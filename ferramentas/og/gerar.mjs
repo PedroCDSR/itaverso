@@ -52,8 +52,8 @@ async function og() {
   morro('#B98BC9', 390, 40, [2, 0, 5]); morro('#8F6FB3', 450, 30, [3, 2, 7]);
   // chão de tiles (escala 4)
   for (let x = 0; x < W; x += 64) { matriz(ctx, T.topo, T.PALETA, x, H - 128, 4); matriz(ctx, T.chao, T.PALETA, x, H - 64, 4); }
-  // Aladdin provisório do jogo (escala 8)
-  matriz(ctx, J.Q, J.PALETA, 830, H - 128 - 48 * 8, 8);
+  // Aladdin do jogo (quadro 48x64, escala 6)
+  matriz(ctx, J.Q, J.PALETA, 830, H - 128 - 64 * 6, 6);
   quadrados(ctx, 80, 80, 44, ['#FFB0FA', '#F9FCBB', '#9E9EFF', '#FFB0FA']);
   texto(ctx, EV.escola, 520, 80, 'PH', 52, '#FFFFFF', null, '#6D6BD9');
   texto(ctx, 'ALADDIN', 480, 210, 'PS2P', 96, '#FFB0FA', '#6D6BD9', '#3A2F7A');
@@ -66,8 +66,8 @@ async function icone() {
   const c = document.getElementById('icone'), ctx = c.getContext('2d'); ctx.imageSmoothingEnabled = false;
   ctx.fillStyle = '#9E9EFF'; ctx.fillRect(0, 0, 512, 512);
   quadrados(ctx, 256, 256, 210, ['#FFB0FA', '#F9FCBB', '#9E9EFF']);
-  // rosto do Aladdin provisório (parte de cima do quadro 32x48), bem grande
-  matriz(ctx, J.Q.slice(2, 26), J.PALETA, 256 - 16 * 13, 70, 13);
+  // rosto do Aladdin (parte de cima do quadro 48x64, recortada em volta da cabeça), bem grande
+  matriz(ctx, J.Q.slice(5, 27).map((l) => l.slice(10, 42)), J.PALETA, 256 - 16 * 13, 60, 13);
 }
 document.fonts.load('20px PS2P').then(() => document.fonts.load('20px PH')).then(async () => { await og(); await icone(); window.pronto = true; });
 </script></body></html>`;
