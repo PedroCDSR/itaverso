@@ -27,10 +27,11 @@ Jogo de plataforma 2D curto, para celular, que funciona para explicar o que é o
 
 ## 3. Como trabalhar neste repositório
 
-- Uma etapa por vez. Antes de etapas grandes, apresente um plano curto e espere o OK.
+- Uma etapa por vez. Antes de etapas grandes, apresente um plano curto (até o lançamento, sem esperar OK: ver a regra abaixo).
 - Branch `main` = produção. Cada deploy de produção consome créditos do plano gratuito do Netlify, então ela só recebe merge no lançamento.
 - Branch `dev` = integração. Deploys de `dev` e de PRs são gratuitos.
 - Cada etapa: nova branch `etapa-N-nome` a partir de `dev` e PR contra `dev`. Nunca fazer merge em `main`; isso é decisão do Pedro.
+- **Regra até o lançamento (decisão do Pedro, 01/11/2026):** o Claude decide sozinho, testa ele mesmo no Chromium com Playwright (sem erros no console, capturas conferidas) e **faz o merge do PR no `dev`**. O Pedro só faz o teste final antes do lançamento. Não é preciso esperar OK de plano nem teste do Pedro entre as etapas. `main` continua intocável: o merge em `main` é só do Pedro.
 - Autor dos commits: `Pedro Rocha <65837046+PedroCDSR@users.noreply.github.com>` (`git config` sem `--global`). Decisão própria deste projeto (e-mail "noreply" do GitHub, para não expor o e-mail pessoal).
 - Ao terminar cada etapa:
   - `npm run build` sem erros;
@@ -265,10 +266,10 @@ Cada etapa termina com PR contra `dev` e o checklist da seção 3.
 | 2 | 01/11/2026 | [PR 3](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/3) | Leitor de mapas em texto, Aladdin original provisório (13 quadros em matriz), tiles 16×16, física com pulo variável, coyote e buffer, câmera com zona morta e folga à frente, céu de entardecer e morros. Pulo alto 69 px, pulo curto 34 px. |
 | 3 | 01/11/2026 | [PR 7](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/7) | Fase 1 com 320 colunas: rua, feira com 6 barracas de toldo, praça com fonte, checkpoint, buracos e plataformas, porta do Espaço. 12 capivaras (pisão = dorme; maçã = come e vai embora; de lado = 1 coração), 38 sapatilhas, 9 maçãs, 3 corações. HUD com corações, maçãs, sapatilhas, pausa e som. Casario de Itajubá no fundo (3 camadas). `dist/` com 1,5 MB. |
 
-**Próximo passo (01/11/2026):** o Pedro testa a prévia do PR da Etapa 3 no celular (a fase inteira, do começo até a
-porta do Espaço) e faz o merge no `dev`. Depois, **Etapa 4, Fase 2 (Espaço Paula De Marco)**: sistema de diálogo, NPCs,
-Tia Claudia com os ingressos, contador de ingressos no HUD e a transição para o chefe. A tela provisória `EmBreve`
-sai nessa etapa.
+**Próximo passo (01/11/2026):** a Etapa 3 (PR 7) foi testada no Chromium e mergeada no `dev` pelo Claude, pela regra
+nova da seção 3. Próxima: **Etapa 4, Fase 2 (Espaço Paula De Marco)**: sistema de diálogo, NPCs, Tia Claudia com os
+ingressos, contador de ingressos no HUD e a transição para o chefe. A tela provisória `EmBreve` sai nessa etapa. O Pedro
+só testa no fim, antes do lançamento.
 
 **Decisões técnicas da Etapa 1:**
 - O toque é escutado na **div inteira** (`input.touch.target`), não só no canvas: no celular deitado sobram faixas laterais, e é ali que ficam os polegares.
