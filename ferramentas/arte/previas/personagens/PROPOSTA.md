@@ -74,3 +74,5 @@ Mudanças de design em relação ao jogo de hoje (todas provisórias até as fot
 - Jafar e Sultão: mesmo design, agora no tamanho e no acabamento certos.
 
 Se aprovar, a 8A troca os sprites no jogo com as animações completas da tabela acima.
+
+**Pele (informação do Pedro, 01/11/2026):** Tia Paula, Tia Claudia e o Sultão têm **pele branca**.

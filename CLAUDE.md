@@ -211,8 +211,8 @@ das duas justifica entregar arte genérica.
 Todos com design próprio. O elenco se baseia nos figurinos do espetáculo (`references/figurinos/`): desenhar a versão da escola, com a qualidade medida em `references/estilo/`. Não reproduzir o design de personagens de filme, animação ou jogo (regra 3); estudar a linguagem visual deles é permitido. Não retratar o rosto de alunos; usar só os figurinos como referência. Enquanto não houver fotos, cada personagem tem um design próprio provisório, com qualidade completa e marcado no índice (seção 7.1).
 
 - **Aladdin** (jogador): herói ágil, com o figurino do espetáculo.
-- **Tia Claudia** (staff do Espaço): usa óculos e tem cabelo preto. Entrega os ingressos.
-- **Tia Paula De Marco** (diretora da escola): é resgatada e abre o espetáculo. **Loira, de rabo de cavalo, com camiseta preta** (a camiseta preta do espetáculo, com "Aladdin" dourado, fumaça azul e roxa e a lâmpada: `references/pessoas/tia-paula-camiseta-aladdin.jpg`). Informação do Pedro, 01/11/2026. O resto (rosto, calça, sapatos): neutro e provisório até a foto.
+- **Tia Claudia** (staff do Espaço): usa óculos, tem cabelo preto e pele branca (informação do Pedro, 01/11/2026). Entrega os ingressos.
+- **Tia Paula De Marco** (diretora da escola): é resgatada e abre o espetáculo. **Loira, de pele branca, de rabo de cavalo, com camiseta preta** (a camiseta preta do espetáculo, com "Aladdin" dourado, fumaça azul e roxa e a lâmpada: `references/pessoas/tia-paula-camiseta-aladdin.jpg`). Informação do Pedro, 01/11/2026. O resto (rosto, calça, sapatos): neutro e provisório até a foto.
 - **Jasmine, Gênio, Abu e demais personagens do espetáculo**: aparecem rapidamente no Espaço, com uma fala cada.
 - **Jafar** (vilão e chefe): com o figurino do espetáculo.
 - **Capivaras** (inimigos de Itajubá): fofas e trapalhonas, nunca assustadoras.

@@ -50,6 +50,7 @@ class Paleta:
 
 # rampas (brilho, base, sombra, funda, contorno)
 R = {
+    'pele_branca': ['#FFF2E6', '#F9DCC6', '#E8B898', '#BC8468', '#6E3E2C'],
     'pele_clara': ['#FCE0C4', '#EDB892', '#C98962', '#97583D', '#55291C'],
     'pele_morena': ['#F6C79A', '#DB9A6B', '#B06C45', '#80452C', '#4A2216'],
     'pele_lilas': ['#E8DCFF', '#C2B0F2', '#9886D6', '#6C5CAE', '#3A2E6E'],
@@ -336,7 +337,7 @@ class TiaPaula(Humano):
 
     def mat(self):
         P = self.pal
-        self.PELE = P('pele', R['pele_clara'], (0.78, 0.42, 0.10))
+        self.PELE = P('pele', R['pele_branca'], (0.78, 0.42, 0.10))   # pele branca (Pedro, 01/11/2026)
         self.CABELO = P('cabelo', R['loiro'], (0.78, 0.46, 0.18))
         self.ROUPA = P('camiseta', R['camiseta_preta'], (0.74, 0.40, 0.12))
         self.CALCA = P('jeans', R['jeans'])
@@ -394,7 +395,7 @@ class TiaClaudia(Humano):
 
     def mat(self):
         P = self.pal
-        self.PELE = P('pele', R['pele_morena'], (0.78, 0.42, 0.10))
+        self.PELE = P('pele', R['pele_branca'], (0.78, 0.42, 0.10))   # pele branca (Pedro, 01/11/2026)
         self.CABELO = P('cabelo', R['preto_cab'], (0.82, 0.52, 0.22))
         self.ROUPA = P('camiseta', R['rosa'], (0.86, 0.50, 0.16))
         self.CALCA = P('calca', ['#8A86A8', '#5C5880', '#424062', '#2E2C48', '#18162A'])
@@ -525,7 +526,7 @@ class Sultao(Humano):
 
     def mat(self):
         P = self.pal
-        self.PELE = P('pele', R['pele_morena'], (0.78, 0.42, 0.10))
+        self.PELE = P('pele', R['pele_branca'], (0.78, 0.42, 0.10))   # pele branca (Pedro, 01/11/2026)
         self.ROUPA = P('tunica', R['creme'])
         self.CALCA = P('calca', R['creme'])
         self.CAPA = P('capa', R['roxo'])

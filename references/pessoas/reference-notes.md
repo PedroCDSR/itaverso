@@ -3,8 +3,8 @@
 **Objetivo:** Tia Paula De Marco (diretora) e Tia Claudia (staff). Só com o OK delas; anotar aqui a data do OK.
 
 **Situação (01/11/2026):** sem fotos.
-- Tia Claudia: o CLAUDE.md diz só "usa óculos e tem cabelo preto".
-- Tia Paula (informação do Pedro, 01/11/2026): **loira, rabo de cavalo, camiseta preta** (de preferência a camiseta
+- Tia Claudia: usa óculos, tem cabelo preto e **pele branca** (Pedro, 01/11/2026).
+- Tia Paula (informação do Pedro, 01/11/2026): **loira, pele branca, rabo de cavalo, camiseta preta** (de preferência a camiseta
   preta do Aladdin; o print vai chegar aqui). O resto da aparência, A DEFINIR.
   As versões antigas (coque castanho, vestido roxo) estão erradas. Em 01/11 o cabelo delas já foi pintado de loiro;
   o redesenho completo (rabo de cavalo + camiseta preta, um sprite só) é da Etapa 8A.
