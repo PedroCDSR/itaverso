@@ -15,7 +15,7 @@ export class Npc extends Phaser.GameObjects.Sprite {
     if (id === 'genio') {
       scene.tweens.add({ targets: this, y: y - 4, duration: 900, yoyo: true, repeat: -1, ease: 'Sine.inOut' });
     }
-    this.balao = scene.add.sprite(x + 10, y - 50, 'balao', 0).setOrigin(0.5, 1).play('balao-pensando');
+    this.balao = scene.add.sprite(x + 10, y - this.height + 8, 'balao', 0).setOrigin(0.5, 1).play('balao-pensando');
     scene.tweens.add({ targets: this.balao, y: this.balao.y - 3, duration: 600, yoyo: true, repeat: -1, ease: 'Sine.inOut' });
   }
 

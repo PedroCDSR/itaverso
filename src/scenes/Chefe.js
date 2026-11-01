@@ -51,17 +51,22 @@ export class Chefe extends Phaser.Scene {
 
     // --- Tia Paula na gaiola, pendurada no canto de cima à direita ---
     // (pendurada, e não no chão, para não ficar escondida atrás do botão PULAR no celular)
-    const gx = LARGURA - 30;
-    const gBase = 170; // pé da gaiola
+    // A gaiola tem 2 camadas (gerar_elenco.py): grades de trás com o brilho do feitiço, a Tia Paula no meio e as
+    // grades da frente, finas e com um vão no meio, para dar para VER a Tia Paula presa (pedido do Pedro).
+    const gx = LARGURA - 40;
+    const gBase = 126; // pé do quadro da gaiola (96 px de altura; o piso dela fica 8 px acima)
+    const meioGaiola = gx + 5; // a gaiola está desenhada 5 px à direita do meio do quadro
     const corrente = this.add.graphics().setDepth(2);
-    for (let y = 0; y < gBase - 56; y += 6) {
-      corrente.fillStyle(0x2e1a33).fillRect(gx - 2, y, 4, 5);
-      corrente.fillStyle(0xb98a2a).fillRect(gx - 1, y + 1, 2, 3);
+    for (let y = 0; y < gBase - 90; y += 6) {
+      corrente.fillStyle(0x2e1a33).fillRect(meioGaiola - 2, y, 4, 5);
+      corrente.fillStyle(0xb98a2a).fillRect(meioGaiola - 1, y + 1, 2, 3);
     }
-    this.paula = this.add.sprite(gx, gBase - 5, 'tiaPaula', 0).setOrigin(0.5, 1).setDepth(3).play('paula-presa');
+    this.gaiolaFundo = this.add.sprite(gx, gBase, 'gaiolaFundo', 0).setOrigin(0.5, 1).setDepth(3);
+    this.paula = this.add.sprite(meioGaiola, gBase - 8, 'tiaPaula', 0).setOrigin(0.5, 1).setDepth(3).play('paula-presa');
+    this.paula.setFlipX(true); // olha para a arena (o desenho olha para a direita)
     this.gaiola = this.add.sprite(gx, gBase, 'gaiola', 0).setOrigin(0.5, 1).setDepth(4);
     // balança de leve
-    this.tweens.add({ targets: [this.gaiola, this.paula], angle: { from: -2, to: 2 }, duration: 1400, yoyo: true, repeat: -1, ease: 'Sine.inOut' });
+    this.tweens.add({ targets: [this.gaiolaFundo, this.gaiola, this.paula], angle: { from: -2, to: 2 }, duration: 1400, yoyo: true, repeat: -1, ease: 'Sine.inOut' });
 
     // --- estado do HUD (vem da fase anterior; no atalho ?fase=chefe começa do zero) ---
     const reg = this.registry;
@@ -107,32 +112,11 @@ export class Chefe extends Phaser.Scene {
 
   // ---------------------------------------------------------------- cenário
 
-  // Céu de entardecer virando noite (o Jafar trouxe a magia escura), lua e morros.
+  // Arena ao pôr do sol (decisão do Pedro: o resgate acontece quando o sol encosta na serra, e o voo do tapete
+  // vem em seguida, no crepúsculo). Céu, sol, Serra da Mantiqueira e terraço com arcos num PNG só
+  // (public/assets/cenario/arena.png, ferramentas/arte/gerar_cenarios.py); chão e plataformas são tiles.
   criarFundo() {
-    this.add.image(0, 0, 'ceu').setOrigin(0).setScrollFactor(0);
-    this.add.rectangle(0, 0, LARGURA, ALTURA, 0x3b2560, 0.35).setOrigin(0);
-    const g = this.add.graphics();
-    // estrelinhas e lua crescente
-    const estrelas = [[40, 30], [96, 52], [150, 22], [222, 44], [300, 26], [352, 58], [404, 36], [460, 64], [260, 70]];
-    g.fillStyle(CORES.amarelo, 0.9);
-    estrelas.forEach(([x, y]) => g.fillRect(x, y, 2, 2));
-    g.fillStyle(CORES.amarelo).fillCircle(420, 92, 14);
-    g.fillStyle(0x6b5590).fillCircle(427, 87, 12);
-    this.add.tileSprite(0, 0, LARGURA, ALTURA, 'morros').setOrigin(0).setTint(0x9a86c8);
-    // colunas do terraço onde acontece a luta
-    const colunas = [40, 200, 280, 440];
-    for (const x of colunas) {
-      g.fillStyle(0x2e1a33).fillRect(x - 9, 120, 18, 120);
-      g.fillStyle(0xe8b48a).fillRect(x - 7, 124, 14, 116);
-      g.fillStyle(0xc98f6a).fillRect(x + 3, 124, 4, 116);
-      g.fillStyle(0x2e1a33).fillRect(x - 12, 114, 24, 8);
-      g.fillStyle(0xb5583a).fillRect(x - 11, 115, 22, 6);
-    }
-    // arcos entre as colunas
-    g.lineStyle(6, 0x2e1a33).beginPath().arc(120, 122, 80, Math.PI, 0).strokePath();
-    g.lineStyle(4, 0xe8b48a).beginPath().arc(120, 122, 80, Math.PI, 0).strokePath();
-    g.lineStyle(6, 0x2e1a33).beginPath().arc(360, 122, 80, Math.PI, 0).strokePath();
-    g.lineStyle(4, 0xe8b48a).beginPath().arc(360, 122, 80, Math.PI, 0).strokePath();
+    this.add.image(0, 0, 'arena').setOrigin(0).setScrollFactor(0);
   }
 
   // Barra de vida do chefe no topo, entre os contadores do HUD e os botões de pausa e som.
@@ -377,7 +361,8 @@ export class Chefe extends Phaser.Scene {
     // a gaiola se abre e a Tia Paula sai feliz
     this.time.delayedCall(1500, () => {
       this.gaiola.setFrame(1);
-      this.estouro(this.gaiola.x, this.gaiola.y - 30, CORES.amarelo);
+      this.gaiolaFundo.setFrame(1); // o brilho do feitiço some
+      this.estouro(this.gaiola.x, this.gaiola.y - 40, CORES.amarelo);
       tocarVinheta('vitoria');
       this.paula.play('paula-feliz');
       this.paula.setDepth(6);

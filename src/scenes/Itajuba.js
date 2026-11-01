@@ -30,6 +30,9 @@ export class Itajuba extends Phaser.Scene {
     this.morros = this.add.tileSprite(0, 0, LARGURA, ALTURA, 'morros').setOrigin(0).setScrollFactor(0);
     this.casas = this.add.tileSprite(0, 0, LARGURA, ALTURA, 'casas').setOrigin(0).setScrollFactor(0);
 
+    // lugares reais de Itajubá, na ordem pedida pelo Pedro (atrás dos tiles e do jogador)
+    this.criarLugares(mapa);
+
     // barracas embaixo dos toldos (desenhadas antes dos tiles, para ficarem atrás)
     this.desenharBarracas(mapa);
 
@@ -121,14 +124,13 @@ export class Itajuba extends Phaser.Scene {
         break;
       }
       case 'fonte': {
-        // 'F' marca o canto inferior esquerdo; a fonte ocupa 3 tiles de largura
-        const x0 = o.col * TILE;
-        this.add.sprite(x0, o.y, 'fonte').setOrigin(0, 1).setDepth(4).play('fonte-agua');
-        // duas partes sólidas: a bacia (baixa e larga) e a coluna com o prato (alta e estreita)
-        const bacia = this.add.zone(x0 + 24, o.y - 6, 46, 12);
-        const coluna = this.add.zone(x0 + 24, o.y - 15, 22, 30);
-        this.solidos.add(bacia);
-        this.solidos.add(coluna);
+        // Fonte da praça com o busto do Teodomiro Santiago (public/assets/cenario/fonte.png, 172x108).
+        // 'F' marca a coluna do meio-esquerda; a fonte fica centrada um pouco à direita dela.
+        const x0 = o.col * TILE - 72;
+        this.add.image(x0, o.y, 'fonte').setOrigin(0, 1).setDepth(2);
+        // só a borda baixa é sólida (dá para andar nela); o pedestal com o busto fica atrás
+        const borda = this.add.zone(x0 + 86, o.y - 6, 156, 12);
+        this.solidos.add(borda);
         break;
       }
       case 'checkpoint': {
@@ -144,6 +146,22 @@ export class Itajuba extends Phaser.Scene {
       default:
         break;
     }
+  }
+
+  // Lugares reais da Fase 1, nesta ordem (CLAUDE.md, seção 11.3; references/lugares/): Clube Itajubense (no fundo),
+  // fonte da praça (objeto 'F' do mapa), Café do Vadinho, Igreja Matriz, posto Esso e Praça do Soldado.
+  // São só cenário (sem colisão), em PNG (ferramentas/arte/gerar_cenarios.py); a coluna de cada um fica aqui.
+  criarLugares(mapa) {
+    const chao = (mapa.linhas - 2) * TILE; // topo do chão (y 240)
+    const lugar = (chave, col, dx = 0, base = chao) => this.add.image(col * TILE + dx, base, chave).setOrigin(0, 1).setDepth(1);
+    lugar('clube', 7, 0, chao + 4); // no fundo: o pé fica escondido atrás do chão
+    lugar('cafe', 121);
+    lugar('igreja', 170);
+    lugar('posto', 189, 8);
+    lugar('arvore', 275, 4);
+    lugar('estatua', 270);
+    lugar('helicoptero', 277, 8);
+    lugar('arvore2', 293);
   }
 
   // Fachada do Espaço Paula De Marco, com placa e porta (a saída da fase).

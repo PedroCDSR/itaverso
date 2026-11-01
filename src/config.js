@@ -38,6 +38,7 @@ export const JOGADOR = {
   aceleracaoChao: 1400, // quanto mais alto, mais "na hora" ele arranca
   aceleracaoAr: 900, // controle no ar (um pouco menor que no chão)
   freio: 1800, // parar ao soltar o direcional
+  aterrissagemMs: 90, // quanto tempo o quadro "aterrissando" (corpo amassado) aparece ao pousar
   gravidade: 900,
   gravidadeQuedaExtra: 500, // cai mais rápido do que sobe: pulo mais "firme"
   quedaMaxima: 520,
