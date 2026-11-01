@@ -212,7 +212,7 @@ Todos com design próprio. O elenco se baseia nos figurinos do espetáculo (`ref
 
 - **Aladdin** (jogador): herói ágil, com o figurino do espetáculo.
 - **Tia Claudia** (staff do Espaço): usa óculos e tem cabelo preto. Entrega os ingressos.
-- **Tia Paula De Marco** (diretora da escola): é resgatada e abre o espetáculo. Aparência: A DEFINIR (ver `references/`).
+- **Tia Paula De Marco** (diretora da escola): é resgatada e abre o espetáculo. **Cabelo loiro** (informação do Pedro, 01/11/2026). O resto da aparência: A DEFINIR (ver `references/pessoas/`).
 - **Jasmine, Gênio, Abu e demais personagens do espetáculo**: aparecem rapidamente no Espaço, com uma fala cada.
 - **Jafar** (vilão e chefe): com o figurino do espetáculo.
 - **Capivaras** (inimigos de Itajubá): fofas e trapalhonas, nunca assustadoras.
