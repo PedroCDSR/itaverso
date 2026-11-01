@@ -37,6 +37,14 @@ export const TEXTOS = {
     sobre: 'SOBRE O ESPETÁCULO',
     rodape: '20/11 · Teatro do Colégio G9 · Itajubá',
     dicaTeclado: 'Setas: andar · Espaço: pular · X: maçã · Esc: pausa',
+    // escolha da dificuldade, depois de tocar em JOGAR
+    escolha: 'ESCOLHA A DIFICULDADE',
+    niveis: {
+      facil: { nome: 'FÁCIL', dica: 'Mais curto e sem buracos' },
+      medio: { nome: 'MÉDIO', dica: 'O caminho inteiro, com mais vida' },
+      dificil: { nome: 'DIFÍCIL', dica: 'Para quem gosta de desafio!' },
+    },
+    voltar: 'VOLTAR',
   },
 
   // Intro: 3 caixas. Toque para avançar.

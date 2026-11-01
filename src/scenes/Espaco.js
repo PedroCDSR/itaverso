@@ -6,7 +6,8 @@ import { Dialogo } from '../ui/Dialogo.js';
 import { tocarEfeito } from '../audio/efeitos.js';
 import { tocarMusica, tocarVinheta, pararMusica } from '../audio/musica.js';
 import { lerMapa, TIPO_TILE } from '../levels/leitor.js';
-import { ESPACO as MAPA, NPCS_ESPACO } from '../levels/espaco.js';
+import { ESPACO as MAPA, ESPACO_FACIL, NPCS_ESPACO } from '../levels/espaco.js';
+import { mapaCurto } from '../dificuldade.js';
 import { Jogador } from '../objects/Jogador.js';
 import { Npc } from '../objects/Npc.js';
 
@@ -31,7 +32,8 @@ export class Espaco extends Phaser.Scene {
   create() {
     this.conversando = false;
     this.terminou = false;
-    const mapa = lerMapa(MAPA, 'ESPACO');
+    // nível fácil: estúdio menor, com os mesmos personagens (src/dificuldade.js)
+    const mapa = mapaCurto() ? lerMapa(ESPACO_FACIL, 'ESPACO_FACIL') : lerMapa(MAPA, 'ESPACO');
     this.mapa = mapa;
 
     // parede com espelhos e barras (acompanha o mundo, é a parede do fundo da sala)

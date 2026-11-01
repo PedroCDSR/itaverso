@@ -97,6 +97,11 @@ def gaiola(parte, aberta=False):
         t.vlinha(x, topo + 2, BASE_G - 1, ou, 2)
         t.vlinha(x - 1 if x > x0 else x + 1, topo + 2, BASE_G - 1, ou, 0 if x < cx else 3)
     if not aberta:
+        # porta fechada: 2 barras finas (1 px) no vão da frente, para a gaiola não parecer aberta durante a luta;
+        # entre elas (7 px) o rosto e o corpo da Tia Paula continuam à vista
+        for x in (int(cx - 4), int(cx + 4)):
+            t.vlinha(x, topo + 2, BASE_G - 1, ou, 1)
+    if not aberta:
         # anel do meio só nas laterais (não passa na frente do rosto)
         t.hlinha(x0, x0 + 10, 58, ou, 1)
         t.hlinha(x1 - 10, x1, 58, ou, 1)

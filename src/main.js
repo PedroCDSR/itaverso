@@ -16,6 +16,10 @@ import { ligarPausaGlobal } from './ui/pausaGlobal.js';
 import { iniciarAvisoGirar } from './ui/AvisoGirar.js';
 import { iniciarPausaFoco } from './ui/PausaFoco.js';
 import { iniciarSom } from './audio/som.js';
+import { carregarDificuldade } from './dificuldade.js';
+
+// nível escolhido antes (ou ?dificuldade=...), aplicado antes de qualquer cena ler as constantes
+carregarDificuldade();
 
 const container = document.getElementById('jogo');
 

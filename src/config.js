@@ -30,6 +30,7 @@ export const FONTES = {
 };
 
 // Jogador (pixels e segundos). Ajuste aqui e teste no celular.
+// Estes valores são os do nível DIFÍCIL; os níveis fácil e médio ajustam alguns deles em src/dificuldade.js.
 // Altura do pulo ≈ forcaPulo² / (2 × gravidade): 380² / 1800 = 80 px = 5 tiles.
 // Escala 48x64 (Etapa 8.0): o herói tem ~58 px; o pulo subiu de 72 para 80 px para manter a agilidade
 // (≈ 1,4× a altura dele) sem alcançar o muro de 6 tiles da Fase 1, que continua pedindo o toldo.
@@ -55,7 +56,7 @@ export const JOGADOR = {
   coracoes: 3,
   invencivelMs: 1000,
   macasIniciais: 5,
-  macasMaximo: 9,
+  macasMaximo: Infinity, // sem limite (decisão do Pedro, 01/11/2026)
   // corpo de colisão dentro do quadro 48x64 (menor que o desenho, para não "enroscar" nas beiradas).
   // Desenho: corpo de ~58 px (linhas 6 a 63, sola na 62). Caixa: 18x46, do ombro ao pé; cabe nos vãos de 3 tiles.
   corpo: { largura: 18, altura: 46, x: 15, y: 17 },

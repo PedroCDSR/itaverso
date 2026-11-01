@@ -8,10 +8,17 @@ Uso: python3 ferramentas/mapas/gerar_espaco.py > src/levels/espaco.js
 """
 
 L, A = 100, 17
-g = [['.'] * L for _ in range(A)]
-for y in (15, 16):
-    for x in range(L):
-        g[y][x] = '#'
+
+
+def novo(larg):
+    grade = [['.'] * larg for _ in range(A)]
+    for y in (15, 16):
+        for x in range(larg):
+            grade[y][x] = '#'
+    return grade
+
+
+g = novo(L)
 
 
 def p(x, y, c):
@@ -39,15 +46,39 @@ p(60, 14, 'N')  # Sultão
 tablado(66, 12); tablado(72, 10); tablado(78, 12)
 p(67, 10, 's'); p(68, 10, 's'); p(73, 8, 's'); p(74, 8, 's'); p(79, 10, 's'); p(80, 10, 's')
 p(90, 14, 'N')  # Tia Claudia, no balcão
+INTEIRO = g
+
+# Nível fácil (src/dificuldade.js): estúdio de 60 colunas, com os mesmos 4 personagens mais perto uns dos outros.
+g = novo(60)
+p(3, 14, 'P')
+arco(8)
+p(15, 14, 'N')  # Jasmine
+tablado(20, 12)
+p(21, 10, 's'); p(22, 10, 's')
+p(28, 14, 'N')  # Gênio
+arco(33)
+p(40, 14, 'N')  # Sultão
+tablado(45, 12)
+p(46, 10, 's'); p(47, 10, 's')
+p(53, 14, 'N')  # Tia Claudia
+FACIL = g
+
+
+def escrever(nome, grade):
+    print(f'export const {nome} = [')
+    for linha in grade:
+        print(f"  '{''.join(linha)}',")
+    print('];')
+
 
 print("// Fase 2, Espaço Paula De Marco (CLAUDE.md, seção 11, cena 4): estúdio de dança, sem inimigos.")
 print("// Legenda em leitor.js e no CLAUDE.md (seção 10). 'N' = personagem que conversa; quem é cada um, da esquerda")
 print("// para a direita, está em NPCS_ESPACO. A fase termina na Tia Claudia (último 'N'), por isso não tem 'E'.")
 print("// Gerado por ferramentas/mapas/gerar_espaco.py; dá para editar à mão.")
-print('export const ESPACO = [')
-for linha in g:
-    print(f"  '{''.join(linha)}',")
-print('];')
+print("// ESPACO: níveis médio e difícil. ESPACO_FACIL: nível fácil (60 colunas, mesmos personagens).")
+escrever('ESPACO', INTEIRO)
+print()
+escrever('ESPACO_FACIL', FACIL)
 print()
 print("// Quem é cada 'N' do mapa, da esquerda para a direita. As falas ficam em data/textos.js (espaco).")
 print("export const NPCS_ESPACO = ['jasmine', 'genio', 'sultao', 'claudia'];")

@@ -96,7 +96,38 @@ def cidade_repete(w=W):
         if rnd.rand() < 0.35:
             return PT.predio(int(rnd.randint(0, 999)), int(rnd.choice([14, 18, 22])), int(rnd.randint(40, 80)))
         return GL.casa(int(rnd.randint(0, 999)), int(rnd.choice([32, 40])), int(rnd.choice([40, 48])))
-    return faixa_repete(peca, w=w, base=236, sobrepor=-2)
+    return com_chao(faixa_repete(peca, w=w, base=236, sobrepor=-2), 236)
+
+
+def com_chao(img, topo):
+    """Rua e muro de arrimo embaixo da fileira de prédios do voo (antes ela acabava no ar, em cima da mata).
+    Do topo para baixo: calçada clara, meio-fio, rua de asfalto e um muro de pedra até o pé da imagem."""
+    a = np.array(img)
+    h, w = a.shape[:2]
+    calcada, meiofio = GL.hex_rgb('#BAB2B4'), GL.hex_rgb('#6C6274')
+    asfalto = [GL.hex_rgb(c) for c in ('#5A5466', '#524C5E')]
+    pedra = [GL.hex_rgb(c) for c in ('#8C8494', '#7E7688', '#857D8F')]
+    junta = GL.hex_rgb('#4A4256')
+    rnd = np.random.RandomState(7)
+    for y in range(topo, h):
+        for x in range(w):
+            if y < topo + 2:
+                c = calcada
+            elif y == topo + 2:
+                c = meiofio
+            elif y < topo + 8:
+                c = asfalto[(x // 3 + y) % 2]
+                if y == topo + 5 and (x // 6) % 2 == 0:
+                    c = GL.hex_rgb('#C8C08A')   # faixa tracejada da rua
+            else:
+                fila = (y - topo - 8) // 6
+                if (y - topo - 8) % 6 == 0 or (x + fila * 7) % 14 == 0:
+                    c = junta
+                else:
+                    c = pedra[((x + fila * 7) // 14 + fila) % 3]
+            a[y, x, :3] = c
+            a[y, x, 3] = 255
+    return Image.fromarray(a, 'RGBA')
 
 
 def main():

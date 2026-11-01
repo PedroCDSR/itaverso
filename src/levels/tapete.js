@@ -150,4 +150,10 @@ const TRECHOS = [
   ],
 ];
 
-export const TAPETE = TRECHOS[0].map((_, linha) => TRECHOS.map((t) => t[linha]).join(''));
+const emendar = (trechos) => trechos[0].map((_, linha) => trechos.map((t) => t[linha]).join(''));
+
+// Níveis médio e difícil: os 8 trechos (40 s).
+export const TAPETE = emendar(TRECHOS);
+// Nível fácil (src/dificuldade.js): 4 dos 8 trechos (20 s). Ficam a decolagem, os primeiros pássaros, o fio baixo
+// e a reta final; saem as pipas e os trechos mais apertados (5, 6 e 7).
+export const TAPETE_FACIL = emendar([0, 1, 2, 7].map((i) => TRECHOS[i]));

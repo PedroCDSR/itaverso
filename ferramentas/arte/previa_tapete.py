@@ -107,9 +107,11 @@ def morro_coroados(w=420, h=230):
     cx = w / 2
     topo_y = 56
 
+    plato = 122   # meia largura do topo plano: o hotel (220 px) fica todo apoiado no morro, sem flutuar
+
     def perfil(x):
-        d = (x - cx) / (w / 2)
-        return topo_y + (h - topo_y) * min(1, max(0, abs(d) ** 1.6)) + 2 * math.sin(x / 9)
+        d = max(0, abs(x - cx) - plato) / (w / 2 - plato)
+        return topo_y + (h - topo_y) * min(1, d ** 1.25) + 2 * math.sin(x / 9)
 
     pasto = ['#C6E08E', '#A8CC78', '#8CB466', '#729A58']
     for x in range(w):
@@ -120,7 +122,7 @@ def morro_coroados(w=420, h=230):
     # mata atrás do hotel e nas laterais
     for _ in range(260):
         x = rnd.uniform(0, w)
-        y = perfil(x) + rnd.uniform(-2, 30) if abs(x - cx) > 70 else perfil(x) + rnd.uniform(-14, 4)
+        y = perfil(x) + rnd.uniform(-2, 30) if abs(x - cx) > plato - 10 else perfil(x) + rnd.uniform(-14, 4)
         GL._copinha(a, x, y, rnd.uniform(3.5, 6), mata)
     for _ in range(70):  # arbustos no pasto
         x = rnd.uniform(40, w - 40)

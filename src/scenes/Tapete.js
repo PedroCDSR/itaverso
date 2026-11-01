@@ -7,7 +7,8 @@ import { BotaoPausa } from '../ui/BotaoPausa.js';
 import { abrirPausa } from '../fluxo.js';
 import { tocarEfeito } from '../audio/efeitos.js';
 import { tocarMusica, tocarVinheta, pararMusica } from '../audio/musica.js';
-import { TAPETE as MAPA } from '../levels/tapete.js';
+import { TAPETE as MAPA_INTEIRO, TAPETE_FACIL } from '../levels/tapete.js';
+import { mapaCurto } from '../dificuldade.js';
 import { ONDA_ALADDIN, ONDA_PAULA } from '../art/tapete.js';
 
 // Fase 4 (CLAUDE.md, seção 11.6): Aladdin e Tia Paula voam de tapete sobre Itajubá ao entardecer.
@@ -20,8 +21,6 @@ import { ONDA_ALADDIN, ONDA_PAULA } from '../art/tapete.js';
 
 const T = TEXTOS.tapete;
 const CHAO_Y = 228; // linha dos telhados mais próximos
-const LINHAS_MAPA = MAPA.length;
-const LARGURA_MAPA = MAPA[0].length * TILE;
 const TEATRO = { largura: 200, altura: 170 };
 
 export class Tapete extends Phaser.Scene {
@@ -37,6 +36,11 @@ export class Tapete extends Phaser.Scene {
     this.vy = 0;
     this.invencivelAte = 0;
     this.tempo = 0;
+    // nível fácil: voo ~40% mais curto (src/dificuldade.js)
+    this.mapa = mapaCurto() ? TAPETE_FACIL : MAPA_INTEIRO;
+    const LARGURA_MAPA = this.mapa[0].length * TILE;
+    // o Hotel Coroados e a UNIFEI aparecem na mesma fração do voo, seja ele curto ou inteiro
+    this.escalaVoo = this.mapa[0].length / MAPA_INTEIRO[0].length;
     this.fimRolagem = LARGURA_MAPA; // câmera para aqui: o teatro inteiro na tela
     this.teatroX = LARGURA_MAPA + LARGURA - TEATRO.largura - 16;
 
@@ -76,10 +80,10 @@ export class Tapete extends Phaser.Scene {
     this.add.image(0, 0, 'ceu-crepusculo').setOrigin(0).setScrollFactor(0);
     this.morros = this.add.tileSprite(0, 0, LARGURA, ALTURA, 'serra-crepusculo').setOrigin(0).setScrollFactor(0);
     // Hotel Coroados: aparece por volta dos 12 s de voo (camada do meio, parallax 0,35)
-    this.add.image(640, ALTURA + 30, 'coroados').setOrigin(0, 1).setScrollFactor(0.35);
+    this.add.image(Math.max(560, 640 * this.escalaVoo), ALTURA + 30, 'coroados').setOrigin(0, 1).setScrollFactor(0.35);
     this.cidade = this.add.tileSprite(0, 0, LARGURA, ALTURA, 'cidade-crepusculo').setOrigin(0).setScrollFactor(0);
     // UNIFEI: por volta dos 25 s (camada de perto, parallax 0,6, atrás dos telhados)
-    this.add.image(1700, ALTURA + 4, 'unifei').setOrigin(0, 1).setScrollFactor(0.6).setDepth(39);
+    this.add.image(1700 * this.escalaVoo, ALTURA + 4, 'unifei').setOrigin(0, 1).setScrollFactor(0.6).setDepth(39);
     this.telhados = this.add.tileSprite(0, 0, LARGURA, ALTURA, 'telhados-crepusculo').setOrigin(0).setScrollFactor(0).setDepth(40);
   }
 
@@ -93,7 +97,8 @@ export class Tapete extends Phaser.Scene {
     const fiosG = this.add.graphics().setDepth(45);
     this.linhasPipa = this.add.graphics().setDepth(20);
 
-    for (let lin = 0; lin < LINHAS_MAPA; lin++) {
+    const MAPA = this.mapa;
+    for (let lin = 0; lin < MAPA.length; lin++) {
       let posteAnterior = null;
       for (let col = 0; col < MAPA[lin].length; col++) {
         const c = MAPA[lin][col];
