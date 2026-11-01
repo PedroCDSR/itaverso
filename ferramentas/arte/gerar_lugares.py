@@ -1083,21 +1083,73 @@ def ceu(w, h=TELA_A):
     return img
 
 
+# Serra da Mantiqueira: 3 camadas verdes cobertas de mata. Quanto mais longe, mais azulada/lilás e com menos
+# contraste (perspectiva atmosférica, guia: fundo com 2 a 3 tons). Cada rampa: luz, base, sombra, funda.
+SERRA = [
+    # (rampa, base da crista, amplitude, frequências, raio das copas)
+    (['#B2CEBE', '#94B4A8', '#7E9C98', '#6E8890'], 132, 34, ((1.1, 1, 0.3), (2.7, 0.5, 1.2), (6.1, 0.15, 2)), 2.5),
+    (['#9CC08C', '#7FA676', '#668C66', '#527458'], 160, 24, ((1.7, 1, 2.1), (4.3, 0.4, 0.7), (9.7, 0.12, 1)), 3.5),
+    (['#86BA62', '#62994E', '#4A7C44', '#355E3A'], 188, 16, ((2.6, 1, 0.9), (6.2, 0.35, 2.4), (13, 0.1, 0.4)), 4.5),
+]
+
+
+def _copinha(a, cx, cy, r, rampa):
+    """Copa de árvore redonda vista de longe: luz em cima à esquerda, sombra embaixo à direita."""
+    h, w = a.shape[:2]
+    x0, x1 = max(0, int(cx - r - 1)), min(w, int(cx + r + 2))
+    y0, y1 = max(0, int(cy - r - 1)), min(h, int(cy + r + 2))
+    if x0 >= x1 or y0 >= y1:
+        return
+    yy, xx = np.mgrid[y0:y1, x0:x1]
+    dx, dy = (xx + 0.5 - cx) / r, (yy + 0.5 - cy) / (r * 0.85)
+    dentro = dx * dx + dy * dy <= 1
+    luz = -dx * 0.6 - dy * 0.8
+    tom = np.where(luz > 0.45, 0, np.where(luz > -0.15, 1, np.where(luz > -0.6, 2, 3)))
+    cores = np.array([hex_rgb(c) for c in rampa], np.uint8)
+    reg = a[y0:y1, x0:x1]
+    reg[dentro, :3] = cores[tom[dentro]]
+    reg[dentro, 3] = 255
+
+
 def morros(w, h=TELA_A):
-    """Serra ao fundo (Itajubá fica no pé da Mantiqueira): duas camadas lilás de pouco contraste."""
-    img = Image.new('RGBA', (w, h), (0, 0, 0, 0))
-    a = np.array(img)
-    for cor, cor_luz, base, amp, freqs in (
-            ('#A487C4', '#B99BD2', 150, 30, ((1.3, 1, 0), (3.1, 0.45, 1), (7.3, 0.12, 2))),
-            ('#8A6FB2', '#9A7EBE', 182, 20, ((2.2, 1, 2), (5.3, 0.3, 0.5), (11, 0.1, 1)))):
+    """Serra da Mantiqueira ao fundo (Itajubá fica no pé dela): morros verdes cobertos de mata."""
+    a = np.zeros((h, w, 4), np.uint8)
+    rnd = np.random.RandomState(12)
+    for rampa, base, amp, freqs, r in SERRA:
+        def crista(x):
+            return base - sum(amp * k * math.sin(x / 480 * math.pi * f + fa) for f, k, fa in freqs)
+        cores = [hex_rgb(c) for c in rampa]
+        # massa do morro: encosta virada para a luz (esquerda) mais clara, a outra na base
         for x in range(w):
-            y = base - sum(amp * a_ * math.sin(x / 480 * math.pi * f + fa) for f, a_, fa in freqs)
-            y = int(y)
-            a[y:, x, :3] = hex_rgb(cor)
+            y = int(crista(x))
+            a[y:, x, :3] = cores[2]
             a[y:, x, 3] = 255
-            yl = base - sum(amp * a_ * math.sin((x - 3) / 480 * math.pi * f + fa) for f, a_, fa in freqs)
-            if yl > y + 0.5:  # encosta que recebe luz (lado esquerdo dos picos)
-                a[y:y + 3, x, :3] = hex_rgb(cor_luz)
+        # encosta virada para a luz (morro subindo para a direita): copas um tom mais claras
+        clara = [rampa[0], rampa[0], rampa[1], rampa[2]]
+
+        def tons(xx):
+            return clara if crista(xx + 6) < crista(xx - 6) else rampa
+        # mata: copas encostadas umas nas outras na crista e espalhadas pela encosta
+        passo = max(2, int(r * 1.3))
+        for x in range(-4, w + 4, passo):
+            xx = x + rnd.uniform(-1, 1)
+            _copinha(a, xx, crista(xx) + rnd.uniform(-0.5, 1.5), r * rnd.uniform(0.8, 1.2), tons(xx))
+        n = int(w * (h - base + amp) / (r * r * 4))
+        for _ in range(n):
+            xx = rnd.uniform(0, w)
+            yy = crista(xx) + rnd.uniform(2, h - base + amp)
+            if yy < h:
+                _copinha(a, xx, yy, r * rnd.uniform(0.7, 1.15), tons(xx))
+        # clareiras de pasto (manchas mais claras e lisas), só na camada do meio
+        if r == 3.5:
+            for _ in range(w // 220):
+                cx, cy = rnd.uniform(0, w), 0
+                cy = crista(cx) + rnd.uniform(10, 22)
+                for yy in range(int(cy - 3), int(cy + 4)):
+                    meia = int(14 * math.sqrt(max(0, 1 - ((yy - cy) / 4) ** 2)))
+                    for xx in range(int(cx - meia), int(cx + meia)):
+                        if 0 <= xx < w and 0 <= yy < h and a[yy, xx, 3]:
+                            a[yy, xx, :3] = hex_rgb('#B6CC8A')
     return Image.fromarray(a, 'RGBA')
 
 
@@ -1180,10 +1232,62 @@ def tingir(img, cor, t):
     return Image.fromarray(a.clip(0, 255).astype(np.uint8), 'RGBA')
 
 
+# Chão de paralelepípedo (rua de Itajubá): meio-fio de granito no alto e pedras em fiadas desencontradas.
+# Tiles de 16x16 como os do jogo, em 3 variações para a repetição não aparecer.
+PEDRA = {   # granito cinza aquecido pelo entardecer: luz, base, sombra, junta, contorno
+    'fria': ['#DCD2D6', '#B6AAB4', '#8E8292', '#5E5268', '#3A3044'],
+    'quente': ['#E2CDBE', '#BCA294', '#937A74', '#5E5268', '#3A3044'],
+    'escura': ['#B8ACB6', '#968A98', '#766A7E', '#5E5268', '#3A3044'],
+}
+
+
+def tiles_paralelepipedo(semente):
+    rnd = np.random.RandomState(semente)
+    topo = np.zeros((16, 16, 4), np.uint8)
+    meio = np.zeros((16, 16, 4), np.uint8)
+    for t_, y_ini in ((topo, 5), (meio, 0)):
+        t_[:, :, 3] = 255
+        t_[:, :, :3] = hex_rgb(PEDRA['fria'][3])          # junta
+        for fiada in range((16 - y_ini) // 4 + 1):
+            y0 = y_ini + fiada * 4
+            desloc = 4 if (fiada + (0 if t_ is topo else 1)) % 2 else 0
+            for x0 in range(-8 + desloc, 16, 8):
+                c = PEDRA[rnd.choice(['fria', 'fria', 'quente', 'escura'])]
+                for y in range(y0, min(16, y0 + 3)):
+                    for x in range(x0, x0 + 7):
+                        if not 0 <= x < 16:
+                            continue
+                        if y == y0 and x < x0 + 6:
+                            tom = 0                          # aresta de cima pega luz
+                        elif x == x0 + 6 or y == y0 + 2:
+                            tom = 2                          # lado e pé na sombra
+                        else:
+                            tom = 1
+                        if (x == x0 and y == y0) or (x == x0 + 6 and y == y0 + 2):
+                            continue                         # cantos arredondados
+                        t_[y, x, :3] = hex_rgb(c[tom])
+                if rnd.rand() < 0.4:                         # desgaste: um pontinho escuro na pedra
+                    xx, yy = x0 + rnd.randint(1, 5), y0 + 1
+                    if 0 <= xx < 16 and yy < 16:
+                        t_[yy, xx, :3] = hex_rgb(c[2])
+    # meio-fio de granito claro no alto do tile de cima
+    gr = ['#3A3044', '#FBF2E0', '#EADBC0', '#AE9878', '#6E5E58']
+    for y, c in enumerate(gr):
+        topo[y, :, :3] = hex_rgb(c)
+    for x in range(0, 16, 8):                                # juntas do meio-fio
+        topo[1:4, x, :3] = hex_rgb('#AE9878')
+    return Image.fromarray(topo, 'RGBA'), Image.fromarray(meio, 'RGBA')
+
+
+TILES_RUA = [tiles_paralelepipedo(s) for s in (1, 2, 3)]
+
+
 def chao(w):
     img = Image.new('RGBA', (w, TELA_A), (0, 0, 0, 0))
-    topo, meio = tile('chaoTopo'), tile('chao')
+    rnd = np.random.RandomState(7)
     for x in range(0, w, 16):
+        topo, _ = TILES_RUA[rnd.randint(3)]
+        _, meio = TILES_RUA[rnd.randint(3)]
         img.alpha_composite(topo, (x, CHAO_Y))
         img.alpha_composite(meio, (x, CHAO_Y + 16))
     return img
@@ -1342,6 +1446,11 @@ if __name__ == '__main__':
         img = f()
         img.save(os.path.join(NATIVO, nome + '.png'))
         print(nome, img.size, contar_cores(img), 'cores')
+    folha = Image.new('RGBA', (16 * 3, 32))
+    for i, (tp, md) in enumerate(TILES_RUA):
+        folha.alpha_composite(tp, (16 * i, 0))
+        folha.alpha_composite(md, (16 * i, 16))
+    folha.save(os.path.join(NATIVO, 'tiles-paralelepipedo.png'))
     pan, lugares = panorama()
     pan.resize((pan.width * 2, pan.height * 2), Image.NEAREST).save(os.path.join(SAIDA, 'fase1-panorama.png'))
     telas(pan, lugares).save(os.path.join(SAIDA, 'fase1-telas.png'))

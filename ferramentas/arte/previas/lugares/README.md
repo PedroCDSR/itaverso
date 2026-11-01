@@ -9,11 +9,17 @@ estátuas de bronze).
 | `fase1-panorama.png` | tira da Fase 1 com os 6 lugares em ordem, casario, céu de entardecer, serra e o Aladdin (2×) |
 | `fase1-telas.png` | 6 telas de 480×270 do jogo, uma por lugar (2×) |
 | `1-clube-itajubense.png` … `6-praca-do-soldado.png` | prancha por lugar: foto × pixel art na mesma altura, com o Aladdin (58 px) |
+| `nativo/tiles-paralelepipedo.png` | chão novo da rua: 3 variações de tile 16×16 de paralelepípedo (topo com meio-fio + meio) |
 | `nativo/*.png` | cada lugar em 1×, pronto para virar textura (`cenario.para_matriz` gera a matriz de `src/art/`) |
 
 Medidas (herói = 58 px, chão em y = 240): igreja 244 px de altura (4,2 heróis), clube 178 px (camada do fundo, tingida
 16% para o lilás), café 174 px (toldo a 80 px do chão), posto 156 px com a placa (cabine 82 px), estátua no pedestal
 156 px (soldado ≈ 60 px), helicóptero 248×112 px, fonte 172×108 px.
+
+Fundo e chão (pedido do Pedro, 01/11/2026): rua de **paralelepípedo** de granito com meio-fio claro (no lugar do
+chão de pedra terracota atual) e **Serra da Mantiqueira** ao fundo em 3 camadas verdes cobertas de mata (copas
+redondas com luz de cima-esquerda; a camada mais longe é verde-azulada, com menos contraste, e a do meio tem
+clareiras de pasto). Só na prévia: `src/art/tiles.js` e o `Preload` ainda não mudaram.
 
 Padrão do guia aplicado: 5 tons por material (luz de cima e da esquerda-frente), contorno colorido do próprio
 material, sombra projetada sob as cornijas, reboco com manchas, escorridos e rachaduras, céu em faixas sem degradê,
