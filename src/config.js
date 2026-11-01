@@ -86,6 +86,24 @@ export const MACA = {
   duracaoMs: 1600,
 };
 
+// Caixa de diálogo (ui/Dialogo.js). Medidas em pixels do jogo (480x270); o texto é HTML nítido por cima do canvas.
+export const DIALOGO = {
+  largura: 400,
+  topo: 34, // abaixo do HUD
+  tamanhoFonte: 17, // Patrick Hand; com 2 linhas a caixa fica com ~60 px de altura
+  letrasPorSegundo: 55, // efeito de "máquina de escrever" (tocar completa o texto na hora)
+  esperaMinimaMs: 250, // tempo mínimo na tela antes de aceitar o toque (evita pular sem querer)
+  maxLinhas: 2,
+};
+
+// Fase 2, Espaço Paula De Marco (sem inimigos).
+export const ESPACO = {
+  distanciaConversa: 44, // quão perto (x, em px) o jogador chega para o NPC falar
+  ingressos: 4, // quantos ingressos a Tia Claudia entrega
+  intervaloIngressoMs: 260, // um ingresso voando para o HUD a cada...
+  velocidadeAbu: 190, // o Abu chega correndo
+};
+
 export const CHEFE = {
   // Fase 3, Resgate. Ciclo do Jafar: flutua -> avisa (brilha) -> lança o leque -> desce cansado e piscando
   // (vulnerável) -> sobe de novo. Só leva dano de maçã enquanto está cansado.
@@ -111,8 +129,31 @@ export const CHEFE = {
   macasMinimasAoReiniciar: 3,
 };
 
+// Fase 4 (Tapete). Segurar = sobe, soltar = desce. Acelera até a velocidade máxima, então a resposta é
+// rápida mas sem tranco. A duração vem do tamanho do mapa: (colunas × 16) / velocidadeRolagem.
 export const TAPETE = {
-  duracaoSeg: 40,
+  velocidadeRolagem: 96, // px/s para a direita (mapa de 240 colunas = 40 s)
+  aceleracaoSubida: 900, // segurando
+  aceleracaoDescida: 650, // soltou (desce um pouco mais devagar do que sobe: mais fácil de controlar)
+  velMaxSubida: 165,
+  velMaxDescida: 140,
+  // ao inverter (estava descendo e segurou), a aceleração ganha este multiplicador: resposta "na hora"
+  multiplicadorVirada: 1.8,
+  // onde o tapete fica na tela (x) e até onde ele pode ir (y do centro do sprite)
+  xNaTela: 120,
+  yMin: 34,
+  yMax: 196,
+  invencivelMs: 1200,
+  sapatilhasPerdidas: 2, // por batida
+  inclinacao: 0.0012, // radianos por px/s de velocidade vertical (o tapete inclina ao subir e descer)
+  // caixa de colisão do tapete com os passageiros, menor que o desenho (64x48) para ser justo
+  corpo: { largura: 44, altura: 30, dy: 2 },
+  // pássaros: andam para a esquerda e ondulam
+  passaroVelocidade: 30,
+  passaroOnda: 10,
+  // pouso no fim: tempo do tapete até a porta do teatro e a pausa antes da cena final
+  pousoMs: 1800,
+  esperaFinalMs: 2200,
 };
 
 // Controles de toque, em pixels do jogo (480x270). Num celular deitado 1 px do jogo vale ~1,4 px da tela,
@@ -127,4 +168,12 @@ export const CONTROLES = {
   maca: { x: 366, y: 236, raio: 22 },
   // toques acima desta linha (y) não contam como botão, para não atrapalhar o HUD
   alturaMinima: 120,
+};
+
+// Som (Etapa 9). Volumes de 0 a 1.
+export const SOM = {
+  volumeGeral: 0.8,
+  volumeEfeitos: 0.7,
+  volumeMusica: 0.25, // a música fica baixinha, por baixo dos efeitos
+  volumeVinheta: 0.6,
 };

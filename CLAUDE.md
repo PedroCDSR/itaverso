@@ -27,10 +27,11 @@ Jogo de plataforma 2D curto, para celular, que funciona para explicar o que é o
 
 ## 3. Como trabalhar neste repositório
 
-- Uma etapa por vez. Antes de etapas grandes, apresente um plano curto e espere o OK.
+- Uma etapa por vez. Antes de etapas grandes, apresente um plano curto (até o lançamento, sem esperar OK: ver a regra abaixo).
 - Branch `main` = produção. Cada deploy de produção consome créditos do plano gratuito do Netlify, então ela só recebe merge no lançamento.
 - Branch `dev` = integração. Deploys de `dev` e de PRs são gratuitos.
 - Cada etapa: nova branch `etapa-N-nome` a partir de `dev` e PR contra `dev`. Nunca fazer merge em `main`; isso é decisão do Pedro.
+- **Regra até o lançamento (decisão do Pedro, 01/11/2026):** o Claude decide sozinho, testa ele mesmo no Chromium com Playwright (sem erros no console, capturas conferidas) e **faz o merge do PR no `dev`**. O Pedro só faz o teste final antes do lançamento. Não é preciso esperar OK de plano nem teste do Pedro entre as etapas. `main` continua intocável: o merge em `main` é só do Pedro.
 - Autor dos commits: `Pedro Rocha <65837046+PedroCDSR@users.noreply.github.com>` (`git config` sem `--global`). Decisão própria deste projeto (e-mail "noreply" do GitHub, para não expor o e-mail pessoal).
 - Ao terminar cada etapa:
   - `npm run build` sem erros;
@@ -61,6 +62,7 @@ Jogo de plataforma 2D curto, para celular, que funciona para explicar o que é o
 
 ```
 references/            referências visuais: figurinos/ pessoas/ lugares/ logo/ estilo/ (não vai para o build)
+ferramentas/           geradores de arte (arte/) e de mapas (mapas/), em Python; não vai para o build
 public/
   assets/sprites/      PNGs finais, quando existirem
   assets/audio/        música (MP3)
@@ -182,6 +184,7 @@ h  coração
 K  checkpoint
 P  início do jogador
 E  saída da fase
+N  personagem que conversa (quem é cada um, da esquerda para a direita, vem de uma lista no arquivo da fase)
 ```
 
 Exemplo:
@@ -262,10 +265,17 @@ Cada etapa termina com PR contra `dev` e o checklist da seção 3.
 | 0 | 01/11/2026 | [PR 1](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/1) | Vite 8 + Phaser 4.2.1, estrutura de pastas, fontes woff2 (33 KB), cena de teste com acentos e dados do evento. |
 | 1 | 01/11/2026 | [PR 2](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/2) | Aviso de girar, controles de toque + teclado, pausa ao perder o foco (volta com toque), som liberado no 1º toque, botão de som, tela cheia + trava deitado no Android. Cena de teste com um bloco que anda, pula e joga maçã. |
 | 2 | 01/11/2026 | [PR 3](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/3) | Leitor de mapas em texto, Aladdin original provisório (13 quadros em matriz), tiles 16×16, física com pulo variável, coyote e buffer, câmera com zona morta e folga à frente, céu de entardecer e morros. Pulo alto 69 px, pulo curto 34 px. |
+| 3 | 01/11/2026 | [PR 7](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/7) | Fase 1 com 320 colunas: rua, feira com 6 barracas de toldo, praça com fonte, checkpoint, buracos e plataformas, porta do Espaço. 12 capivaras (pisão = dorme; maçã = come e vai embora; de lado = 1 coração), 38 sapatilhas, 9 maçãs, 3 corações. HUD com corações, maçãs, sapatilhas, pausa e som. Casario de Itajubá no fundo (3 camadas). `dist/` com 1,5 MB. |
+| 4 | 01/11/2026 | [PR 12](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/12) | Fase 2 com 100 colunas: estúdio com espelhos, barras, piso de madeira e tablados. Diálogo em HTML nítido (Patrick Hand, até 2 linhas, máquina de escrever, avança com toque ou tecla). Jasmine, Gênio e Sultão ensaiando (1 fala cada), Tia Claudia no balcão entrega 4 ingressos que voam até o contador do HUD, Abu chega correndo com a notícia. Cena `Chefe` provisória. `?fase=espaco` abre direto na Fase 2. Já junta as Etapas 6 e 9: o jogo vai da Fase 1 ao Final. `dist/` com 1,56 MB. |
+| 5 | 01/11/2026 | [PR PENDENTE] | Fase 3 (Resgate): arena de uma tela (terraço com arcos ao anoitecer), Tia Paula numa gaiola pendurada no canto, Jafar original e provisório que flutua, avisa piscando, lança 3 projéteis em leque e desce cansado e piscando (vulnerável). 5 acertos de maçã (no máximo 2 por descida), barra de vida no topo, maçãs que reaparecem no chão. Vitória: fumaça, gaiola abre, Tia Paula agradece e vai para o Tapete. Robôs no Chromium venceram em 17,8 s (ágil) e 29,6 s (lento, sem desviar, voltou ao início 1 vez). `dist/` com 1,60 MB. |
+| 6 | 01/11/2026 | [PR 8](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/8) | Fase 4 (Tapete): rolagem automática de 40 s + pouso de ~4 s no Teatro do Colégio G9, segurar sobe / soltar desce (toque em qualquer lugar, espaço, W ou seta para cima), pássaros (sabiás), pipas, postes e fios, sapatilhas no céu, batida = pisca e perde 2 sapatilhas. Tela Final provisória. Teste direto: `?fase=tapete`. Feita antes das Etapas 4 e 5 (modo autônomo). `dist/` = 1,51 MB (já com a Etapa 3). |
+| 9 | 01/11/2026 | [PR 10](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/10) | Som feito antes das Etapas 4, 5, 7 e 8. 13 efeitos com ZzFX (pulo, maçã, toldo, pisão, capivara comendo, sapatilha, maçã e coração recolhidos, dano, botão, blip de diálogo, acerto no chefe, projétil), 6 músicas originais em loop (título, Itajubá, Espaço, Chefe, Tapete, Final) e 3 vinhetas (checkpoint, ingresso, vitória), tudo em código. Desbloqueio do áudio refeito para o iPhone. Botão de som e tecla M lembram a escolha. Fase 1, Tapete e Final já ligados. `dist/` com 1,45 MB. |
 
-**Próximo passo (01/11/2026):** o Pedro testa a prévia do PR 3 no celular (sensação de correr e pular) e faz o merge no
-`dev`. Depois, **Etapa 3, Fase 1 (Itajubá)**: capivaras, maçãs com arremesso de verdade, toldos que quicam, fonte,
-sapatilhas, corações, checkpoint, HUD e transição. Apresentar o plano curto e esperar o OK antes de começar.
+**Próximo passo (01/11/2026):** as Etapas 3, 4, 5, 6 e 9 estão no `dev`, e o jogo vai de ponta a ponta com todas as
+fases jogáveis: Fase 1 → Fase 2 → Chefe → Tapete → Final provisório. Próxima: **Etapa 7** (Título, Intro, Final de
+verdade, menu de Pausa com "pular para o final", compartilhar e meta tags). Para testar direto: `?fase=espaco`,
+`?fase=chefe`, `?fase=tapete`, `?fase=final`. O Pedro só testa no fim, antes do lançamento, e revisa as falas em
+`src/data/textos.js`.
 
 **Decisões técnicas da Etapa 1:**
 - O toque é escutado na **div inteira** (`input.touch.target`), não só no canvas: no celular deitado sobram faixas laterais, e é ali que ficam os polegares.
@@ -284,6 +294,78 @@ sapatilhas, corações, checkpoint, HUD e transição. Apresentar o plano curto 
 - Tiles via `Tilemap` do Phaser; `=` e `T` só colidem por cima. O mundo não tem chão invisível: cair abaixo do mapa volta ao checkpoint (por enquanto, o `P`).
 - Objetos do mapa (C, a, s, h, K, F, E) aparecem como marcadores coloridos; ganham comportamento na Etapa 3.
 
+**Decisões técnicas da Etapa 3:**
+- Decisões do Pedro (01/11/2026): ele delegou as escolhas. Branch `etapa-3-itajuba`; encostar de lado numa capivara acordada tira 1 coração.
+- A seção 7.1 (gestão rígida de referências) foi removida a pedido do Pedro. Continua valendo a regra 3: as capturas do jogo original em `references/` servem só de clima, nunca de modelo de personagem, sprite ou cenário.
+- Mapa montado por trechos em `ferramentas/mapas/gerar_itajuba.py` (anota alcance do pulo e do toldo). O `src/levels/itajuba.js` gerado é editável à mão.
+- Arte dos objetos (capivara com 6 quadros, maçã, sapatilha, coração cheio/vazio, fonte com água animada, bandeira) em `ferramentas/arte/gerar_objetos.py` → `src/art/objetos.js`. Casario e torre da igreja são desenhados em canvas no `Preload`; barracas e fachada do Espaço, com `Graphics` na cena.
+- HUD é uma cena separada (`scenes/HUD.js`) que lê o `registry` (`vida`, `vidaMax`, `macas`, `sapatilhas`). O botão de pausa usa a mesma tela "Pausado" da Etapa 1 (`pausarAgora()` em `ui/PausaFoco.js`). O menu de pausa completo fica para a Etapa 7.
+- Toldo: quica 520 segurando PULAR (≈150 px) e 420 sem segurar (≈98 px). Pisar na capivara segurando PULAR também vai mais alto.
+- Maçã: arco baixo que quica até 3 vezes e rola, para acertar capivaras de perto e de longe (até ~140 px). O `overlap` do Arcade entre dois grupos não disparou para maçã × capivara; a checagem é feita à mão no `update()`.
+- Ao voltar ao checkpoint: vida cheia, 1 s de invencibilidade e no mínimo 3 maçãs. Capivaras dormindo continuam dormindo.
+- Coração só é recolhido se faltar vida; maçã só se houver espaço (máximo 9).
+- A tela "JOGAR" provisória continua até a Etapa 7. Ao chegar na porta, a Fase 2 começa (a tela `EmBreve` saiu na Etapa 4).
+- Teste automatizado no Chromium (Playwright) conferiu: pisão, maçã, quique no toldo, checkpoint, buraco, 3 danos, coleta, chegada na porta e jogar de novo, sem erros no console.
+
+**Decisões técnicas da Etapa 4:**
+- Modo autônomo autorizado pelo Pedro (01/11/2026): decisões tomadas sem esperar OK e registradas aqui e no PR.
+- Quando a etapa começou, o `dev` ainda não tinha a Etapa 3; a branch recebeu o PR 7 por merge. Enquanto isso, outras sessões mergearam as Etapas 3, 6 e 9 no `dev`; antes do merge, a branch juntou o `dev` de novo e ligou tudo: som novo no Espaço (música `espaco`, sapatilha, pulo, vinheta `ingresso`, `blip` a cada 3 letras do diálogo), `Chefe` provisória com CONTINUAR → Tapete (música `chefe`) e JOGAR DE NOVO do Final voltando à Fase 1. A tela `EmBreve` saiu.
+- **Texto serrilhado (risco da Etapa 2): resolvido com HTML.** O canvas de 480×270 é ampliado inteiro, então qualquer texto do Phaser fica com a resolução do jogo, por mais que se aumente a fonte. A caixa de diálogo (`ui/Dialogo.js`) é uma `div` dentro de `#jogo` (aparece em tela cheia), posicionada sobre o canvas a cada quadro, com todas as medidas em "pixels do jogo" × escala (variável CSS `--u`). Assim a quebra de linha é a mesma em qualquer tela e a letra sai nítida. Resultado conferido em captura de 844×390 com densidade 3 (iPhone deitado).
+- Diálogo: no máximo 2 linhas (no `npm run dev` aparece aviso no console se passar), "máquina de escrever" no relógio da cena (para junto com a pausa), 1º toque completa o texto, o seguinte avança, seta rosa piscando quando dá para avançar. Só conta o toque que **começou** com a caixa aberta (o dedo que segurava ▶ ao chegar no NPC não pula a fala) e há 250 ms mínimos por caixa. Teclas: espaço, Enter, W, X, J, seta para cima. A tecla que tira da pausa não avança a fala (a escuta é na fase de captura). Ao fechar, `Entrada.ignorarAteSoltar()` evita que o mesmo toque vire pulo.
+- Conversa dispara pela distância só em x (44 px), para ninguém passar pulando por cima sem querer. Enquanto conversa, o jogador fica parado. Quem ainda não falou tem um balãozinho "..." e olha para o jogador.
+- Personagens originais e provisórios em `ferramentas/arte/gerar_espaco.py` → `src/art/espaco.js` (as fotos dos figurinos ainda não chegaram; as imagens em `references/figurinos/` são capturas de jogo, que valem só como clima): Jasmine (trança, tiara, top lilás, calça bufante rosa; 2 quadros de balé), Gênio (pele lilás, coque, colete rosa, cauda de fumaça amarela; flutua), Sultão (turbante rosa com pena, barba branca, capa roxa; bate palmas), Tia Claudia (cabelo preto no ombro, óculos de armação roxa, camiseta rosa com os quadradinhos do logo; quadro com os ingressos na mão), Abu (macaquinho com colete rosa e chapéu roxo; correndo e aflito). Nenhum usa as cores ou silhuetas do filme.
+- Mapa da Fase 2 em `ferramentas/mapas/gerar_espaco.py` → `src/levels/espaco.js`. Novo caractere `N` (personagem); quem é cada um vem de `NPCS_ESPACO`, na ordem. Tiles do estúdio usam a mesma `ORDEM` de `tiles.js` com outra textura (`tiles-espaco`): piso de madeira e tablado lilás (atravessa por baixo).
+- Parede com espelhos e barras desenhada em canvas no `Preload` (faixa de 240 px repetida); cartaz "ALADDIN · 20/11", balcão e porta com `Graphics` na cena.
+- Sem inimigos: o botão MAÇÃ some (`ControlesToque.esconderBotao`). Vida cheia ao entrar; maçãs e sapatilhas da Fase 1 continuam.
+- Ingressos: a Tia Claudia entrega 4 (`ESPACO.ingressos` em `config.js`). O HUD mostra o contador só quando `ingressos` não é `null` (a Fase 1 zera para `null`). O total de sapatilhas das duas fases vai em `sapatilhasTotal`.
+- Quem chega correndo é o **Abu**, pela porta do fundo do estúdio: "O Jafar levou a Tia Paula!". A Tia Claudia fecha com "Corre, Aladdin!". Transição com clarão roxo e escurecida para `scenes/Chefe.js`, tela provisória com sapatilhas, ingressos e CONTINUAR (vai para o Tapete) até a Etapa 5.
+- `?fase=espaco` e `?fase=chefe` entraram na mesma lista do `?fase=tapete` (`FASES` no `Preload`). Valem também na produção; não atrapalham quem joga normalmente.
+- Teste automatizado no Chromium (Playwright), sem erros no console: fase inteira com teclado (4 conversas, 13 caixas, 4 ingressos, chegada no Chefe em 28 s com o robô lendo ~1 s por caixa); com toque em 844×390: Fase 1 → porta → Fase 2, dedo antigo não avança a fala, pausa no meio do diálogo e volta sem avançar, toque avança e fecha.
+
+**Decisões técnicas da Etapa 5 (chefe):**
+- Modo autônomo autorizado pelo Pedro (01/11/2026): decisões tomadas sem esperar OK e registradas aqui e no PR.
+- Começou quando o `dev` ainda só tinha a Etapa 2. A base que o chefe precisava (vida e dano do jogador, HUD, arte de maçã e coração) foi copiada **sem mudanças** do PR 7, para não duplicar código. Antes do merge, a branch juntou o `dev` com as Etapas 3, 4, 6 e 9: a `Chefe` provisória e a `Tapete` provisória desta etapa saíram, ficou o atalho `?fase=` do `Preload`, e o chefe ganhou o som da Etapa 9 e o diálogo da Etapa 4.
+- Ciclo do Jafar (`objects/Jafar.js`, números em `CHEFE` no `config.js`): flutua de um lado para o outro lá em cima (2,2 s) → pisca em amarelo (0,6 s, aviso) → 3 projéteis em leque mirando o jogador (22° entre eles, 115 px/s) → desce cansado até a altura da maçã e pisca por 3,6 s → sobe. Só leva dano de maçã cansado; maçã que bate nele voando só faz um "tic".
+- No máximo **2 acertos por descida** (depois ele sobe na hora), então são pelo menos 3 descidas: a luta não acaba num sopro, mas também não se arrasta. Encostar no Jafar não machuca; só os projéteis tiram coração.
+- **Sem game over e sem frustração:** sem corações, volta ao começo da arena com vida cheia, no mínimo 3 maçãs, e **a vida do Jafar continua como estava** (`manterVidaAoReiniciar`). Ninguém perde o progresso da luta.
+- Maçãs: o jogador entra com as que trouxe (no mínimo 5). Há 2 lugares no chão (`a` no mapa) onde aparece uma maçã; quando alguém pega, outra surge no mesmo lugar 2 s depois.
+- Barra de vida do Jafar no topo, entre os contadores do HUD e os botões de pausa e som (x de 212 a 398, sem encostar no contador de ingressos). Uma marquinha por acerto.
+- A gaiola fica **pendurada** no canto de cima à direita, e não no chão: no celular o botão PULAR cobria a gaiola e a Tia Paula. Na vitória a porta abre e ela pula para o chão.
+- Falas: Jafar e Tia Paula na caixa de diálogo da Etapa 4 (entrada e agradecimento; a luta só começa depois da fala). "Socorro!", "ai!" e "Nããão! Puf!" são balõezinhos rápidos do Phaser. Música `chefe`; efeitos `projetil`, `acertoChefe`, `maca`, `pegarMaca`, `dano` e `pulo`; vinheta `vitoria` quando a gaiola abre. No fim: `scene.stop('HUD')` + `scene.start('Tapete')`.
+- Vindo da Fase 2, o chefe começa direto (o `registry` já tem `vida`). Pelo atalho `?fase=chefe`, aparece a tela JOGAR, porque é o toque que libera o som.
+- Arte original e provisória em `ferramentas/arte/gerar_chefe.py` → `src/art/chefe.js`: **Jafar** (mago de capuz roxo pontudo com beirada lilás, bigodão enrolado, cavanhaque, medalhão de lua dourado, forro magenta, varinha de estrela, cauda de fumaça no lugar das pernas; 4 quadros: flutuar ×2, lançar, tonto com olhos em X), projétil (estrela magenta girando, desenhada 1,5× maior para ver no celular), gaiola dourada (fechada com cadeado / aberta) e **Tia Paula** em pé (aparência A DEFINIR: mesmas cores da Tia Paula do tapete, coque castanho e vestido roxo com faixa amarela; 4 quadros: pedindo socorro ×2, feliz, parada). Nada segue o filme: sem turbante, sem preto e vermelho, sem cajado de cobra. Redesenhar o Jafar quando chegarem as fotos do figurino.
+- Arena em `src/levels/chefe.js` (30×17 tiles, 2 plataformas). Céu do entardecer escurecido, estrelas, lua, morros e um terraço com colunas e arcos desenhado com `Graphics`.
+- Teste automatizado no Chromium (Playwright), sem erros no console: robô ágil (desvia dos projéteis) venceu em 17,8 s; robô sem desvio venceu em 17,5 s levando 1 dano; robô lento (reage 1,2 s depois e joga 1 maçã a cada 0,8 s) venceu em 29,6 s, levou 4 danos e voltou ao início 1 vez. Também conferidos: tela de celular deitado (iPhone 13) com os botões de toque, passagem da Fase 2 para o chefe com os ingressos no HUD e chegada no Tapete de verdade.
+
+**Decisões técnicas da Etapa 6:**
+- O voo do tapete é feito à mão (sem Arcade Physics): aceleração para cima ao segurar, para baixo ao soltar, velocidade máxima nos dois sentidos e aceleração 1,8× ao inverter, para a resposta parecer imediata sem tranco. Sobe até 165 px/s, desce até 140 px/s (`TAPETE` em `config.js`).
+- A câmera anda sozinha (96 px/s); o tapete fica sempre no x 120 da tela. A duração sai do tamanho do mapa: 8 trechos de 30 colunas = 3840 px = 40 s.
+- Mapa do céu em `src/levels/tapete.js`, com legenda própria: `s` sapatilha, `B` pássaro, `Q` pipa, `f` topo de poste (dois `f` na mesma linha ganham um fio). Os trechos têm 30 colunas e são emendados.
+- No limite de baixo o tapete só desliza sobre os telhados, sem dano. Batida: 1,2 s piscando, perde até 2 sapatilhas (caem do tapete), o pássaro foge; postes, fios e pipas continuam no lugar.
+- Arte original em `ferramentas/arte/gerar_tapete.py` → `src/art/tapete.js`: tapete ondulando (3 quadros) com a estampa dos quadrados concêntricos do logo (rosa, amarelo, verde, roxo sobre lilás), Aladdin provisório sentado, **Tia Paula provisória** (coque castanho, vestido roxo; aparência A DEFINIR), sabiá-laranjeira, pipa nas cores da escola, sapatilha de ponta.
+- Fachada do teatro, cidade ao fundo (com uma torre de igreja genérica) e telhados são desenhados em código e **genéricos**: refazer quando chegarem as fotos do Teatro do Colégio G9.
+- O sol desce durante a fase (entardecer). Parallax: morros 0,15, cidade 0,35, telhados 1.
+- `?fase=tapete` ou `?fase=final` no link abre a fase direto (útil na prévia do Netlify). Sem o parâmetro abre a Fase 1 (Itajubá).
+- `scenes/Final.js` é **provisória**: cortinas, cartão do evento, QUERO INGRESSOS (WhatsApp) e JOGAR DE NOVO. A Etapa 7 faz a versão completa.
+- O contador de sapatilhas do tapete usa o `registry` (`sapatilhas`), o mesmo nome do HUD do PR 7.
+- (Etapa 4) JOGAR DE NOVO do Final agora volta à Fase 1.
+
+**Decisões técnicas da Etapa 9 (som):**
+- Tudo em código, sem arquivo de áudio: efeitos com o ZzFX (só o gerador `zzfxG`, em `src/audio/zzfx.js`, MIT, registrado no `CREDITS.md`) e músicas tocadas por um tocador próprio (`src/audio/musica.js`). Peso extra no build: ~10 KB.
+- **Um AudioContext só** (`src/audio/som.js`), com volume geral. O Phaser roda com `audio: { noAudio: true }`, para não criar um segundo contexto que nunca tocaria (o iPhone limita contextos).
+- **Desbloqueio revisado (Etapa 1):** o contexto só é criado dentro de um gesto (nada de aviso no console antes do toque). Os ouvintes de gesto (`touchend`, `pointerup`, `click`, `keydown`, `pointerdown`) ficam ligados o tempo todo: no iPhone o primeiro evento pode não contar como gesto, e o iOS também interrompe o áudio em ligações e troca de app. A cada toque, se o som não está rodando, tenta de novo (resume + som vazio).
+- Efeitos e música podem ser agendados enquanto o contexto ainda está "acordando" (o `resume()` é assíncrono): o som do botão JOGAR, que é o mesmo toque que libera o áudio, toca.
+- Pausa (aba sem foco, celular em pé) suspende o contexto: música e efeitos param juntos e voltam no toque que tira a pausa.
+- Mudo: volume geral a zero e contexto suspenso (economiza bateria). A escolha fica no `localStorage` (`aladdin-som-mudo`). Tecla **M** no computador. Os botões de som se redesenham sozinhos (`quandoMudarMudo`).
+- **Como usar nas cenas novas:** `tocarEfeito('nome')` (`src/audio/efeitos.js`; prontos para as próximas etapas: `blip` para cada caixa ou letra de diálogo, `acertoChefe`, `projetil`, `botao`), `tocarMusica('espaco' | 'chefe' | 'tapete' | 'final' | 'titulo')` no `create()` da cena e `tocarVinheta('ingresso' | 'vitoria' | 'checkpoint')`. Pedir uma música antes do 1º toque é seguro: ela começa quando o som ligar. A vinheta abaixa a música enquanto toca.
+- Partituras em texto (`src/audio/musicas.js`): uma colcheia por ficha, `-` segura, `.` é silêncio, bateria `k s h`. Melodias compostas para o jogo, curtas (4 a 8 compassos), em tons maiores (Lá menor só no chefe), onda quadrada filtrada + baixo em triângulo.
+- Ligados até agora: Fase 1 (música do título na tela JOGAR, depois a de Itajubá), `EmBreve` e `Final` (música de festa), Tapete (música, sapatilha, batida = `dano`, chegada = vinheta de vitória). Espaço e Chefe provisório ligados na Etapa 4; falta a luta do Chefe (Etapa 5) e Título/Intro (Etapa 7).
+- Volumes em `config.js` (`SOM`): música (0,25) mais baixa que os efeitos (0,7). Pico medido no Chromium: ~0,3 para cada música.
+- Teste no Chromium com `--autoplay-policy=user-gesture-required` (igual ao celular): nenhum contexto antes do toque; contexto `running` depois do toque em JOGAR; música agendando; efeitos de pulo, maçã, pisão e coleta tocando; pausa suspende e o toque retoma; mudo lembrado depois de recarregar; nenhum erro no console. Não dá para testar o iPhone de verdade daqui: fica para o teste final do Pedro.
+
 **Riscos anotados:**
-- Texto com Patrick Hand num canvas de 480×270 ampliado pode ficar serrilhado. Avaliar no celular na Etapa 4; se ficar ruim, desenhar o texto de diálogo numa resolução maior (por exemplo, câmera com zoom 2 num jogo de 960×540).
+- A Fase 1 tem ~4.900 px: correndo direto dá ~35 s; com capivaras, toldos e coleta, a estimativa é de 60 a 80 s. Medir no celular e ajustar no polimento (Etapa 10).
+- ~~Texto serrilhado no diálogo~~: resolvido na Etapa 4 com a caixa em HTML. Os outros textos do Phaser (HUD, faixas, avisos) continuam na resolução do jogo; se incomodarem no celular, dá para levá-los para HTML do mesmo jeito.
+- A Fase 2 tem 13 caixas de diálogo. Com leitura de ~2,5 s por caixa, a fase fica perto de 45 s (o limite de cima). Se ficar longa no teste com crianças, cortar falas em `textos.js`.
+- Som no iPhone: só testado em Chromium. Se não tocar depois do 1º toque no Safari, conferir primeiro a chave de silencioso (decisão da Etapa 1: o jogo respeita a chave).
 - O Phaser completo pesa ~1,2 MB minificado (~330 KB comprimido na transferência). Cabe no orçamento; se apertar, trocar pelo build só com Arcade Physics.

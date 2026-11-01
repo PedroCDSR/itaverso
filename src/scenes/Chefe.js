@@ -3,11 +3,16 @@ import { LARGURA, ALTURA, TILE, CORES, CORES_CSS, FONTES, JOGADOR as J, MACA, CH
 import { TEXTOS } from '../data/textos.js';
 import { Entrada } from '../ui/Entrada.js';
 import { tentarTelaCheia } from '../ui/telaCheia.js';
-import { bipe } from '../audio/som.js';
+import { tocarEfeito } from '../audio/efeitos.js';
+import { tocarMusica, tocarVinheta, pararMusica } from '../audio/musica.js';
+import { Dialogo } from '../ui/Dialogo.js';
 import { lerMapa, TIPO_TILE } from '../levels/leitor.js';
 import { CHEFE as MAPA_CHEFE } from '../levels/chefe.js';
 import { Jogador } from '../objects/Jogador.js';
 import { Jafar } from '../objects/Jafar.js';
+
+// cor do nome na caixa de diálogo
+const COR_NOME = { jafar: CORES_CSS.roxo, paula: '#D57FCF' };
 
 // Fase 3, Resgate (CLAUDE.md, seção 11, cena 5). Arena de uma tela, sem rolagem.
 // A Tia Paula está presa numa gaiola no canto direito. O Jafar flutua, lança 3 projéteis em leque e depois desce
@@ -18,9 +23,10 @@ export class Chefe extends Phaser.Scene {
     super('Chefe');
   }
 
-  // dados.direto = true: chegou de outra fase, já começa (sem a tela JOGAR)
+  // Vindo da Fase 2 o jogo já tem vida no registry: começa direto. No atalho ?fase=chefe (registry vazio) mostra a
+  // tela JOGAR, porque o primeiro toque é que libera o som e a tela cheia.
   init(dados) {
-    this.direto = !!dados?.direto;
+    this.direto = !!dados?.direto || this.registry.has('vida');
   }
 
   create() {
@@ -60,6 +66,7 @@ export class Chefe extends Phaser.Scene {
 
     // --- estado do HUD (vem da fase anterior; no atalho ?fase=chefe começa do zero) ---
     const reg = this.registry;
+    // ingressos e sapatilhas vêm das fases anteriores e passam adiante sem mudar
     reg.set({
       vida: J.coracoes,
       vidaMax: J.coracoes,
@@ -92,6 +99,7 @@ export class Chefe extends Phaser.Scene {
 
     this.criarBarraChefe();
     this.entrada = new Entrada(this);
+    this.dialogo = new Dialogo(this);
     this.cameras.main.fadeIn(300);
 
     if (this.direto) this.comecar(null);
@@ -130,9 +138,10 @@ export class Chefe extends Phaser.Scene {
 
   // Barra de vida do chefe no topo, entre os contadores do HUD e os botões de pausa e som.
   criarBarraChefe() {
-    const x = 196;
+    // começa depois dos contadores do HUD (que vão até x≈196 quando há ingressos) e termina antes da pausa (x≈410)
+    const x = 212;
     const y = 12;
-    const largura = 150;
+    const largura = 186;
     this.barra = { x: x + 50, y, largura: largura - 50, altura: 8 };
     this.add
       .text(x, y + 4, TEXTOS.chefe.nomeChefe, { fontFamily: FONTES.titulo, fontSize: '8px', color: CORES_CSS.branco })
@@ -199,17 +208,33 @@ export class Chefe extends Phaser.Scene {
     this.jogando = true;
     this.scene.launch('HUD');
     this.scene.bringToTop('HUD');
-    bipe(520, 0.12);
+    if (tela) tocarEfeito('botao');
+    tocarMusica('chefe');
 
     const jf = this.jafar;
+    const t = TEXTOS.chefe;
+    // aparece mais baixo, para não ficar escondido atrás da caixa de diálogo, e sobe quando a luta começa
+    jf.y = 150;
     this.tweens.add({ targets: jf, alpha: 1, duration: 500 });
     this.fumaca(jf.x, jf.y, 8);
-    this.balao(jf.x, jf.y - 44, TEXTOS.chefe.jafarEntrada, 1700);
-    this.time.delayedCall(1100, () => this.balao(this.paula.x - 20, this.paula.y - 62, TEXTOS.chefe.paulaSocorro, 1300));
-    this.time.delayedCall(1900, () => {
-      this.faixa(TEXTOS.chefe.objetivo);
-      jf.comecar(this.time.now);
-      this.inicioLuta = this.time.now;
+    this.time.delayedCall(1100, () => this.balao(this.paula.x - 20, this.paula.y - 62, t.paulaSocorro, 1300));
+    // a fala espera o toque; a luta só começa depois dela
+    this.time.delayedCall(600, async () => {
+      await this.dialogo.mostrar([
+        { nome: t.nomeJafar, texto: t.jafarEntrada, cor: COR_NOME.jafar },
+        ...t.paulaAntes.map((texto) => ({ nome: t.nomePaula, texto, cor: COR_NOME.paula })),
+      ]);
+      this.faixa(t.objetivo);
+      this.tweens.add({
+        targets: jf,
+        y: C.alturaVoo,
+        duration: 500,
+        ease: 'Sine.inOut',
+        onComplete: () => {
+          jf.comecar(this.time.now);
+          this.inicioLuta = this.time.now;
+        },
+      });
     });
   }
 
@@ -230,7 +255,7 @@ export class Chefe extends Phaser.Scene {
       this.physics.velocityFromRotation(ang, C.velocidadeProjetil, p.body.velocity);
     }
     this.cameras.main.shake(80, 0.003);
-    bipe(300, 0.15);
+    tocarEfeito('projetil');
   }
 
   atingido(p) {
@@ -242,7 +267,7 @@ export class Chefe extends Phaser.Scene {
     const vida = this.jogador.levarDano(p.x, agora);
     this.registry.set('vida', vida);
     this.cameras.main.shake(120, 0.006);
-    bipe(180, 0.18);
+    tocarEfeito('dano');
     if (vida <= 0) this.voltarAoInicio();
   }
 
@@ -275,7 +300,7 @@ export class Chefe extends Phaser.Scene {
   pegarMaca(m) {
     if (!m.active || this.registry.get('macas') >= J.macasMaximo) return;
     this.registry.inc('macas', 1);
-    bipe(760, 0.06);
+    tocarEfeito('pegarMaca');
     this.tweens.killTweensOf(m);
     m.disableBody(false, false);
     this.tweens.add({ targets: m, y: m.y - 14, alpha: 0, scale: 1.4, duration: 220, onComplete: () => m.destroy() });
@@ -294,7 +319,7 @@ export class Chefe extends Phaser.Scene {
     m.setVelocity(MACA.velocidadeX * dir + j.body.velocity.x * 0.3, MACA.velocidadeY);
     m.setAngularVelocity(720 * dir);
     this.time.delayedCall(MACA.duracaoMs, () => m.active && m.destroy());
-    bipe(880, 0.05);
+    tocarEfeito('maca');
   }
 
   macaQuicou(m) {
@@ -318,13 +343,13 @@ export class Chefe extends Phaser.Scene {
       if (r === 'bateu') {
         // não estava cansado: a maçã só bate e cai
         this.estouro(m.x, m.y, CORES.amarelo);
-        bipe(1400, 0.03);
+        tocarEfeito('pisao', { volume: 0.5 });
       } else {
         this.atualizarBarra();
         this.estouro(m.x, m.y, 0xe0453a);
         this.aviso(jf.x, jf.y - 36, TEXTOS.chefe.ai);
         this.cameras.main.shake(90, 0.004);
-        bipe(990, 0.1);
+        tocarEfeito('acertoChefe');
       }
       m.destroy();
     }
@@ -343,8 +368,10 @@ export class Chefe extends Phaser.Scene {
     const j = this.jogador;
     j.body.setVelocityX(0);
 
-    this.balao(jf.x, jf.y - 44, TEXTOS.chefe.jafarDerrotado, 900);
-    bipe(220, 0.3);
+    const t = TEXTOS.chefe;
+    pararMusica(0.4);
+    this.balao(jf.x, jf.y - 44, t.jafarDerrotado, 900);
+    tocarEfeito('acertoChefe');
     // nuvem de fumaça e o Jafar some
     this.time.delayedCall(700, () => {
       this.fumaca(jf.x, jf.y, 18);
@@ -355,8 +382,7 @@ export class Chefe extends Phaser.Scene {
     this.time.delayedCall(1500, () => {
       this.gaiola.setFrame(1);
       this.estouro(this.gaiola.x, this.gaiola.y - 30, CORES.amarelo);
-      bipe(784, 0.1);
-      this.time.delayedCall(120, () => bipe(1046, 0.18));
+      tocarVinheta('vitoria');
       this.paula.play('paula-feliz');
       this.paula.setDepth(6);
       // pula da gaiola para o chão, num arco
@@ -371,13 +397,15 @@ export class Chefe extends Phaser.Scene {
         ],
       });
     });
-    this.time.delayedCall(2400, () => this.balao(this.paula.x - 10, this.paula.y - 62, TEXTOS.chefe.paulaObrigada, 2400));
-    this.time.delayedCall(5000, () => {
+    // a Tia Paula agradece (caixa de diálogo, toque para avançar) e os dois vão para o tapete
+    this.time.delayedCall(2500, async () => {
+      j.setFlipX(this.paula.x < j.x);
+      await this.dialogo.mostrar(t.paulaObrigada.map((texto) => ({ nome: t.nomePaula, texto, cor: COR_NOME.paula })));
       const cam = this.cameras.main;
       cam.fadeOut(700, 158, 158, 255);
       cam.once('camerafadeoutcomplete', () => {
         this.scene.stop('HUD');
-        this.scene.start('Tapete', { direto: true });
+        this.scene.start('Tapete');
       });
     });
   }
@@ -491,7 +519,7 @@ export class Chefe extends Phaser.Scene {
     const temMaca = this.registry.get('macas') > 0;
     const pulouAntes = j.body.velocity.y < 0;
     const soltouMaca = j.atualizar(this.entrada, agora, delta, temMaca);
-    if (!pulouAntes && j.body.velocity.y < -200 && this.entrada.pularApertou) bipe(660, 0.08);
+    if (!pulouAntes && j.body.velocity.y < -200 && this.entrada.pularApertou) tocarEfeito('pulo');
     if (soltouMaca) this.arremessar();
     else if (this.entrada.macaApertou && !temMaca) this.aviso(j.x, j.y - 52, TEXTOS.chefe.semMaca);
     this.macasAcertaram();

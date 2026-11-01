@@ -14,6 +14,28 @@ python3 ferramentas/arte/gerar_jogador.py . /tmp
 python3 ferramentas/arte/gerar_tiles.py . /tmp
 ```
 
+```bash
+python3 ferramentas/arte/gerar_tapete.py . /tmp
+```
+
+```bash
+python3 ferramentas/arte/gerar_objetos.py . /tmp
+```
+
+```bash
+python3 ferramentas/arte/gerar_espaco.py . /tmp
+```
+
+Os mapas das fases têm geradores próprios:
+
+```bash
+python3 ferramentas/mapas/gerar_itajuba.py > src/levels/itajuba.js
+```
+
+```bash
+python3 ferramentas/mapas/gerar_espaco.py > src/levels/espaco.js
+```
+
 Rodar um gerador **sobrescreve** a matriz correspondente em `src/art/`: edições feitas à mão nela se perdem.
 
 A arte da Fase 3 (Jafar, projétil, gaiola e Tia Paula) vem de outro gerador. A Tia Paula tem aparência A DEFINIR:

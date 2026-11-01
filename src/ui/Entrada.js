@@ -29,6 +29,13 @@ export class Entrada {
     this.pularApertou = this.macaApertou = false;
   }
 
+  // Depois de fechar um diálogo: um botão que ainda está apertado só vale de novo depois de solto
+  // (senão o toque/tecla que fechou a caixa viraria um pulo no quadro seguinte).
+  ignorarAteSoltar() {
+    this.antes.pular = true;
+    this.antes.maca = true;
+  }
+
   setModoTapete(ligado) {
     this.toque.setModoTapete(ligado);
   }

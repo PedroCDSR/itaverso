@@ -3,8 +3,8 @@
 Jafar (chefe), projétil mágico, gaiola e Tia Paula.
 - Jafar: design ORIGINAL e provisório (mago de capuz roxo, bigodão enrolado, medalhão de lua, varinha de estrela).
   Não segue nenhum filme nem jogo; deve ser redesenhado quando chegarem as fotos do figurino do espetáculo.
-- Tia Paula: aparência A DEFINIR (CLAUDE.md, seção 8). Desenho NEUTRO de professora de dança (coque, blusa rosa,
-  saia lilás), num sprite separado ('tiaPaula', quadros 32x48) para trocar fácil por PNG ou por um novo gerador.
+- Tia Paula: aparência A DEFINIR (CLAUDE.md, seção 8). Desenho NEUTRO de professora de dança (coque, vestido roxo
+  com faixa amarela, igual à Tia Paula do tapete), num sprite separado ('tiaPaula', quadros 32x48) para trocar fácil por PNG ou por um novo gerador.
 
 Saída: src/art/chefe.js (matrizes) e uma prévia PNG ampliada para conferir.
 Uso: python3 ferramentas/arte/gerar_chefe.py <repo> <pasta_previa>
@@ -27,13 +27,14 @@ PALETA = {
     'O': '#B98A2A',  # dourado sombra
     'y': '#F9FCBB',  # amarelo claro (estrela, brilho)
     'b': '#6E4A2A',  # varinha
-    # Tia Paula
-    'h': '#4A2E22',  # cabelo
-    'H': '#6B4434',  # cabelo brilho
-    'r': '#FFB0FA',  # blusa rosa (cor da escola)
-    'R': '#D57FCF',  # blusa sombra
-    'v': '#9E9EFF',  # saia lilás
-    'V': '#7C7CE0',  # saia sombra
+    # Tia Paula (mesmas cores da Tia Paula do tapete, em gerar_tapete.py)
+    'h': '#5A3A2A',  # cabelo
+    'H': '#3E2619',  # cabelo sombra
+    'q': '#E8B48A',  # pele
+    'Q': '#C48C64',  # pele sombra
+    'v': '#6D6BD9',  # vestido roxo (cor da escola)
+    'V': '#4F4DB0',  # vestido sombra
+    'r': '#FFB0FA',  # sapatilha rosa
     'n': '#9A4040',  # boca
 }
 
@@ -251,25 +252,27 @@ def gaiola(aberta):
 def tia_paula(pose):
     """pose: 'presa1', 'presa2' (pedindo ajuda), 'feliz' (braços para cima), 'parada'."""
     q = Quadro(32, 48)
-    # saia longa lilás (rodada)
+    # saia longa rodada do vestido
     q.poligono([(11, 28), (21, 28), (25, 44), (7, 44)], 'v')
     q.poligono([(18, 28), (21, 28), (25, 44), (21, 44)], 'V')
     # sapatilhas
     q.ret(10, 45, 14, 46, 'r'); q.ret(18, 45, 22, 46, 'r')
-    q.ret(11, 44, 13, 44, 's'); q.ret(19, 44, 21, 44, 's')
-    # blusa rosa
-    q.poligono([(11, 18), (21, 18), (22, 29), (10, 29)], 'r')
-    q.ret(19, 18, 21, 29, 'R')
+    q.ret(11, 44, 13, 44, 'q'); q.ret(19, 44, 21, 44, 'q')
+    # parte de cima do vestido e faixa amarela na cintura
+    q.poligono([(11, 18), (21, 18), (22, 29), (10, 29)], 'v')
+    q.ret(19, 18, 21, 29, 'V')
+    q.ret(10, 27, 22, 28, 'y')
     # pescoço e cabeça
-    q.ret(15, 15, 17, 18, 'S')
-    q.elipse(16, 10, 5, 6, 's')
-    q.ret(19, 7, 21, 13, 'S')
-    q.elipse(15.5, 10, 4.5, 5.5, 's')
+    q.ret(15, 15, 17, 18, 'Q')
+    q.elipse(16, 10, 5, 6, 'q')
+    q.ret(19, 7, 21, 13, 'Q')
+    q.elipse(15.5, 10, 4.5, 5.5, 'q')
     # cabelo preso em coque alto (professora de dança)
     q.elipse(16, 6, 5.5, 3.5, 'h', so_se=lambda x, y: y <= 7)
     q.ret(19, 5, 21, 11, 'h')
     q.elipse(18, 1.8, 3, 2.2, 'h')
     q.px(17, 1, 'H'); q.px(14, 5, 'H')
+    q.px(11, 12, 'y')  # brinco
     # olhos e boca
     q.ret(13, 9, 13, 10, 'e'); q.ret(17, 9, 17, 10, 'e')
     if pose == 'feliz':
@@ -280,14 +283,14 @@ def tia_paula(pose):
         q.elipse(15, 13.5, 1.2, 1.2, 'n')  # "socorro!"
     # braços
     if pose in ('presa1', 'feliz'):
-        q.linha(11, 19, 7, 8, 2.5, 'r'); q.elipse(7, 7, 1.6, 1.6, 's')
-        q.linha(21, 19, 25, 8, 2.5, 'R'); q.elipse(25, 7, 1.6, 1.6, 's')
+        q.linha(11, 19, 7, 8, 2.5, 'v'); q.elipse(7, 7, 1.6, 1.6, 'q')
+        q.linha(21, 19, 25, 8, 2.5, 'V'); q.elipse(25, 7, 1.6, 1.6, 'q')
     elif pose == 'presa2':
-        q.linha(11, 19, 6, 11, 2.5, 'r'); q.elipse(6, 10, 1.6, 1.6, 's')
-        q.linha(21, 19, 24, 27, 2.5, 'R'); q.elipse(24, 28, 1.6, 1.6, 's')
+        q.linha(11, 19, 6, 11, 2.5, 'v'); q.elipse(6, 10, 1.6, 1.6, 'q')
+        q.linha(21, 19, 24, 27, 2.5, 'V'); q.elipse(24, 28, 1.6, 1.6, 'q')
     else:
-        q.linha(11, 19, 9, 28, 2.5, 'r'); q.elipse(9, 29, 1.6, 1.6, 's')
-        q.linha(21, 19, 23, 28, 2.5, 'R'); q.elipse(23, 29, 1.6, 1.6, 's')
+        q.linha(11, 19, 9, 28, 2.5, 'v'); q.elipse(9, 29, 1.6, 1.6, 'q')
+        q.linha(21, 19, 23, 28, 2.5, 'V'); q.elipse(23, 29, 1.6, 1.6, 'q')
     return q.contorno().texto()
 
 
