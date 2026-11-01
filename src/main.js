@@ -3,6 +3,8 @@ import { LARGURA, ALTURA, CORES_CSS, JOGADOR } from './config.js';
 import { Boot } from './scenes/Boot.js';
 import { Preload } from './scenes/Preload.js';
 import { Teste } from './scenes/Teste.js';
+import { Tapete } from './scenes/Tapete.js';
+import { Final } from './scenes/Final.js';
 import { ligarPausaGlobal } from './ui/pausaGlobal.js';
 import { iniciarAvisoGirar } from './ui/AvisoGirar.js';
 import { iniciarPausaFoco } from './ui/PausaFoco.js';
@@ -36,7 +38,7 @@ const config = {
     default: 'arcade',
     arcade: { gravity: { x: 0, y: JOGADOR.gravidade }, debug: false },
   },
-  scene: [Boot, Preload, Teste],
+  scene: [Boot, Preload, Teste, Tapete, Final],
 };
 
 // Espera as fontes antes de criar o jogo: o Phaser desenha texto em canvas e não troca a fonte depois.

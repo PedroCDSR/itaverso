@@ -14,4 +14,8 @@ python3 ferramentas/arte/gerar_jogador.py . /tmp
 python3 ferramentas/arte/gerar_tiles.py . /tmp
 ```
 
+```bash
+python3 ferramentas/arte/gerar_tapete.py . /tmp
+```
+
 Rodar um gerador **sobrescreve** a matriz correspondente em `src/art/`: edições feitas à mão nela se perdem.
