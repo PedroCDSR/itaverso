@@ -20,18 +20,47 @@ Jogo de plataforma 2D curto, para celular, que funciona para explicar o que é o
 
 1. **Mobile first.** Paisagem, toque, roda no Safari do iPhone e no Chrome do Android. Teclado funciona no computador como bônus.
 2. **Fácil e curto.** Sem game over. Ao perder todos os corações, o jogador volta ao último checkpoint com vida cheia. Duração total de 2 a 3 minutos.
-3. **Jogabilidade inspirada no Aladdin do Super Nintendo (1993), arte 100% original.** A referência é a *sensação* de jogo: correr, pular na cabeça dos inimigos, arremessar maçãs, quicar em toldos, voar de tapete. Mecânicas e números de física (gravidade, força do pulo, velocidade) podem servir de referência. **Nunca** usar sprites, cenários, músicas, sons, fontes ou logotipos extraídos do jogo original (Capcom/Disney) nem copiar o visual do filme: o site é público e promove a escola, então isso seria infração de direito autoral. Toda arte segue a seção 7 e todos os personagens seguem a seção 8. (Decisão de 01/11/2026.)
+3. **Jogabilidade e linguagem visual inspiradas no Aladdin do Super Nintendo (1993); personagens, cenários e arquivos próprios.** (Revisada em 01/11/2026; substitui a redação anterior, que era lida como proibição de estudar o estilo.)
+   - **Permitido e esperado (referência de desenvolvimento):** estudar a fundo as capturas em `references/estilo/`:
+     proporção do corpo e do personagem na tela, composição, perspectiva, camadas, arquitetura dos cenários, paleta,
+     iluminação, sombreamento (número de tons), contorno, densidade de detalhe, ritmo e técnica de animação. Usar
+     essas medidas como **padrão mínimo de qualidade** e criar personagens e cenários próprios com qualidade técnica e
+     estética comparável. Mecânicas e números de física também servem de referência. Estilo, técnica e convenções do
+     gênero (arenito ao entardecer, toldos de pano que quicam, maçãs, tapete voador) **não** são cópia.
+   - **Proibido:** extrair, recortar ou reaproveitar sprites, tiles, cenários, músicas, sons, fontes ou logotipos do
+     jogo (Capcom/Disney) ou do filme; decalcar (desenhar por cima) ou redesenhar pixel a pixel qualquer elemento
+     deles; reproduzir o **design** de personagens protegidos como a Disney os desenhou (ex.: Aladdin de colete roxo,
+     fez vermelho e calça bufante branca; o macaco Abu; Jafar, Gênio, Jasmine e Iago dos filmes) ou a composição
+     específica de uma tela do jogo; usar ou redistribuir arquivos de terceiros sem licença. O site é público e
+     promove a escola.
+   - **Teste prático:** se alguém, vendo o nosso sprite ao lado do original, disser "é o mesmo personagem
+     redesenhado", passou do limite. Se disser "tem o mesmo nível e o mesmo jeito de pixel art", está certo.
+   - Os personagens seguem os figurinos do espetáculo da escola (seção 8). Assets de terceiros com licença que permita
+     o uso podem entrar (`references/licenciados/`), sempre registrados em `CREDITS.md`.
+   - A restrição de direito autoral **nunca** justifica arte genérica, simplificada ou abaixo do padrão medido nas
+     referências. Toda arte segue a seção 7 (inclusive o protocolo 7.1) e todos os personagens seguem a seção 8.
 4. **Leve.** Peso total do site abaixo de 3 MB (limite de 5 MB). A hospedagem é o plano gratuito do Netlify, que cobra créditos por banda.
 5. **Site estático.** Sem backend, sem login, sem coleta de dados pessoais.
 6. **Textos editáveis num lugar só.** Todo texto exibido no jogo e todos os dados do evento ficam em `src/data/`. Português do Brasil, frases curtas (no máximo 2 linhas por caixa de diálogo), tom leve e divertido para crianças.
 
 ## 3. Como trabalhar neste repositório
 
-- Uma etapa por vez. Antes de etapas grandes, apresente um plano curto (até o lançamento, sem esperar OK: ver a regra abaixo).
+- **Autonomia até a entrega final (decisão do Pedro, 01/11/2026).** O Pedro define a direção e avalia o jogo pronto;
+  a condução técnica e operacional é do Claude. Não pedir aprovação de etapas, protótipos, escalas, personagens,
+  cenários ou implementações parciais. Nas decisões técnicas e artísticas, escolher a alternativa que melhor atende ao
+  objetivo final, testar comparando, descartar o que ficar abaixo do padrão e continuar trabalhando até atingir os
+  critérios. Corrigir integração, inconsistências, duplicações e bugs sem esperar OK. Manter o jogo funcionando no
+  `dev` o tempo todo e registrar decisões no PR e na seção "Status".
+- **Só consultar o Pedro** quando houver impedimento real que só ele resolve: comprar ou autorizar um asset de
+  terceiros, enviar fotos ou informações pessoais, mudança irreversível de escopo, ou algo que impeça continuar.
+  Mesmo assim, seguir com uma alternativa provisória **claramente marcada** (seção 7.1) para não travar o resto.
+- Falta de aprovação intermediária nunca justifica baixar a qualidade: uma etapa só termina quando atende aos
+  critérios da seção 12 e, para arte, ao protocolo 7.1.
+- Uma etapa por vez no `dev` (janelas em paralelo estouram o limite de uso e geram conflitos). Antes de etapas grandes, escreva um plano curto no PR, sem esperar OK.
 - Branch `main` = produção. Cada deploy de produção consome créditos do plano gratuito do Netlify, então ela só recebe merge no lançamento.
 - Branch `dev` = integração. Deploys de `dev` e de PRs são gratuitos.
 - Cada etapa: nova branch `etapa-N-nome` a partir de `dev` e PR contra `dev`. Nunca fazer merge em `main`; isso é decisão do Pedro.
-- **Regra até o lançamento (decisão do Pedro, 01/11/2026):** o Claude decide sozinho, testa ele mesmo no Chromium com Playwright (sem erros no console, capturas conferidas) e **faz o merge do PR no `dev`**. O Pedro só faz o teste final antes do lançamento. Não é preciso esperar OK de plano nem teste do Pedro entre as etapas. `main` continua intocável: o merge em `main` é só do Pedro.
+- **Regra até o lançamento (decisão do Pedro, 01/11/2026):** o Claude decide sozinho, testa ele mesmo no Chromium com Playwright (sem erros no console, capturas conferidas) e **faz o merge do PR no `dev`**. O Pedro só avalia o produto final antes do lançamento. Não é preciso esperar OK de plano nem teste do Pedro entre as etapas. `main` continua intocável: o merge em `main` é só do Pedro.
 - Autor dos commits: `Pedro Rocha <65837046+PedroCDSR@users.noreply.github.com>` (`git config` sem `--global`). Decisão própria deste projeto (e-mail "noreply" do GitHub, para não expor o e-mail pessoal).
 - Ao terminar cada etapa:
   - `npm run build` sem erros;
@@ -61,7 +90,9 @@ Jogo de plataforma 2D curto, para celular, que funciona para explicar o que é o
 ## 5. Estrutura de pastas
 
 ```
-references/            referências visuais: figurinos/ pessoas/ lugares/ logo/ estilo/ (não vai para o build)
+references/            biblioteca de referências (seção 7.1; não vai para o build)
+  visual-reference-index.md   índice: cada arte do jogo, suas referências, situação e diferenças
+  figurinos/ pessoas/ lugares/ logo/ estilo/ licenciados/   cada uma com seu reference-notes.md
 ferramentas/           geradores de arte (arte/) e de mapas (mapas/), em Python; não vai para o build
 public/
   assets/sprites/      PNGs finais, quando existirem
@@ -119,14 +150,65 @@ O botão de ingresso abre `https://wa.me/<whatsapp>?text=<mensagem com encodeURI
 
 **Pipeline de arte:**
 
-- Tiles de 16×16. Personagens em quadros de 32×48 (corpo útil de cerca de 24×40).
-- Enquanto não houver PNGs, cada sprite é uma matriz de texto em `src/art/` (um caractere por pixel, cada caractere mapeado a uma cor), convertida em textura no `Preload`. Isso permite arte original simples sem ferramenta externa.
+- Tiles de 16×16. **Escala dos personagens (decisão de 01/11/2026):** quadros de 48×64, corpo do Aladdin com ~56 a
+  60 px de altura (≈ 21 a 22% da altura da tela de 270). Nas capturas de referência o herói ocupa ≈ 28% da tela; com
+  os 32×48 antigos ficava em ≈ 15%, pequeno demais para o nível de detalhe esperado. Hitbox, pulos e mapas são
+  reajustados junto (seção 9 continua valendo). Os números exatos ficam em `references/estilo/reference-notes.md`.
+- Enquanto não houver PNGs, cada sprite é uma matriz de texto em `src/art/` (um caractere por pixel, cada caractere mapeado a uma cor), convertida em textura no `Preload`. A matriz é só o formato do arquivo: o padrão de qualidade é o da seção 7.1, não "arte simples".
+- **Fonte única:** cada personagem e cada objeto tem **um** sprite em `src/art/`, usado por todas as cenas. Nada de redesenhar o mesmo personagem em outra cena com `Graphics` ou num gerador paralelo.
 - Quando existir `public/assets/sprites/<nome>.png` com os mesmos tamanhos de quadro, o `Preload` usa o PNG no lugar da matriz.
 - Animações mínimas do jogador: parado (2 quadros), correndo (6), pulando (1), caindo (1), arremessando (2), dano (1).
 
+### 7.1 Protocolo de fidelidade visual
+
+(Recriada em 01/11/2026. A primeira versão existiu das 02:16 às 02:22 e foi removida; esta corrige os problemas dela:
+proibia estudar proporções das capturas, exigia não inventar quando não havia referência e tinha tabelas que ninguém
+preenchia.)
+
+Vale para personagens, cenários, objetos, animações, HUD e menus. Fidelidade visual é requisito de qualidade **desde o
+primeiro rascunho**, não polimento posterior.
+
+**Tipos de referência e o que se exige de cada um:**
+
+| Pasta | Conteúdo | O que seguir com fidelidade |
+|---|---|---|
+| `figurinos/` | fotos dos figurinos do espetáculo | design do personagem: silhueta, peças, cores, acessórios |
+| `pessoas/` | Tia Paula e Tia Claudia (com o OK delas) | traços que identificam: cabelo, óculos, roupa típica |
+| `lugares/` | Itajubá, Espaço, Teatro do Colégio G9 | arquitetura, cores, elementos marcantes |
+| `logo/` | logo da escola | paleta e estampa do tapete |
+| `estilo/` | capturas de jogos (Aladdin do SNES) | **linguagem e qualidade**: escala, tons, contorno, luz, densidade, animação. Nunca o design (regra 3) |
+| `licenciados/` | assets de terceiros com licença | uso direto conforme a licença, com `CREDITS.md` |
+
+**Antes de implementar:**
+
+1. Abrir as imagens relevantes; ler o `reference-notes.md` da pasta e o `references/visual-reference-index.md`.
+2. Escrever no PR a **ficha da arte**: referências usadas e medidas-alvo (altura em px e % da tela, número de tons por
+   material, cores-chave em hex, tipo de contorno, número de quadros, densidade de detalhe do cenário).
+
+**Durante:**
+
+3. Um sprite por personagem ou objeto, usado por todas as cenas (seção 7, "Fonte única").
+4. Arte provisória é marcada como **provisória** no índice e nunca é tratada como final.
+
+**Depois (obrigatório para concluir):**
+
+5. Gerar uma **prancha comparativa** lado a lado (referência × nossa, mesma escala) em `ferramentas/arte/previas/`.
+6. Listar as diferenças de proporção, silhueta, cores, composição, sombreamento e acabamento.
+7. Corrigir o que for possível. Registrar no índice e no PR as diferenças que ficam e o motivo.
+
+**Não está concluída se:** só "dá para reconhecer"; funciona, mas está abaixo das medidas-alvo; ou as diferenças não
+foram registradas.
+
+**Referência insuficiente:** dizer o que falta, o impacto e o que o Pedro precisa enviar (seção 13). Até lá, fazer uma
+versão com a qualidade técnica completa, marcada como **provisória**, sem inventar traços de identidade de pessoas
+reais (rosto, cabelo, roupa típica) além do que já está escrito na seção 8. Nunca apresentá-la como final.
+
+**Relação com a regra 3:** a regra 3 define o que não pode ser copiado; esta seção define o nível de qualidade. Nenhuma
+das duas justifica entregar arte genérica.
+
 ## 8. Personagens
 
-Todos com design original. O elenco se baseia nos figurinos do espetáculo (`references/figurinos/`); nunca reproduzir o visual de versões em filme, animação ou jogo. Não retratar o rosto de alunos; usar só os figurinos como referência.
+Todos com design próprio. O elenco se baseia nos figurinos do espetáculo (`references/figurinos/`): desenhar a versão da escola, com a qualidade medida em `references/estilo/`. Não reproduzir o design de personagens de filme, animação ou jogo (regra 3); estudar a linguagem visual deles é permitido. Não retratar o rosto de alunos; usar só os figurinos como referência. Enquanto não houver fotos, cada personagem tem um design próprio provisório, com qualidade completa e marcado no índice (seção 7.1).
 
 - **Aladdin** (jogador): herói ágil, com o figurino do espetáculo.
 - **Tia Claudia** (staff do Espaço): usa óculos e tem cabelo preto. Entrega os ingressos.
@@ -234,9 +316,9 @@ Cada etapa termina com PR contra `dev` e o checklist da seção 3.
 | 5 | Fase 3, Chefe | dá para vencer em menos de 1 minuto sem frustração |
 | 6 | Fase 4, Tapete | o controle de segurar e soltar fica natural |
 | 7 | Título, intro, final, pausa, compartilhar, meta tags (título, descrição, Open Graph com `og-image.png`, favicon) | **jogo completo de ponta a ponta (meta: 08/11)** |
-| 8 | Arte: sprites originais em matriz ou PNGs fornecidos, cenários, parallax, animações | visual coerente com a paleta |
+| 8 | Arte, em 3 partes: **8.0** guia de linguagem visual (medidas-alvo tiradas de `references/estilo/`, escala 48×64, ajuste de hitbox e pulos); **8A** personagens (um sprite por personagem, ligado a todas as cenas, sem duplicatas); **8B** cenários de todas as fases, parallax, objetos e camada da frente | protocolo 7.1 cumprido: medidas-alvo atingidas, pranchas comparativas em `ferramentas/arte/previas/`, índice atualizado, nenhuma arte provisória sem marcação |
 | 9 | Som: efeitos com ZzFX, música, botão de som | som funciona no iPhone depois do primeiro toque |
-| 10 | Polimento: dificuldade, partículas leves, tremor de tela suave nos impactos, revisão de textos, duração total de 2 a 3 min, peso abaixo de 3 MB | teste completo em 2 celulares diferentes |
+| 10 | Polimento e revisão geral: dificuldade, partículas leves, tremor de tela suave nos impactos, revisão de textos, duração total de 2 a 3 min, peso abaixo de 3 MB, consistência visual entre fases, animações e transições, nenhuma duplicata ou provisório indevido, testes de regressão, `og-image` regenerada, `CREDITS.md` e documentação, relatório final para o Pedro | jogada completa automatizada sem erros em tamanhos de iPhone e Android; relatório entregue |
 | 11 | Lançamento: merge de `dev` em `main` feito pelo Pedro; conferir a prévia do link no WhatsApp | link de produção no ar (meta: 10/11) |
 
 ## 13. Pendências do Pedro
@@ -249,6 +331,7 @@ Cada etapa termina com PR contra `dev` e o checklist da seção 3.
 - [ ] Logo em boa resolução em `public/assets/logo.png`
 - [ ] Música CC0, se não for usar a gerada em código
 - [ ] Revisão dos textos em `src/data/textos.js`
+- [ ] (Opcional) Comprar o pacote "8-bit Capibaras" do 14collective (itch.io, US$ 2; a página diz que pode ser usado em projetos comerciais) e subir os arquivos em `references/licenciados/`. Sem ele, a capivara é própria, desenhada no mesmo nível de qualidade.
 
 ## 14. Começar uma sessão nova
 
@@ -276,9 +359,9 @@ Cada etapa termina com PR contra `dev` e o checklist da seção 3.
 
 **Próximo passo (01/11/2026):** as Etapas 3, 4, 5, 6, 7 e 9 estão no `dev`: o jogo vai de ponta a ponta, do Título ao
 Final de verdade (Título → Intro → Itajubá → Espaço → Chefe → Tapete → Final), com menu de pausa, compartilhar e meta
-tags. Próxima: **Etapa 8 (Arte)**: sprites originais com base nos figurinos (Aladdin, Tia Paula de pé no Final, Tia
-Claudia, Jafar), cenários e logo (`TEM_LOGO`). Depois, **Etapa 10 (Polimento)**: medir a duração total (meta de 2 a
-3 min) e revisar textos. Novas fases que usam o HUD precisam estar em `FASES` (`src/fluxo.js`) para o menu de pausa
+tags. As instruções de arte foram revisadas (regra 3, seção 7.1, `references/`). Próximas, uma por vez:
+**8.0** guia de linguagem visual e escala 48×64 → **8A** personagens (partindo da branch `etapa-8a-personagens`) →
+**8B** cenários (partindo da branch `etapa-8b-cenarios`) → **10** polimento, revisão geral e relatório final. Novas fases que usam o HUD precisam estar em `FASES` (`src/fluxo.js`) para o menu de pausa
 funcionar nelas. Para testar direto: `?fase=itajuba`, `?fase=espaco`, `?fase=chefe`, `?fase=tapete`, `?fase=final`.
 O Pedro só testa no fim, antes do lançamento, e revisa as falas em `src/data/textos.js`.
 
@@ -293,7 +376,7 @@ O Pedro só testa no fim, antes do lançamento, e revisa as falas em `src/data/t
 - No `npm run dev` o jogo fica em `window.jogo` para depurar no console.
 
 **Decisões técnicas da Etapa 2:**
-- **Referências visuais (01/11/2026):** das capturas do Aladdin de SNES usamos só o clima: paleta quente de arenito e terracota, céu de entardecer lilás → rosa, camadas de cenário, toldos de feira (aqui nas cores da escola), contorno escuro com sombra em 2 tons. **Nada** do visual dos personagens (Aladdin/Abu/guardas/Jasmine) nem do palácio.
+- *(Substituída em 01/11/2026 pela nova regra 3 e pela seção 7.1: as capturas agora valem como padrão de linguagem e de qualidade, não só de clima.)* ~~**Referências visuais (01/11/2026):** das capturas do Aladdin de SNES usamos só o clima:~~ paleta quente de arenito e terracota, céu de entardecer lilás → rosa, camadas de cenário, toldos de feira (aqui nas cores da escola), contorno escuro com sombra em 2 tons. **Nada** do visual dos personagens (Aladdin/Abu/guardas/Jasmine) nem do palácio.
 - Aladdin **provisório e original**: cabelo cacheado escuro, faixa rosa na cabeça, túnica verde com faixa rosa, calça areia, sandálias. Redesenhar com os figurinos.
 - A arte nasce de geradores em `ferramentas/arte/` (Python) que escrevem as matrizes em `src/art/`. O jogo só lê as matrizes; dá para editar à mão.
 - PNG final: colocar em `public/assets/sprites/` e registrar em `SPRITES_PNG` (`src/art/index.js`). A lista evita pedidos 404.
@@ -302,7 +385,7 @@ O Pedro só testa no fim, antes do lançamento, e revisa as falas em `src/data/t
 
 **Decisões técnicas da Etapa 3:**
 - Decisões do Pedro (01/11/2026): ele delegou as escolhas. Branch `etapa-3-itajuba`; encostar de lado numa capivara acordada tira 1 coração.
-- A seção 7.1 (gestão rígida de referências) foi removida a pedido do Pedro. Continua valendo a regra 3: as capturas do jogo original em `references/` servem só de clima, nunca de modelo de personagem, sprite ou cenário.
+- ~~A seção 7.1 (gestão rígida de referências) foi removida a pedido do Pedro. Continua valendo a regra 3: as capturas do jogo original em `references/` servem só de clima, nunca de modelo de personagem, sprite ou cenário.~~ *(Substituída em 01/11/2026: a 7.1 foi recriada e a regra 3 revisada; ver a seção "Revisão das instruções de arte".)*
 - Mapa montado por trechos em `ferramentas/mapas/gerar_itajuba.py` (anota alcance do pulo e do toldo). O `src/levels/itajuba.js` gerado é editável à mão.
 - Arte dos objetos (capivara com 6 quadros, maçã, sapatilha, coração cheio/vazio, fonte com água animada, bandeira) em `ferramentas/arte/gerar_objetos.py` → `src/art/objetos.js`. Casario e torre da igreja são desenhados em canvas no `Preload`; barracas e fachada do Espaço, com `Graphics` na cena.
 - HUD é uma cena separada (`scenes/HUD.js`) que lê o `registry` (`vida`, `vidaMax`, `macas`, `sapatilhas`). O botão de pausa abre o menu de pausa da Etapa 7.
@@ -319,7 +402,7 @@ O Pedro só testa no fim, antes do lançamento, e revisa as falas em `src/data/t
 - **Texto serrilhado (risco da Etapa 2): resolvido com HTML.** O canvas de 480×270 é ampliado inteiro, então qualquer texto do Phaser fica com a resolução do jogo, por mais que se aumente a fonte. A caixa de diálogo (`ui/Dialogo.js`) é uma `div` dentro de `#jogo` (aparece em tela cheia), posicionada sobre o canvas a cada quadro, com todas as medidas em "pixels do jogo" × escala (variável CSS `--u`). Assim a quebra de linha é a mesma em qualquer tela e a letra sai nítida. Resultado conferido em captura de 844×390 com densidade 3 (iPhone deitado).
 - Diálogo: no máximo 2 linhas (no `npm run dev` aparece aviso no console se passar), "máquina de escrever" no relógio da cena (para junto com a pausa), 1º toque completa o texto, o seguinte avança, seta rosa piscando quando dá para avançar. Só conta o toque que **começou** com a caixa aberta (o dedo que segurava ▶ ao chegar no NPC não pula a fala) e há 250 ms mínimos por caixa. Teclas: espaço, Enter, W, X, J, seta para cima. A tecla que tira da pausa não avança a fala (a escuta é na fase de captura). Ao fechar, `Entrada.ignorarAteSoltar()` evita que o mesmo toque vire pulo.
 - Conversa dispara pela distância só em x (44 px), para ninguém passar pulando por cima sem querer. Enquanto conversa, o jogador fica parado. Quem ainda não falou tem um balãozinho "..." e olha para o jogador.
-- Personagens originais e provisórios em `ferramentas/arte/gerar_espaco.py` → `src/art/espaco.js` (as fotos dos figurinos ainda não chegaram; as imagens em `references/figurinos/` são capturas de jogo, que valem só como clima): Jasmine (trança, tiara, top lilás, calça bufante rosa; 2 quadros de balé), Gênio (pele lilás, coque, colete rosa, cauda de fumaça amarela; flutua), Sultão (turbante rosa com pena, barba branca, capa roxa; bate palmas), Tia Claudia (cabelo preto no ombro, óculos de armação roxa, camiseta rosa com os quadradinhos do logo; quadro com os ingressos na mão), Abu (macaquinho com colete rosa e chapéu roxo; correndo e aflito). Nenhum usa as cores ou silhuetas do filme.
+- Personagens originais e provisórios em `ferramentas/arte/gerar_espaco.py` → `src/art/espaco.js` (as fotos dos figurinos ainda não chegaram; as capturas de jogo foram movidas para `references/estilo/` e, desde a revisão de 01/11, valem como padrão de qualidade, não só de clima): Jasmine (trança, tiara, top lilás, calça bufante rosa; 2 quadros de balé), Gênio (pele lilás, coque, colete rosa, cauda de fumaça amarela; flutua), Sultão (turbante rosa com pena, barba branca, capa roxa; bate palmas), Tia Claudia (cabelo preto no ombro, óculos de armação roxa, camiseta rosa com os quadradinhos do logo; quadro com os ingressos na mão), Abu (macaquinho com colete rosa e chapéu roxo; correndo e aflito). Nenhum usa as cores ou silhuetas do filme.
 - Mapa da Fase 2 em `ferramentas/mapas/gerar_espaco.py` → `src/levels/espaco.js`. Novo caractere `N` (personagem); quem é cada um vem de `NPCS_ESPACO`, na ordem. Tiles do estúdio usam a mesma `ORDEM` de `tiles.js` com outra textura (`tiles-espaco`): piso de madeira e tablado lilás (atravessa por baixo).
 - Parede com espelhos e barras desenhada em canvas no `Preload` (faixa de 240 px repetida); cartaz "ALADDIN · 20/11", balcão e porta com `Graphics` na cena.
 - Sem inimigos: o botão MAÇÃ some (`ControlesToque.esconderBotao`). Vida cheia ao entrar; maçãs e sapatilhas da Fase 1 continuam.
@@ -384,6 +467,14 @@ O Pedro só testa no fim, antes do lançamento, e revisa as falas em `src/data/t
 - `og-image.png` (1200×630, 81 KB) e ícones (favicon 32, apple-touch 180, manifest 192/512) são gerados por `ferramentas/og/gerar.mjs` com a arte do próprio jogo (céu, morros, tiles, Aladdin provisório, quadrados do logo). Rodar de novo quando a arte mudar. As meta tags `og:image` e `og:url` usam o endereço de produção, porque o WhatsApp exige endereço completo.
 - `?fase=` no link agora aceita `titulo`, `intro`, `itajuba`, `tapete` e `final`; sem o parâmetro, o jogo começa no Título.
 - Teste automatizado (Playwright): jogada completa do Título ao Final, passando por Sobre, Intro, Itajubá (pausa, som, sobre, continuar), Espaço, Chefe, Tapete inteiro (com pausa) e Final (compartilhar, ingressos, Instagram, jogar de novo, pular para o final), sem erros no console.
+
+**Revisão das instruções de arte (01/11/2026):**
+- Motivo: a arte ficou longe das referências enviadas pelo Pedro. Auditoria no Git:
+  - `802af5e` (31/10): o Pedro subiu 5 capturas do Aladdin do SNES e a folha de capivaras do 14collective em `references/figurinos/`.
+  - `57d5f8a` (01/11, 02:16): criada a seção 7.1, o índice e as notas por pasta. `5f92d81` (02:22): tudo removido a pedido do Pedro ("arte com mais liberdade"), antes de ser usado.
+  - As decisões das Etapas 2, 3 e 4 fixaram "capturas = só clima" e cada etapa desenhou seus próprios personagens provisórios.
+- Problemas encontrados: regra 3 lida como proibição de estilo; capturas na pasta errada (o README mandava capturas para `estilo/` e pedia para não subir "telas"); critério da Etapa 8 sem medida ("coerente com a paleta"); escala 32×48 em 480×270 deixava o herói com ≈ 15% da tela (≈ 28% nas capturas); "arte simples" escrito na seção 7; personagens duplicados (Jafar em `chefe.js` e `jafar.js`; Tia Paula no Tapete, no Final com `Graphics` e em `paula.js`; NPCs em `espaco.js` e na 8A).
+- O que foi feito: nova regra 3 (permitido × proibido × teste prático), seção 7.1 recriada e corrigida, escala 48×64 e "fonte única" na seção 7, seção 8 e critérios das Etapas 8 e 10 revistos, autonomia até a entrega final na seção 3. Capturas movidas com `git mv` para `references/estilo/` e a folha de capivaras para `references/licenciados/`. `references/README.md`, índice e notas de cada pasta recriados. As decisões antigas ficaram riscadas, não apagadas.
 
 **Riscos anotados:**
 - A Fase 1 tem ~4.900 px: correndo direto dá ~35 s; com capivaras, toldos e coleta, a estimativa é de 60 a 80 s. Medir no celular e ajustar no polimento (Etapa 10).

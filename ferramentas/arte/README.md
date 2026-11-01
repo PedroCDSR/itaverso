@@ -44,3 +44,12 @@ o desenho é neutro e fica num sprite separado (`tiaPaula`), para trocar fácil.
 ```bash
 python3 ferramentas/arte/gerar_chefe.py . /tmp
 ```
+
+## Prancha comparativa (obrigatória, CLAUDE.md seção 7.1)
+
+Toda arte nova ou refeita termina com uma prancha em `ferramentas/arte/previas/`: a referência (de
+`references/estilo/`, `figurinos/`, `pessoas/` ou `lugares/`) ao lado da nossa arte, **na mesma escala** (por exemplo,
+as duas ampliadas para a mesma altura de tela). Nome sugerido: `comparar-<arte>.png`.
+
+Depois de gerar, anote no `references/visual-reference-index.md` e no PR as diferenças de proporção, silhueta, cores,
+composição, sombreamento e acabamento que ficaram, e o motivo.
