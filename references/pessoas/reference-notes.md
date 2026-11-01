@@ -16,3 +16,13 @@ acima; o resto (roupa, penteado) é neutro e fácil de trocar. Não inventar tra
 data do OK.
 
 **Validação:** prancha foto × sprite; traços que identificam conferidos.
+
+## Imagens
+
+| Arquivo | O que mostra | Detalhes que não podem sumir |
+|---|---|---|
+| `tia-paula-camiseta-aladdin.jpg` | Camiseta oficial do espetáculo (enviada pelo Pedro em 01/11/2026), arte da própria escola: preta; na frente, a palavra "Aladdin" em letra cursiva dourada com contorno, envolta numa fumaça azul/roxa, com uma lâmpada mágica dourada embaixo e estrelinhas; nas costas, "Dancer" em dourado e o logo da escola | camiseta **preta**; na frente, o "Aladdin" **dourado** com a fumaça **azul e roxa** e a **lâmpada dourada**. No sprite (48×64), a estampa vira uma mancha dourada com azul/roxo no peito, legível como "a camiseta do Aladdin" |
+
+Esta camiseta é arte da escola, não da Disney: pode ser seguida com fidelidade. A imagem também mostra o logo da
+escola (quadrados arredondados rosa/amarelo e verde/roxo), útil para conferir a paleta e a estampa do tapete.
+
