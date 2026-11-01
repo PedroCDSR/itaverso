@@ -244,7 +244,7 @@ Cada etapa termina com PR contra `dev` e o checklist da seção 3.
 | # | Data | PR | Observações |
 |---|---|---|---|
 | 0 | 01/11/2026 | [PR 1](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/1) | Vite 8 + Phaser 4.2.1, estrutura de pastas, fontes woff2 (33 KB), cena de teste com acentos e dados do evento. |
-| 1 | 01/11/2026 | (PR `etapa-1-mobile` → `dev`) | Aviso de girar, controles de toque + teclado, pausa ao perder o foco (volta com toque), som liberado no 1º toque, botão de som, tela cheia + trava deitado no Android. Cena de teste com um bloco que anda, pula e joga maçã. |
+| 1 | 01/11/2026 | [PR 2](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/2) | Aviso de girar, controles de toque + teclado, pausa ao perder o foco (volta com toque), som liberado no 1º toque, botão de som, tela cheia + trava deitado no Android. Cena de teste com um bloco que anda, pula e joga maçã. |
 
 **Decisões técnicas da Etapa 1:**
 - O toque é escutado na **div inteira** (`input.touch.target`), não só no canvas: no celular deitado sobram faixas laterais, e é ali que ficam os polegares.
