@@ -8,3 +8,6 @@ dist/
 *.smc
 *.zip
 __pycache__/
+
+# capturas da jogada automática (ferramentas/teste/jogar.mjs)
+capturas/
