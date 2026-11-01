@@ -4,7 +4,10 @@ import { Boot } from './scenes/Boot.js';
 import { Preload } from './scenes/Preload.js';
 import { Titulo } from './scenes/Titulo.js';
 import { Intro } from './scenes/Intro.js';
-import { Teste } from './scenes/Teste.js';
+import { Itajuba } from './scenes/Itajuba.js';
+import { HUD } from './scenes/HUD.js';
+import { EmBreve } from './scenes/EmBreve.js';
+import { Tapete } from './scenes/Tapete.js';
 import { Final } from './scenes/Final.js';
 import { Pausa } from './scenes/Pausa.js';
 import { Sobre } from './scenes/Sobre.js';
@@ -41,8 +44,8 @@ const config = {
     default: 'arcade',
     arcade: { gravity: { x: 0, y: JOGADOR.gravidade }, debug: false },
   },
-  // Pausa e Sobre ficam no fim da lista: assim aparecem desenhadas por cima das outras cenas.
-  scene: [Boot, Preload, Titulo, Intro, Teste, Final, Pausa, Sobre],
+  // Pausa e Sobre ficam no fim da lista: assim aparecem desenhadas por cima das outras cenas (inclusive do HUD).
+  scene: [Boot, Preload, Titulo, Intro, Itajuba, HUD, EmBreve, Tapete, Final, Pausa, Sobre],
 };
 
 // Espera as fontes antes de criar o jogo: o Phaser desenha texto em canvas e não troca a fonte depois.

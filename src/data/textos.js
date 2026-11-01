@@ -80,6 +80,33 @@ export const TEXTOS = {
   teste: {
     dicaTeclado: 'Setas ou A/D: andar · Espaço ou W: pular · X ou J: maçã · Esc: pausa',
   },
+  itajuba: {
+    nomeFase: 'Fase 1 · Itajubá',
+    objetivo: 'Chegue ao Espaço Paula De Marco!',
+    placaEspaco: 'ESPAÇO PAULA DE MARCO',
+    zzz: 'zzz',
+    nham: 'nham!',
+    checkpoint: 'Ponto salvo!',
+    semMaca: 'Sem maçãs!',
+  },
+  // Ponte provisória no lugar das Fases 2 e 3 (Etapas 4 e 5)
+  emBreve: {
+    titulo: 'Você chegou ao Espaço!',
+    sapatilhas: (n) => `Sapatilhas: ${n}`,
+    proxima: 'O Espaço e o resgate da Tia Paula\nchegam nas próximas etapas. Agora, de tapete!',
+    continuar: 'VOAR DE TAPETE',
+  },
+  tapete: {
+    titulo: 'VOANDO PARA O TEATRO!',
+    dicaToque: 'Segure a tela para subir. Solte para descer.',
+    dicaTeclado: 'Segure espaço, W ou seta para cima para subir. Solte para descer.',
+    comecarToque: 'Toque para voar',
+    comecarTeclado: 'Aperte espaço para voar',
+    perdeu: '-{n}',
+    teatro: 'TEATRO',
+    teatroNome: 'Colégio G9',
+    chegou: 'Chegamos ao Teatro do Colégio G9!',
+  },
 };
 
 // Troca {n} pelo número, usando o texto no singular quando n = 1.

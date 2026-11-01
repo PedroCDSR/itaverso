@@ -26,9 +26,8 @@ export class Final extends Phaser.Scene {
     this.cameras.main.fadeIn(300, 0, 0, 0);
     this.desenharPalco();
 
-    // Tia Paula: aparência ainda A DEFINIR (CLAUDE.md, seção 8). Até lá, silhueta neutra e provisória
-    // com microfone, sob o canhão de luz. Trocar pelo sprite dela na Etapa 8.
-    this.tiaPaula = this.desenharSilhuetaProvisoria(LARGURA / 2, CHAO_PALCO);
+    // Tia Paula no centro do palco, sob o canhão de luz
+    this.tiaPaula = this.desenharTiaPaula(LARGURA / 2, CHAO_PALCO);
     this.aladdin = this.add.sprite(LARGURA / 2 - 70, CHAO_PALCO, 'jogador').setOrigin(0.5, 1).play('parado');
 
     this.criarCortinas();
@@ -60,14 +59,43 @@ export class Final extends Phaser.Scene {
     g.fillStyle(CORES.amarelo, 0.35).fillEllipse(LARGURA / 2, CHAO_PALCO + 4, 150, 22);
   }
 
-  desenharSilhuetaProvisoria(x, y) {
-    const g = this.add.graphics();
-    g.fillStyle(0x5a4fa0, 1);
-    g.fillCircle(x, y - 44, 7); // cabeça
-    g.fillTriangle(x - 15, y, x + 15, y, x, y - 36); // vestido
-    g.fillRect(x - 5, y - 37, 10, 13); // tronco
-    g.fillStyle(0x2e1a33, 1).fillRect(x + 7, y - 34, 2, 10); // microfone
-    g.fillStyle(0x777777, 1).fillCircle(x + 8, y - 35, 2);
+  // Tia Paula de pé, com o MESMO design provisório do Tapete (ferramentas/arte/gerar_tapete.py): coque castanho,
+  // vestido roxo com faixa amarela, meia lilás e sapatilha rosa. Aparência real A DEFINIR (CLAUDE.md, seção 8).
+  desenharTiaPaula(x, y) {
+    const g = this.add.graphics({ x, y });
+    const r = (cor, x0, y0, w, h) => g.fillStyle(cor, 1).fillRect(x0, y0, w, h);
+    const k = 0x2e1a33; // contorno
+    // pernas e sapatilhas
+    r(k, -5, -13, 10, 11);
+    r(0x7c7ce0, -4, -13, 3, 11);
+    r(0x9e9eff, 1, -13, 3, 11);
+    r(k, -7, -3, 15, 3);
+    r(0xffb0fa, -6, -3, 5, 2);
+    r(0xffb0fa, 1, -3, 5, 2);
+    // vestido com saia rodada
+    g.fillStyle(k, 1).fillTriangle(-14, -11, 14, -11, 0, -32);
+    g.fillStyle(0x6d6bd9, 1).fillTriangle(-12, -12, 12, -12, 0, -31);
+    g.fillStyle(0x4f4db0, 1).fillTriangle(-12, -12, -6, -12, -1, -30);
+    r(k, -6, -32, 12, 12);
+    r(0x6d6bd9, -5, -31, 10, 11);
+    r(0xf9fcbb, -6, -22, 12, 2); // faixa amarela na cintura
+    // braço com microfone
+    r(0xe8b48a, 5, -29, 3, 7);
+    r(0x222222, 7, -33, 2, 7);
+    g.fillStyle(0x777777, 1).fillCircle(8, -34, 2);
+    // pescoço e cabeça
+    r(0xc48c64, -1, -34, 3, 3);
+    g.fillStyle(k, 1).fillCircle(0, -40, 7);
+    g.fillStyle(0xe8b48a, 1).fillCircle(0, -40, 6);
+    // cabelo puxado para trás, com coque alto de bailarina
+    g.fillStyle(0x5a3a2a, 1).fillRect(-6, -47, 12, 4).fillRect(-6, -45, 2, 5).fillRect(4, -45, 2, 5);
+    g.fillStyle(0x5a3a2a, 1).fillCircle(0, -49, 4);
+    g.fillStyle(0x3e2619, 1).fillRect(-1, -51, 2, 2);
+    // olhos e sorriso
+    r(0x2a1a1c, -3, -41, 1, 2);
+    r(0x2a1a1c, 2, -41, 1, 2);
+    r(0x9a4040, -1, -37, 3, 1);
+    r(0xf9fcbb, -6, -38, 1, 1); // brinco
     return g;
   }
 
@@ -108,7 +136,7 @@ export class Final extends Phaser.Scene {
 
   comecarFalas() {
     this.fase = 'falas';
-    this.tweens.add({ targets: this.tiaPaula, y: -2, yoyo: true, repeat: -1, duration: 500 });
+    this.tweens.add({ targets: this.tiaPaula, y: CHAO_PALCO - 2, yoyo: true, repeat: -1, duration: 500 });
     this.dialogo.mostrar(this.falas[0]);
   }
 
@@ -167,7 +195,7 @@ export class Final extends Phaser.Scene {
 
   jogarDeNovo() {
     // quem joga de novo já viu a intro: vai direto para a primeira fase
-    novaPartida(this);
+    novaPartida(this); // (a Itajubá também zera vida, maçãs e sapatilhas ao começar)
     this.cameras.main.fadeOut(250, 158, 158, 255);
     this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start(PRIMEIRA_FASE));
   }

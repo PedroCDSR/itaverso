@@ -4,10 +4,10 @@ import { TEXTOS } from '../data/textos.js';
 import { Botao } from '../ui/Botao.js';
 import { alternarSom, estaMudo } from '../audio/som.js';
 import { alternarTelaCheia, estaEmTelaCheia, telaCheiaDisponivel } from '../ui/telaCheia.js';
-import { FINAL } from '../fluxo.js';
+import { FINAL, SOBREPOSTAS } from '../fluxo.js';
 
 // Menu de pausa (CLAUDE.md, seção 11): continuar, som, tela cheia (opcional), sobre o espetáculo, pular para o final.
-// A fase pausa a si mesma e abre esta cena com { cena: <nome da fase> }.
+// Abrir com abrirPausa() (src/fluxo.js): esta cena pausa a fase e o HUD e os retoma ao continuar.
 export class Pausa extends Phaser.Scene {
   constructor() {
     super('Pausa');
@@ -19,8 +19,11 @@ export class Pausa extends Phaser.Scene {
 
   create() {
     const t = TEXTOS.pausa;
+    this.sobrepostas = SOBREPOSTAS.filter((k) => this.scene.isActive(k));
+    [this.cena, ...this.sobrepostas].forEach((k) => this.scene.pause(k));
     const cx = LARGURA / 2;
-    this.add.rectangle(0, 0, LARGURA, ALTURA, CORES.roxo, 0.75).setOrigin(0);
+    // fundo interativo: segura os toques, para não acertarem os botões do HUD por baixo
+    this.add.rectangle(0, 0, LARGURA, ALTURA, CORES.roxo, 0.75).setOrigin(0).setInteractive();
     this.add
       .text(cx, 26, t.titulo, { fontFamily: FONTES.titulo, fontSize: '16px', color: CORES_CSS.branco })
       .setOrigin(0.5)
@@ -87,11 +90,11 @@ export class Pausa extends Phaser.Scene {
   continuar() {
     if (!this.scene.isActive()) return;
     this.scene.stop();
-    this.scene.resume(this.cena);
+    [this.cena, ...this.sobrepostas].forEach((k) => this.scene.resume(k));
   }
 
   pularFinal() {
-    this.scene.stop(this.cena);
+    [this.cena, ...this.sobrepostas].forEach((k) => this.scene.stop(k));
     this.scene.start(FINAL); // start() também fecha esta cena
   }
 }

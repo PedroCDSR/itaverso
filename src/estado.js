@@ -9,6 +9,3 @@ export function sapatilhas(scene) {
   return scene.registry.get('sapatilhas') || 0;
 }
 
-export function somarSapatilha(scene) {
-  scene.registry.set('sapatilhas', sapatilhas(scene) + 1);
-}

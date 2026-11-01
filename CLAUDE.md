@@ -27,10 +27,11 @@ Jogo de plataforma 2D curto, para celular, que funciona para explicar o que é o
 
 ## 3. Como trabalhar neste repositório
 
-- Uma etapa por vez. Antes de etapas grandes, apresente um plano curto e espere o OK.
+- Uma etapa por vez. Antes de etapas grandes, apresente um plano curto (até o lançamento, sem esperar OK: ver a regra abaixo).
 - Branch `main` = produção. Cada deploy de produção consome créditos do plano gratuito do Netlify, então ela só recebe merge no lançamento.
 - Branch `dev` = integração. Deploys de `dev` e de PRs são gratuitos.
 - Cada etapa: nova branch `etapa-N-nome` a partir de `dev` e PR contra `dev`. Nunca fazer merge em `main`; isso é decisão do Pedro.
+- **Regra até o lançamento (decisão do Pedro, 01/11/2026):** o Claude decide sozinho, testa ele mesmo no Chromium com Playwright (sem erros no console, capturas conferidas) e **faz o merge do PR no `dev`**. O Pedro só faz o teste final antes do lançamento. Não é preciso esperar OK de plano nem teste do Pedro entre as etapas. `main` continua intocável: o merge em `main` é só do Pedro.
 - Autor dos commits: `Pedro Rocha <65837046+PedroCDSR@users.noreply.github.com>` (`git config` sem `--global`). Decisão própria deste projeto (e-mail "noreply" do GitHub, para não expor o e-mail pessoal).
 - Ao terminar cada etapa:
   - `npm run build` sem erros;
@@ -61,6 +62,7 @@ Jogo de plataforma 2D curto, para celular, que funciona para explicar o que é o
 
 ```
 references/            referências visuais: figurinos/ pessoas/ lugares/ logo/ estilo/ (não vai para o build)
+ferramentas/           geradores de arte (arte/) e de mapas (mapas/), em Python; não vai para o build
 public/
   assets/sprites/      PNGs finais, quando existirem
   assets/audio/        música (MP3)
@@ -264,13 +266,17 @@ Cada etapa termina com PR contra `dev` e o checklist da seção 3.
 | 0 | 01/11/2026 | [PR 1](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/1) | Vite 8 + Phaser 4.2.1, estrutura de pastas, fontes woff2 (33 KB), cena de teste com acentos e dados do evento. |
 | 1 | 01/11/2026 | [PR 2](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/2) | Aviso de girar, controles de toque + teclado, pausa ao perder o foco (volta com toque), som liberado no 1º toque, botão de som, tela cheia + trava deitado no Android. Cena de teste com um bloco que anda, pula e joga maçã. |
 | 2 | 01/11/2026 | [PR 3](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/3) | Leitor de mapas em texto, Aladdin original provisório (13 quadros em matriz), tiles 16×16, física com pulo variável, coyote e buffer, câmera com zona morta e folga à frente, céu de entardecer e morros. Pulo alto 69 px, pulo curto 34 px. |
-| 7 | 01/11/2026 | [PR 11](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/11) | Título, Sobre o espetáculo, Intro (3 caixas, PULAR), Final (cortinas, fala da Tia Paula, cartão com QUERO INGRESSOS, COMPARTILHAR, INSTAGRAM, JOGAR DE NOVO), menu de pausa, meta tags + Open Graph + favicon + manifest. Tela cheia automática removida. Feita **antes** das Etapas 3 a 6: a fase de teste faz o papel das fases. `dist/` = 1,57 MB. |
+| 3 | 01/11/2026 | [PR 7](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/7) | Fase 1 com 320 colunas: rua, feira com 6 barracas de toldo, praça com fonte, checkpoint, buracos e plataformas, porta do Espaço. 12 capivaras (pisão = dorme; maçã = come e vai embora; de lado = 1 coração), 38 sapatilhas, 9 maçãs, 3 corações. HUD com corações, maçãs, sapatilhas, pausa e som. Casario de Itajubá no fundo (3 camadas). `dist/` com 1,5 MB. |
+| 6 | 01/11/2026 | [PR 8](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/8) | Fase 4 (Tapete): rolagem automática de 40 s + pouso de ~4 s no Teatro do Colégio G9, segurar sobe / soltar desce (toque em qualquer lugar, espaço, W ou seta para cima), pássaros (sabiás), pipas, postes e fios, sapatilhas no céu, batida = pisca e perde 2 sapatilhas. Tela Final provisória. Teste direto: `?fase=tapete`. Feita antes das Etapas 4 e 5 (modo autônomo). `dist/` = 1,51 MB (já com a Etapa 3). |
+| 7 | 01/11/2026 | [PR 11](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/11) | Título, Sobre o espetáculo, Intro (3 caixas, PULAR), Final completo (cortinas, Tia Paula anuncia, cartão com QUERO INGRESSOS, COMPARTILHAR, INSTAGRAM, JOGAR DE NOVO), menu de pausa (continuar, som, tela cheia opcional, sobre, pular para o final), meta tags + Open Graph + favicon + manifest. Tela cheia automática removida. Fluxo ligado: Título → Intro → Itajubá → ponte → Tapete → Final. `dist/` = DIST_MB. |
 
-**Próximo passo (01/11/2026):** o Pedro testa no celular a prévia do `dev` (fluxo Título → Intro → fase de teste → Final,
-botões do cartão, pausa, prévia do link no WhatsApp quando chegar ao `main`). Depois, **Etapa 3, Fase 1 (Itajubá)**:
-capivaras, maçãs com arremesso de verdade, toldos que quicam, fonte, sapatilhas, corações, checkpoint, HUD e transição.
-A fase nova entra no fluxo trocando `PRIMEIRA_FASE` em `src/fluxo.js` e terminando com `scene.start(FINAL)` (ou com a
-fase seguinte). Apresentar o plano curto e esperar o OK antes de começar.
+**Próximo passo (01/11/2026):** a Etapa 7 (PR 11) foi mergeada no `dev` e o jogo já vai de ponta a ponta:
+Título → Intro → Itajubá → `EmBreve` (ponte provisória no lugar das Fases 2 e 3, com o botão VOAR DE TAPETE) → Tapete →
+Final. Próxima: **Etapa 4, Fase 2 (Espaço Paula De Marco)**: sistema de diálogo (dá para reaproveitar `ui/Dialogo.js`),
+NPCs, Tia Claudia com os ingressos, contador de ingressos no HUD e a transição para o chefe. A Itajubá passa a ir para o
+`Espaco` em vez da `EmBreve`. Depois, Etapa 5 (Chefe), que termina com `this.scene.start('Tapete')` (parando o HUD antes).
+Novas fases que usam o HUD devem entrar em `FASES` (`src/fluxo.js`) para o menu de pausa funcionar nelas. Para testar
+uma cena direto: `?fase=itajuba`, `?fase=tapete`, `?fase=final`. O Pedro só testa no fim, antes do lançamento.
 
 **Decisões técnicas da Etapa 1:**
 - O toque é escutado na **div inteira** (`input.touch.target`), não só no canvas: no celular deitado sobram faixas laterais, e é ali que ficam os polegares.
@@ -290,17 +296,45 @@ fase seguinte). Apresentar o plano curto e esperar o OK antes de começar.
 - Tiles via `Tilemap` do Phaser; `=` e `T` só colidem por cima. O mundo não tem chão invisível: cair abaixo do mapa volta ao checkpoint (por enquanto, o `P`).
 - Objetos do mapa (C, a, s, h, K, F, E) aparecem como marcadores coloridos; ganham comportamento na Etapa 3.
 
+**Decisões técnicas da Etapa 3:**
+- Decisões do Pedro (01/11/2026): ele delegou as escolhas. Branch `etapa-3-itajuba`; encostar de lado numa capivara acordada tira 1 coração.
+- A seção 7.1 (gestão rígida de referências) foi removida a pedido do Pedro. Continua valendo a regra 3: as capturas do jogo original em `references/` servem só de clima, nunca de modelo de personagem, sprite ou cenário.
+- Mapa montado por trechos em `ferramentas/mapas/gerar_itajuba.py` (anota alcance do pulo e do toldo). O `src/levels/itajuba.js` gerado é editável à mão.
+- Arte dos objetos (capivara com 6 quadros, maçã, sapatilha, coração cheio/vazio, fonte com água animada, bandeira) em `ferramentas/arte/gerar_objetos.py` → `src/art/objetos.js`. Casario e torre da igreja são desenhados em canvas no `Preload`; barracas e fachada do Espaço, com `Graphics` na cena.
+- HUD é uma cena separada (`scenes/HUD.js`) que lê o `registry` (`vida`, `vidaMax`, `macas`, `sapatilhas`). O botão de pausa abre o menu de pausa da Etapa 7.
+- Toldo: quica 520 segurando PULAR (≈150 px) e 420 sem segurar (≈98 px). Pisar na capivara segurando PULAR também vai mais alto.
+- Maçã: arco baixo que quica até 3 vezes e rola, para acertar capivaras de perto e de longe (até ~140 px). O `overlap` do Arcade entre dois grupos não disparou para maçã × capivara; a checagem é feita à mão no `update()`.
+- Ao voltar ao checkpoint: vida cheia, 1 s de invencibilidade e no mínimo 3 maçãs. Capivaras dormindo continuam dormindo.
+- Coração só é recolhido se faltar vida; maçã só se houver espaço (máximo 9).
+- Ao chegar na porta, `scenes/EmBreve.js` mostra as sapatilhas (na Etapa 7 virou ponte para o Tapete; sai nas Etapas 4 e 5).
+- Teste automatizado no Chromium (Playwright) conferiu: pisão, maçã, quique no toldo, checkpoint, buraco, 3 danos, coleta, chegada na porta e jogar de novo, sem erros no console.
+
+**Decisões técnicas da Etapa 6:**
+- O voo do tapete é feito à mão (sem Arcade Physics): aceleração para cima ao segurar, para baixo ao soltar, velocidade máxima nos dois sentidos e aceleração 1,8× ao inverter, para a resposta parecer imediata sem tranco. Sobe até 165 px/s, desce até 140 px/s (`TAPETE` em `config.js`).
+- A câmera anda sozinha (96 px/s); o tapete fica sempre no x 120 da tela. A duração sai do tamanho do mapa: 8 trechos de 30 colunas = 3840 px = 40 s.
+- Mapa do céu em `src/levels/tapete.js`, com legenda própria: `s` sapatilha, `B` pássaro, `Q` pipa, `f` topo de poste (dois `f` na mesma linha ganham um fio). Os trechos têm 30 colunas e são emendados.
+- No limite de baixo o tapete só desliza sobre os telhados, sem dano. Batida: 1,2 s piscando, perde até 2 sapatilhas (caem do tapete), o pássaro foge; postes, fios e pipas continuam no lugar.
+- Arte original em `ferramentas/arte/gerar_tapete.py` → `src/art/tapete.js`: tapete ondulando (3 quadros) com a estampa dos quadrados concêntricos do logo (rosa, amarelo, verde, roxo sobre lilás), Aladdin provisório sentado, **Tia Paula provisória** (coque castanho, vestido roxo; aparência A DEFINIR), sabiá-laranjeira, pipa nas cores da escola, sapatilha de ponta.
+- Fachada do teatro, cidade ao fundo (com uma torre de igreja genérica) e telhados são desenhados em código e **genéricos**: refazer quando chegarem as fotos do Teatro do Colégio G9.
+- O sol desce durante a fase (entardecer). Parallax: morros 0,15, cidade 0,35, telhados 1.
+- `?fase=tapete` ou `?fase=final` no link abre a fase direto (útil na prévia do Netlify). Sem o parâmetro abre o Título (desde a Etapa 7).
+- A tela Final provisória desta etapa foi trocada pela versão completa da Etapa 7.
+- O contador de sapatilhas do tapete usa o `registry` (`sapatilhas`), o mesmo nome do HUD do PR 7.
+
 **Decisões técnicas da Etapa 7:**
-- Feita antes das Etapas 3 a 6. O fluxo é Título → Intro → `PRIMEIRA_FASE` → Final (`src/fluxo.js`). Por enquanto a fase é o mapa de teste: as sapatilhas já contam (`src/estado.js`, no `registry` do Phaser) e a saída `E` leva ao Final. Contador de sapatilhas, botão de pausa e de som ficam no canto; o HUD completo é da Etapa 3.
+- Feita em paralelo com as Etapas 3 e 6 e juntada depois. O fluxo fica em `src/fluxo.js`: Título → Intro → Itajubá → `EmBreve` → Tapete → Final. A `EmBreve` virou ponte provisória (sapatilhas + VOAR DE TAPETE) até existirem Espaço e Chefe. A tela "JOGAR" provisória da Itajubá e a tela cheia automática da Itajubá e do Tapete saíram.
+- O botão de pausa do HUD (e o novo botão do Tapete) e as teclas Esc/P abrem o menu de pausa com `abrirPausa()` (`src/fluxo.js`), que pausa a fase e o HUD juntos. `pausarAgora()` saiu do `PausaFoco.js`.
 - Menus em Phaser, com `ui/Botao.js` (ação no `pointerup`, o único momento em que o navegador aceita abrir link, compartilhar e tela cheia). O cartão do evento (`ui/CartaoEvento.js`) é o mesmo no Sobre (Título e Pausa) e no Final; tudo lê de `src/data/`.
 - Pausa e Sobre são cenas sobrepostas: quem chama se pausa (`scene.pause`) e abre a outra por cima; VOLTAR/CONTINUAR retomam. Esc ou P abrem a pausa na fase. O aviso HTML "Pausado" continua só para perda de foco.
 - COMPARTILHAR usa `navigator.share` com o texto e o link da página aberta (prévias do Netlify compartilham a si mesmas). Sem suporte, copia texto + link e o botão mostra "LINK COPIADO!" por 2 s. Links abrem com `window.open` e, se um bloqueador impedir, na mesma aba.
 - JOGAR DE NOVO vai direto para a primeira fase (quem joga de novo já viu a intro) e zera as sapatilhas.
-- Tia Paula no Final é uma **silhueta neutra provisória** com microfone (a aparência dela está A DEFINIR, seção 8). Trocar pelo sprite na Etapa 8.
+- Tia Paula no Final, de pé com microfone, usa o **mesmo design provisório** do Tapete (coque castanho, vestido roxo, faixa amarela), desenhado com `Graphics`. A aparência real está A DEFINIR (seção 8): trocar pelo sprite na Etapa 8.
 - Sem `logo.png`, Título e Final mostram o nome da escola em texto. Ao colocar o arquivo, mudar `TEM_LOGO` para `true` em `src/art/index.js` (evita pedido 404).
 - `og-image.png` (1200×630, 81 KB) e ícones (favicon 32, apple-touch 180, manifest 192/512) são gerados por `ferramentas/og/gerar.mjs` com a arte do próprio jogo (céu, morros, tiles, Aladdin provisório, quadrados do logo). Rodar de novo quando a arte mudar. As meta tags `og:image` e `og:url` usam o endereço de produção, porque o WhatsApp exige endereço completo.
-- No `npm run dev`, `?cena=Final` (ou outra cena) abre direto aquela cena.
+- `?fase=` no link agora aceita `titulo`, `intro`, `itajuba`, `tapete` e `final`; sem o parâmetro, o jogo começa no Título.
+- Teste automatizado (Playwright): jogada completa do Título ao Final, passando por Sobre, Intro, Itajubá (pausa, som, sobre, continuar), ponte, Tapete inteiro (com pausa) e Final (compartilhar, ingressos, Instagram, jogar de novo, pular para o final), sem erros no console.
 
 **Riscos anotados:**
+- A Fase 1 tem ~4.900 px: correndo direto dá ~35 s; com capivaras, toldos e coleta, a estimativa é de 60 a 80 s. Medir no celular e ajustar no polimento (Etapa 10).
 - Texto com Patrick Hand num canvas de 480×270 ampliado pode ficar serrilhado. Avaliar no celular na Etapa 4; se ficar ruim, desenhar o texto de diálogo numa resolução maior (por exemplo, câmera com zoom 2 num jogo de 960×540).
 - O Phaser completo pesa ~1,2 MB minificado (~330 KB comprimido na transferência). Cabe no orçamento; se apertar, trocar pelo build só com Arcade Physics.

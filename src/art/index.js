@@ -9,6 +9,8 @@ export const SPRITES_PNG = {
 
 export * as ArteJogador from './jogador.js';
 export * as ArteTiles from './tiles.js';
+export * as ArteObjetos from './objetos.js';
+export * as ArteTapete from './tapete.js';
 
 // Logo da escola: mude para true quando existir public/assets/logo.png (assim não há pedido 404).
 // Sem o logo, o Título e o Final mostram o nome da escola em texto.

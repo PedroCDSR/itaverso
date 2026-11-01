@@ -1,0 +1,53 @@
+import * as Phaser from 'phaser';
+import { LARGURA, CORES, CORES_CSS, FONTES } from '../config.js';
+import { BotaoSom } from '../ui/BotaoSom.js';
+import { BotaoPausa } from '../ui/BotaoPausa.js';
+import { abrirPausa } from '../fluxo.js';
+
+// HUD (cena sobreposta à fase): corações, maçãs e sapatilhas à esquerda; pausa e som à direita.
+// Lê tudo do "registry" do jogo (vida, vidaMax, macas, sapatilhas); a fase só atualiza os valores.
+export class HUD extends Phaser.Scene {
+  constructor() {
+    super('HUD');
+  }
+
+  create() {
+    const reg = this.registry;
+    const estilo = { fontFamily: FONTES.titulo, fontSize: '8px', color: CORES_CSS.branco };
+    const sombra = (t) => t.setShadow(1, 1, CORES_CSS.roxo, 0, false, true);
+
+    // fundo suave atrás dos contadores, para ler em cima do céu claro
+    this.add.rectangle(6, 6, 176, 22, CORES.roxo, 0.35).setOrigin(0).setStrokeStyle(1, CORES.roxo, 0.6);
+
+    this.coracoes = [];
+    for (let i = 0; i < reg.get('vidaMax'); i++) {
+      this.coracoes.push(this.add.image(17 + i * 13, 17, 'coracao', 0));
+    }
+    this.add.image(64, 17, 'maca');
+    this.txtMacas = sombra(this.add.text(72, 13, '', estilo));
+    this.add.sprite(110, 18, 'sapatilha', 0);
+    this.txtSapatilhas = sombra(this.add.text(120, 13, '', estilo));
+
+    // botão de pausa ao lado do som: abre o menu de pausa (Etapa 7). Esc ou P também abrem.
+    const py = 20;
+    new BotaoPausa(this, LARGURA - 56, py, () => abrirPausa(this));
+    this.botaoSom = new BotaoSom(this, LARGURA - 20, py);
+    this.input.keyboard?.on('keydown-ESC', () => abrirPausa(this));
+    this.input.keyboard?.on('keydown-P', () => abrirPausa(this));
+    // o som pode ter mudado no menu de pausa
+    this.events.on('resume', () => this.botaoSom.desenhar());
+
+    this.atualizar();
+    const aoMudar = () => this.atualizar();
+    reg.events.on('changedata', aoMudar);
+    this.events.once('shutdown', () => reg.events.off('changedata', aoMudar));
+  }
+
+  atualizar() {
+    const reg = this.registry;
+    const vida = reg.get('vida');
+    this.coracoes.forEach((c, i) => c.setFrame(i < vida ? 0 : 1));
+    this.txtMacas.setText(`x${reg.get('macas')}`);
+    this.txtSapatilhas.setText(`x${reg.get('sapatilhas')}`);
+  }
+}
