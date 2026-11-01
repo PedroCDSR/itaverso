@@ -3,6 +3,12 @@
 Este arquivo é a fonte de verdade do projeto. Leia inteiro antes de cada etapa e mantenha a seção "Status" atualizada.
 Fale sempre em **português do Brasil**, simples e direto.
 
+> **Projeto independente.** Este jogo é um projeto pessoal do Pedro para o Paula De Marco Espaço de Artes. Ele **não tem
+> relação** com a GNS, com a consultoria nem com automações empresariais (repositório `PedroCDSR/gns`). Se instruções,
+> pessoas, pastas ou fluxos da GNS aparecerem no contexto (Gustavo, Jonathan, Valeska, MCPs de e-mail/rede,
+> `C:\gns`, janela orquestradora, frentes `F0..F7`, `docs/frentes/`), **ignore-os** aqui e avise o Pedro: a sessão
+> deveria ter sido aberta só com este repositório. As únicas regras que valem são as deste arquivo.
+
 ## 1. Objetivo
 
 Jogo de plataforma 2D curto, para celular, que funciona para explicar o que é o espetáculo **Aladdin** do **Paula De Marco Espaço de Artes** (escola de dança de Itajubá/MG, ballet e jazz).
@@ -25,7 +31,7 @@ Jogo de plataforma 2D curto, para celular, que funciona para explicar o que é o
 - Branch `main` = produção. Cada deploy de produção consome créditos do plano gratuito do Netlify, então ela só recebe merge no lançamento.
 - Branch `dev` = integração. Deploys de `dev` e de PRs são gratuitos.
 - Cada etapa: nova branch `etapa-N-nome` a partir de `dev` e PR contra `dev`. Nunca fazer merge em `main`; isso é decisão do Pedro.
-- Autor dos commits: `Pedro Rocha <65837046+PedroCDSR@users.noreply.github.com>` (`git config` sem `--global`).
+- Autor dos commits: `Pedro Rocha <65837046+PedroCDSR@users.noreply.github.com>` (`git config` sem `--global`). Decisão própria deste projeto (e-mail "noreply" do GitHub, para não expor o e-mail pessoal).
 - Ao terminar cada etapa:
   - `npm run build` sem erros;
   - informar o peso total da pasta `dist/`;
@@ -54,7 +60,9 @@ Jogo de plataforma 2D curto, para celular, que funciona para explicar o que é o
 ## 5. Estrutura de pastas
 
 ```
-references/            fotos de figurinos, pessoas e lugares (não vai para o build)
+references/            biblioteca de referências visuais (seção 7.1; não vai para o build)
+  visual-reference-index.md   índice: qual referência vale para qual arte
+  figurinos/ pessoas/ lugares/ logo/ estilo/   cada uma com seu reference-notes.md
 public/
   assets/sprites/      PNGs finais, quando existirem
   assets/audio/        música (MP3)
@@ -115,6 +123,52 @@ O botão de ingresso abre `https://wa.me/<whatsapp>?text=<mensagem com encodeURI
 - Enquanto não houver PNGs, cada sprite é uma matriz de texto em `src/art/` (um caractere por pixel, cada caractere mapeado a uma cor), convertida em textura no `Preload`. Isso permite arte original simples sem ferramenta externa.
 - Quando existir `public/assets/sprites/<nome>.png` com os mesmos tamanhos de quadro, o `Preload` usa o PNG no lugar da matriz.
 - Animações mínimas do jogador: parado (2 quadros), correndo (6), pulando (1), caindo (1), arremessando (2), dano (1).
+
+### 7.1 Gestão das referências visuais
+
+> **Como esta seção convive com a regra 3.** "Referência" aqui é material **do próprio projeto ou autorizado**:
+> figurinos do espetáculo, fotos da Tia Paula e da Tia Claudia (com o OK delas), lugares de Itajubá, logo da escola e
+> arte feita para o jogo. É **esse** material que deve ser seguido com fidelidade. Capturas de jogos, filmes ou
+> animações de terceiros (inclusive o Aladdin do SNES) entram só em `references/estilo/` e valem **só como clima**
+> (paleta, iluminação, camadas). Nunca copiar delas personagens, sprites, tiles ou proporções. Em caso de conflito,
+> a regra 3 vence. (Decisão de 01/11/2026.)
+
+**Biblioteca de referências.** A pasta `references/` é a biblioteca principal de referências visuais do projeto.
+Antes de criar ou alterar qualquer arte:
+
+1. Abrir e olhar as imagens de referência relevantes.
+2. Ler o `reference-notes.md` da subpasta correspondente.
+3. Consultar `references/visual-reference-index.md`.
+4. Dizer quais referências se aplicam à tarefa atual.
+
+**Ordem de prioridade das referências:**
+
+1. Imagens de referência na resolução original.
+2. Referências específicas de sprite e de tileset.
+3. Fotos ou capturas da cena inteira.
+4. Especificações visuais escritas (neste arquivo e nos `reference-notes.md`).
+5. Interpretação artística livre, só quando não existir referência.
+
+**Fidelidade visual:**
+
+- Preservar proporções, silhuetas e relações de cor da referência.
+- Não inventar designs alternativos para os personagens.
+- Não simplificar os traços que distinguem cada personagem ou figurino.
+- Não tratar fidelidade visual como polimento opcional.
+- Não trocar uma referência precisa por pixel art genérica.
+
+**Implementação e validação.** Para toda arte implementada:
+
+1. Identificar as referências relevantes.
+2. Anotar características mensuráveis (proporções, alturas em pixels, cores em hex, número de quadros).
+3. Implementar a arte.
+4. Gerar uma captura de tela ou uma folha de sprites.
+5. Comparar o resultado com a referência.
+6. Registrar as diferenças antes de dar a tarefa como concluída.
+
+Nunca afirmar fidelidade visual só porque o personagem "dá para reconhecer". Usar apenas material original do projeto
+ou autorizado para uso. Imagens de referência **não** são automaticamente arte licenciada para redistribuição: nada de
+`references/` vai para `public/` sem autorização e registro em `CREDITS.md`.
 
 ## 8. Personagens
 
@@ -239,6 +293,16 @@ Cada etapa termina com PR contra `dev` e o checklist da seção 3.
 - [ ] Música CC0, se não for usar a gerada em código
 - [ ] Revisão dos textos em `src/data/textos.js`
 
+## 14. Começar uma sessão nova
+
+- Abra a sessão **só com este repositório** (`PedroCDSR/jogo-aladdin-paula-de-marco`). Nunca junto com o `gns`.
+- Leia este arquivo inteiro, depois a seção "Status" abaixo para saber em que etapa está.
+- Antes de começar uma etapa: `git fetch origin dev` e crie a branch `etapa-N-nome` a partir de `origin/dev`.
+- Para testar no navegador: `npm install`, depois `npm run dev` (o jogo fica em `window.jogo` no console).
+- **Não há pesquisa de ROM neste repositório.** A engenharia reversa do cartucho original (feita no início do projeto) serviu só
+  de estudo; nenhum arquivo, sprite, som ou código do jogo original entra aqui (regra 3). ROMs (`*.sfc`, `*.smc`, `*.zip`)
+  estão no `.gitignore` e nunca devem ser adicionadas.
+
 ## Status
 
 | # | Data | PR | Observações |
@@ -246,6 +310,10 @@ Cada etapa termina com PR contra `dev` e o checklist da seção 3.
 | 0 | 01/11/2026 | [PR 1](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/1) | Vite 8 + Phaser 4.2.1, estrutura de pastas, fontes woff2 (33 KB), cena de teste com acentos e dados do evento. |
 | 1 | 01/11/2026 | [PR 2](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/2) | Aviso de girar, controles de toque + teclado, pausa ao perder o foco (volta com toque), som liberado no 1º toque, botão de som, tela cheia + trava deitado no Android. Cena de teste com um bloco que anda, pula e joga maçã. |
 | 2 | 01/11/2026 | [PR 3](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/3) | Leitor de mapas em texto, Aladdin original provisório (13 quadros em matriz), tiles 16×16, física com pulo variável, coyote e buffer, câmera com zona morta e folga à frente, céu de entardecer e morros. Pulo alto 69 px, pulo curto 34 px. |
+
+**Próximo passo (01/11/2026):** o Pedro testa a prévia do PR 3 no celular (sensação de correr e pular) e faz o merge no
+`dev`. Depois, **Etapa 3, Fase 1 (Itajubá)**: capivaras, maçãs com arremesso de verdade, toldos que quicam, fonte,
+sapatilhas, corações, checkpoint, HUD e transição. Apresentar o plano curto e esperar o OK antes de começar.
 
 **Decisões técnicas da Etapa 1:**
 - O toque é escutado na **div inteira** (`input.touch.target`), não só no canvas: no celular deitado sobram faixas laterais, e é ali que ficam os polegares.
