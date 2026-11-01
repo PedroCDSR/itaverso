@@ -1,6 +1,6 @@
 import * as Phaser from 'phaser';
 import { LARGURA, ALTURA, TILE } from '../config.js';
-import { SPRITES_PNG, ArteJogador, ArteTiles } from '../art/index.js';
+import { SPRITES_PNG, TEM_LOGO, ArteJogador, ArteTiles } from '../art/index.js';
 import { texturaDeQuadros } from '../art/matriz.js';
 
 // Prepara texturas e animações antes do jogo começar.
@@ -10,6 +10,7 @@ export class Preload extends Phaser.Scene {
   }
 
   preload() {
+    if (TEM_LOGO) this.load.image('logo', 'assets/logo.png');
     for (const [nome, q] of Object.entries(SPRITES_PNG)) {
       this.load.spritesheet(nome, `assets/sprites/${nome}.png`, { frameWidth: q.largura, frameHeight: q.altura });
     }
@@ -26,7 +27,9 @@ export class Preload extends Phaser.Scene {
 
     this.criarAnimacoes();
     this.criarCeu();
-    this.scene.start('Teste');
+    // no `npm run dev`, ?cena=Final (por exemplo) abre direto uma cena, para testar
+    const pedida = import.meta.env.DEV && new URLSearchParams(location.search).get('cena');
+    this.scene.start(pedida && this.scene.get(pedida) ? pedida : 'Titulo');
   }
 
   criarAnimacoes() {

@@ -2,7 +2,12 @@ import * as Phaser from 'phaser';
 import { LARGURA, ALTURA, CORES_CSS, JOGADOR } from './config.js';
 import { Boot } from './scenes/Boot.js';
 import { Preload } from './scenes/Preload.js';
+import { Titulo } from './scenes/Titulo.js';
+import { Intro } from './scenes/Intro.js';
 import { Teste } from './scenes/Teste.js';
+import { Final } from './scenes/Final.js';
+import { Pausa } from './scenes/Pausa.js';
+import { Sobre } from './scenes/Sobre.js';
 import { ligarPausaGlobal } from './ui/pausaGlobal.js';
 import { iniciarAvisoGirar } from './ui/AvisoGirar.js';
 import { iniciarPausaFoco } from './ui/PausaFoco.js';
@@ -22,7 +27,7 @@ const config = {
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
-    // tela cheia na div inteira (com os avisos HTML dentro), não só no canvas
+    // tela cheia (só pelo botão da pausa) na div inteira, com os avisos HTML dentro, não só no canvas
     fullscreenTarget: container,
   },
   input: {
@@ -36,7 +41,8 @@ const config = {
     default: 'arcade',
     arcade: { gravity: { x: 0, y: JOGADOR.gravidade }, debug: false },
   },
-  scene: [Boot, Preload, Teste],
+  // Pausa e Sobre ficam no fim da lista: assim aparecem desenhadas por cima das outras cenas.
+  scene: [Boot, Preload, Titulo, Intro, Teste, Final, Pausa, Sobre],
 };
 
 // Espera as fontes antes de criar o jogo: o Phaser desenha texto em canvas e não troca a fonte depois.

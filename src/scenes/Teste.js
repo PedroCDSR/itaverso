@@ -3,21 +3,25 @@ import { LARGURA, ALTURA, TILE, CORES, CORES_CSS, FONTES, CAMERA } from '../conf
 import { TEXTOS } from '../data/textos.js';
 import { Entrada } from '../ui/Entrada.js';
 import { BotaoSom } from '../ui/BotaoSom.js';
-import { tentarTelaCheia } from '../ui/telaCheia.js';
+import { BotaoPausa } from '../ui/BotaoPausa.js';
+import { somarSapatilha, sapatilhas } from '../estado.js';
+import { FINAL } from '../fluxo.js';
 import { bipe } from '../audio/som.js';
 import { lerMapa, TIPO_TILE } from '../levels/leitor.js';
 import { TESTE } from '../levels/teste.js';
 import { Jogador } from '../objects/Jogador.js';
 
-// Cena de teste da Etapa 2: mapa em texto, jogador com a física final, câmera e céu de fim de tarde.
-// Objetos (maçã, capivara, toldo que quica...) aparecem como marcadores e ganham vida na Etapa 3.
+// Fase de teste (Etapas 2 e 7): mapa em texto, jogador com a física final, câmera e céu de fim de tarde.
+// Enquanto as fases de verdade (Etapas 3 a 6) não existem, ela faz o papel do jogo entre a Intro e o Final:
+// as sapatilhas já contam e a saída (E) leva ao Final. Os outros objetos ainda são só marcadores.
 export class Teste extends Phaser.Scene {
   constructor() {
     super('Teste');
   }
 
   create() {
-    this.jogando = false;
+    this.jogando = true;
+    this.cameras.main.fadeIn(250, 158, 158, 255);
     const mapa = lerMapa(TESTE, 'TESTE');
     this.mapa = mapa;
 
@@ -55,65 +59,86 @@ export class Teste extends Phaser.Scene {
     cam.setDeadzone(CAMERA.zonaMortaLargura, CAMERA.zonaMortaAltura);
 
     this.entrada = new Entrada(this);
-    new BotaoSom(this, LARGURA - 20, 20);
+    this.botaoSom = new BotaoSom(this, LARGURA - 20, 20);
+    new BotaoPausa(this, LARGURA - 56, 20, () => this.abrirPausa());
+    this.input.keyboard?.on('keydown-ESC', () => this.abrirPausa());
+    this.input.keyboard?.on('keydown-P', () => this.abrirPausa());
+    // ao voltar da pausa: som pode ter mudado e as teclas não podem ficar "presas"
+    this.events.on('resume', () => {
+      this.botaoSom.desenhar();
+      this.input.keyboard?.resetKeys();
+    });
+
+    // contador provisório de sapatilhas (o HUD completo vem na Etapa 3)
+    this.contador = this.add
+      .text(12, 12, '', { fontFamily: FONTES.titulo, fontSize: '8px', color: CORES_CSS.branco })
+      .setScrollFactor(0)
+      .setDepth(1001)
+      .setBackgroundColor(CORES_CSS.roxo)
+      .setPadding(6, 5, 6, 4);
+    this.atualizarContador();
+    this.ligarObjetos();
     if (!this.sys.game.device.input.touch) {
       this.add
-        .text(LARGURA / 2, 10, TEXTOS.teste.dicaTeclado, { fontFamily: FONTES.dialogo, fontSize: '12px', color: CORES_CSS.branco })
+        .text(LARGURA / 2, 40, TEXTOS.teste.dicaTeclado, { fontFamily: FONTES.dialogo, fontSize: '12px', color: CORES_CSS.branco })
         .setOrigin(0.5, 0)
         .setScrollFactor(0)
         .setDepth(900)
         .setShadow(1, 1, CORES_CSS.roxo, 0, false, true);
     }
 
-    this.criarTelaJogar();
   }
 
   // Marcadores provisórios dos objetos do mapa (Etapa 3 troca por objetos de verdade).
   criarMarcadores(objetos) {
     const cor = { maca: 0xe0453a, sapatilha: CORES.rosa, coracao: 0xff5a7a, capivara: 0x8a5a3a, checkpoint: CORES.verde, fonte: 0x9fb6c9, saida: CORES.amarelo };
     const tam = { capivara: [26, 16], fonte: [44, 24], saida: [18, 30], checkpoint: [6, 28] };
+    this.marcadores = [];
     for (const o of objetos) {
       const [w, h] = tam[o.tipo] || [8, 8];
       const y = tam[o.tipo] ? o.y - h / 2 : o.y - TILE / 2;
       const x = o.tipo === 'fonte' ? o.x + TILE : o.x;
-      this.add.rectangle(x, y, w, h, cor[o.tipo]).setStrokeStyle(1, 0x2e1a33);
+      const obj = this.add.rectangle(x, y, w, h, cor[o.tipo]).setStrokeStyle(1, 0x2e1a33);
+      this.marcadores.push({ tipo: o.tipo, obj });
     }
   }
 
-  criarTelaJogar() {
-    const t = TEXTOS.teste;
-    const tela = this.add.container(0, 0).setDepth(2000).setScrollFactor(0);
-    tela.add(this.add.rectangle(0, 0, LARGURA, ALTURA, CORES.lilas, 0.92).setOrigin(0));
-    tela.add(
-      this.add
-        .text(LARGURA / 2, 70, t.titulo, { fontFamily: FONTES.titulo, fontSize: '24px', color: CORES_CSS.branco })
-        .setOrigin(0.5)
-        .setShadow(2, 2, CORES_CSS.roxo, 0, false, true),
-    );
-    const botao = this.add.rectangle(LARGURA / 2, 150, 140, 40, CORES.rosa).setStrokeStyle(3, CORES.roxo);
-    tela.add(botao);
-    tela.add(
-      this.add
-        .text(LARGURA / 2, 151, TEXTOS.botoes.jogar, { fontFamily: FONTES.titulo, fontSize: '16px', color: CORES_CSS.roxo })
-        .setOrigin(0.5),
-    );
-    tela.add(
-      this.add
-        .text(LARGURA / 2, 200, t.tocarJogar, { fontFamily: FONTES.dialogo, fontSize: '16px', color: CORES_CSS.roxo })
-        .setOrigin(0.5),
-    );
-    botao.setInteractive({ useHandCursor: true });
-    // pointerup: o navegador só aceita tela cheia quando o dedo sai da tela
-    botao.on('pointerup', () => this.comecar(tela));
-    this.input.keyboard?.once('keydown-ENTER', () => this.comecar(tela));
+  // Sapatilhas que somam e a saída que leva ao Final.
+  ligarObjetos() {
+    this.saindo = false;
+    for (const m of this.marcadores) {
+      if (m.tipo !== 'sapatilha' && m.tipo !== 'saida') continue;
+      this.physics.add.existing(m.obj, true);
+      this.physics.add.overlap(this.jogador, m.obj, () => {
+        if (m.tipo === 'sapatilha') {
+          m.obj.destroy();
+          somarSapatilha(this);
+          this.atualizarContador();
+          bipe(990, 0.06);
+        } else {
+          this.irParaFinal();
+        }
+      });
+    }
   }
 
-  comecar(tela) {
-    if (this.jogando) return;
-    tentarTelaCheia(this);
-    bipe(520, 0.12);
-    tela.destroy();
-    this.jogando = true;
+  atualizarContador() {
+    this.contador.setText(`SAPATILHAS ${sapatilhas(this)}`);
+  }
+
+  abrirPausa() {
+    if (!this.scene.isActive() || this.saindo) return;
+    this.scene.pause();
+    this.scene.launch('Pausa', { cena: this.scene.key });
+  }
+
+  irParaFinal() {
+    if (this.saindo) return;
+    this.saindo = true;
+    this.jogando = false;
+    bipe(784, 0.25);
+    this.cameras.main.fadeOut(400, 0, 0, 0);
+    this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start(FINAL));
   }
 
   update(agora, delta) {

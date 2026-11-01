@@ -16,3 +16,7 @@ export const EVENTO = {
 export function linkWhatsapp() {
   return `https://wa.me/${EVENTO.whatsapp}?text=${encodeURIComponent(EVENTO.mensagemWhatsapp)}`;
 }
+
+// Endereço público do jogo (vai no COMPARTILHAR e nas meta tags do index.html).
+// No celular, o link compartilhado é o da página aberta (assim as prévias do Netlify também funcionam).
+export const URL_JOGO = 'https://aladdin-paulademarco.netlify.app/';

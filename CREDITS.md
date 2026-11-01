@@ -12,5 +12,5 @@ Tudo que vem de fora do projeto fica registrado aqui (autoria, licença e onde e
 As fontes vêm do repositório oficial `google/fonts` e foram convertidas para woff2, só com o alfabeto latino
 (Latin-1), para ficarem leves. A OFL permite essa conversão.
 
-Personagens, cenários e sprites: criação original deste projeto. A jogabilidade se inspira no gênero de plataforma
+Personagens, cenários, sprites, `og-image.png` e ícones: criação original deste projeto. A jogabilidade se inspira no gênero de plataforma
 dos anos 90; nenhum arquivo de arte, som ou música de outro jogo é usado.

@@ -161,7 +161,9 @@ Todos com design original. O elenco se baseia nos figurinos do espetáculo (`ref
 **Mobile:**
 
 - Em modo retrato, mostrar o aviso "Gire o celular" por cima do jogo e pausar.
-- Tentar tela cheia ao tocar em JOGAR no Android. No iPhone isso normalmente não funciona para páginas, então o jogo não pode depender disso.
+- **Sem tela cheia automática** (decisão do Pedro, 01/11/2026): o jogo roda no navegador normal ocupando `100dvh`. No Android, a tela cheia faz o Chrome mostrar por vários segundos a faixa "Para sair da tela cheia..." por cima do começo do jogo. Também não há trava de orientação.
+- Tela cheia **opcional** pelo botão "TELA CHEIA" do menu de pausa (só aparece onde o navegador permite; no iPhone, não).
+- `public/manifest.webmanifest` (`display: fullscreen`, `orientation: landscape`, ícones): quem usar "Adicionar à tela inicial" abre o jogo sem barras e deitado.
 - Layout ocupando 100% da altura visível (`100dvh`), sem rolagem, sem zoom por toque duplo, sem seleção de texto.
 - Pausar automaticamente quando a aba perde o foco.
 
@@ -262,15 +264,19 @@ Cada etapa termina com PR contra `dev` e o checklist da seção 3.
 | 0 | 01/11/2026 | [PR 1](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/1) | Vite 8 + Phaser 4.2.1, estrutura de pastas, fontes woff2 (33 KB), cena de teste com acentos e dados do evento. |
 | 1 | 01/11/2026 | [PR 2](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/2) | Aviso de girar, controles de toque + teclado, pausa ao perder o foco (volta com toque), som liberado no 1º toque, botão de som, tela cheia + trava deitado no Android. Cena de teste com um bloco que anda, pula e joga maçã. |
 | 2 | 01/11/2026 | [PR 3](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/3) | Leitor de mapas em texto, Aladdin original provisório (13 quadros em matriz), tiles 16×16, física com pulo variável, coyote e buffer, câmera com zona morta e folga à frente, céu de entardecer e morros. Pulo alto 69 px, pulo curto 34 px. |
+| 7 | 01/11/2026 | PR_ETAPA_7 | Título, Sobre o espetáculo, Intro (3 caixas, PULAR), Final (cortinas, fala da Tia Paula, cartão com QUERO INGRESSOS, COMPARTILHAR, INSTAGRAM, JOGAR DE NOVO), menu de pausa, meta tags + Open Graph + favicon + manifest. Tela cheia automática removida. Feita **antes** das Etapas 3 a 6: a fase de teste faz o papel das fases. `dist/` = 1,57 MB. |
 
-**Próximo passo (01/11/2026):** o Pedro testa a prévia do PR 3 no celular (sensação de correr e pular) e faz o merge no
-`dev`. Depois, **Etapa 3, Fase 1 (Itajubá)**: capivaras, maçãs com arremesso de verdade, toldos que quicam, fonte,
-sapatilhas, corações, checkpoint, HUD e transição. Apresentar o plano curto e esperar o OK antes de começar.
+**Próximo passo (01/11/2026):** o Pedro testa no celular a prévia do `dev` (fluxo Título → Intro → fase de teste → Final,
+botões do cartão, pausa, prévia do link no WhatsApp quando chegar ao `main`). Depois, **Etapa 3, Fase 1 (Itajubá)**:
+capivaras, maçãs com arremesso de verdade, toldos que quicam, fonte, sapatilhas, corações, checkpoint, HUD e transição.
+A fase nova entra no fluxo trocando `PRIMEIRA_FASE` em `src/fluxo.js` e terminando com `scene.start(FINAL)` (ou com a
+fase seguinte). Apresentar o plano curto e esperar o OK antes de começar.
 
 **Decisões técnicas da Etapa 1:**
 - O toque é escutado na **div inteira** (`input.touch.target`), não só no canvas: no celular deitado sobram faixas laterais, e é ali que ficam os polegares.
 - Os controles leem, a cada quadro, a posição de todos os dedos (`ui/ControlesToque.js`). Multitoque e deslizar de ◀ para ▶ funcionam sem eventos extras. As cenas usam só `ui/Entrada.js` (toque + teclado juntos).
-- "Gire o celular" e "Pausado" são HTML **dentro** da div `#jogo`, porque em tela cheia (Android) só aparece o que está dentro do elemento em tela cheia. Pausa com motivos acumulados em `ui/pausaGlobal.js`.
+- "Gire o celular" e "Pausado" são HTML **dentro** da div `#jogo`, porque em tela cheia só aparece o que está dentro do elemento em tela cheia. Pausa com motivos acumulados em `ui/pausaGlobal.js`.
+- ~~Tela cheia + trava deitado ao tocar em JOGAR no Android.~~ Removido na Etapa 7 (decisão do Pedro): a faixa "Para sair da tela cheia..." do Chrome atrapalhava o começo. Agora a tela cheia é só pelo botão da pausa (`ui/telaCheia.js`), sem trava de orientação, e há o manifest para "Adicionar à tela inicial".
 - Depois de perder o foco, o jogo só volta com um toque, para ninguém levar dano no susto.
 - O aviso de girar só aparece em aparelho de toque (`pointer: coarse`); no computador, nunca.
 - O iPhone silencia o Web Audio quando a chave lateral está no silencioso. Isso é do aparelho e foi mantido de propósito.
@@ -283,6 +289,17 @@ sapatilhas, corações, checkpoint, HUD e transição. Apresentar o plano curto 
 - PNG final: colocar em `public/assets/sprites/` e registrar em `SPRITES_PNG` (`src/art/index.js`). A lista evita pedidos 404.
 - Tiles via `Tilemap` do Phaser; `=` e `T` só colidem por cima. O mundo não tem chão invisível: cair abaixo do mapa volta ao checkpoint (por enquanto, o `P`).
 - Objetos do mapa (C, a, s, h, K, F, E) aparecem como marcadores coloridos; ganham comportamento na Etapa 3.
+
+**Decisões técnicas da Etapa 7:**
+- Feita antes das Etapas 3 a 6. O fluxo é Título → Intro → `PRIMEIRA_FASE` → Final (`src/fluxo.js`). Por enquanto a fase é o mapa de teste: as sapatilhas já contam (`src/estado.js`, no `registry` do Phaser) e a saída `E` leva ao Final. Contador de sapatilhas, botão de pausa e de som ficam no canto; o HUD completo é da Etapa 3.
+- Menus em Phaser, com `ui/Botao.js` (ação no `pointerup`, o único momento em que o navegador aceita abrir link, compartilhar e tela cheia). O cartão do evento (`ui/CartaoEvento.js`) é o mesmo no Sobre (Título e Pausa) e no Final; tudo lê de `src/data/`.
+- Pausa e Sobre são cenas sobrepostas: quem chama se pausa (`scene.pause`) e abre a outra por cima; VOLTAR/CONTINUAR retomam. Esc ou P abrem a pausa na fase. O aviso HTML "Pausado" continua só para perda de foco.
+- COMPARTILHAR usa `navigator.share` com o texto e o link da página aberta (prévias do Netlify compartilham a si mesmas). Sem suporte, copia texto + link e o botão mostra "LINK COPIADO!" por 2 s. Links abrem com `window.open` e, se um bloqueador impedir, na mesma aba.
+- JOGAR DE NOVO vai direto para a primeira fase (quem joga de novo já viu a intro) e zera as sapatilhas.
+- Tia Paula no Final é uma **silhueta neutra provisória** com microfone (a aparência dela está A DEFINIR, seção 8). Trocar pelo sprite na Etapa 8.
+- Sem `logo.png`, Título e Final mostram o nome da escola em texto. Ao colocar o arquivo, mudar `TEM_LOGO` para `true` em `src/art/index.js` (evita pedido 404).
+- `og-image.png` (1200×630, 81 KB) e ícones (favicon 32, apple-touch 180, manifest 192/512) são gerados por `ferramentas/og/gerar.mjs` com a arte do próprio jogo (céu, morros, tiles, Aladdin provisório, quadrados do logo). Rodar de novo quando a arte mudar. As meta tags `og:image` e `og:url` usam o endereço de produção, porque o WhatsApp exige endereço completo.
+- No `npm run dev`, `?cena=Final` (ou outra cena) abre direto aquela cena.
 
 **Riscos anotados:**
 - Texto com Patrick Hand num canvas de 480×270 ampliado pode ficar serrilhado. Avaliar no celular na Etapa 4; se ficar ruim, desenhar o texto de diálogo numa resolução maior (por exemplo, câmera com zoom 2 num jogo de 960×540).
