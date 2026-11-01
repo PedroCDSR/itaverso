@@ -28,8 +28,8 @@ PALETA = {
     'y': '#F9FCBB',  # amarelo claro (estrela, brilho)
     'b': '#6E4A2A',  # varinha
     # Tia Paula (mesmas cores da Tia Paula do tapete, em gerar_tapete.py)
-    'h': '#5A3A2A',  # cabelo
-    'H': '#3E2619',  # cabelo sombra
+    'h': '#E8C25A',  # cabelo loiro (Pedro, 01/11/2026)
+    'H': '#B88A32',  # cabelo sombra
     'q': '#E8B48A',  # pele
     'Q': '#C48C64',  # pele sombra
     'v': '#6D6BD9',  # vestido roxo (cor da escola)

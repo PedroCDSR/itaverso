@@ -21,7 +21,7 @@ PALETA = {
     'r': '#FFB0FA', 'R': '#D57FCF', 'l': '#9E9EFF', 'L': '#7C7CE0', 'y': '#F9FCBB', 'Y': '#D9D59A',
     'v': '#6D6BD9', 'V': '#4F4DB0', 'x': '#6CC24A',
     # Tia Paula (provisória)
-    'p': '#5A3A2A', 'P': '#3E2619', 'q': '#E8B48A', 'Q': '#C48C64',
+    'p': '#E8C25A', 'P': '#B88A32', 'q': '#E8B48A', 'Q': '#C48C64',
     # sabiá
     'b': '#8A6A4A', 'B': '#6A4E36', 'o': '#E8873A', 'O': '#C66A24', 'a': '#F2C14E',
     # varetas da pipa
@@ -185,7 +185,7 @@ def paula(q, ox, oy):
         q.ret(16 + ox - meia, y, 16 + ox - meia + 1, y, 'V')
     q.ret(13 + ox, 26 + oy, 20 + ox, 26 + oy, 'y')  # faixa amarela na cintura
     q.px(18 + ox, 21 + oy, 'q'); q.px(19 + ox, 21 + oy, 'q')
-    # cabeça: cabelo castanho escuro preso num coque alto (de bailarina)
+    # cabeça: cabelo LOIRO (Pedro, 01/11/2026) preso num coque alto (de bailarina)
     q.elipse(cx - 1, cy - 1, 5.5, 5.0, 'p')
     q.elipse(cx - 4, cy - 6, 2.6, 2.4, 'p')  # coque
     q.px(cx - 4, cy - 7, 'P'); q.px(cx - 3, cy - 6, 'P')

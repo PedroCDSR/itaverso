@@ -85,10 +85,10 @@ export class Final extends Phaser.Scene {
     r(0xc48c64, -1, -34, 3, 3);
     g.fillStyle(k, 1).fillCircle(0, -40, 7);
     g.fillStyle(0xe8b48a, 1).fillCircle(0, -40, 6);
-    // cabelo puxado para trás, com coque alto de bailarina
-    g.fillStyle(0x5a3a2a, 1).fillRect(-6, -47, 12, 4).fillRect(-6, -45, 2, 5).fillRect(4, -45, 2, 5);
-    g.fillStyle(0x5a3a2a, 1).fillCircle(0, -49, 4);
-    g.fillStyle(0x3e2619, 1).fillRect(-1, -51, 2, 2);
+    // cabelo LOIRO (Pedro, 01/11/2026) puxado para trás, com coque alto de bailarina
+    g.fillStyle(0xe8c25a, 1).fillRect(-6, -47, 12, 4).fillRect(-6, -45, 2, 5).fillRect(4, -45, 2, 5);
+    g.fillStyle(0xe8c25a, 1).fillCircle(0, -49, 4);
+    g.fillStyle(0xb88a32, 1).fillRect(-1, -51, 2, 2);
     // olhos e sorriso
     r(0x2a1a1c, -3, -41, 1, 2);
     r(0x2a1a1c, 2, -41, 1, 2);

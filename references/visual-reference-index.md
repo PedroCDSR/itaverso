@@ -15,7 +15,7 @@ Situação em 01/11/2026, depois da auditoria:
 | Jasmine, Gênio, Sultão, Abu | `src/art/espaco.js` (`dev`) + `jasmine.js`, `genio.js`, `sultao.js`, `abu.js` (8A) | `estilo/`; `figurinos/` (a subir) | provisório, **duplicado** | proporção "cabeçuda", 2 tons, pouco detalhe |
 | Bailarina (8A) | `bailarina.js` (8A) | `estilo/` | provisório | idem |
 | Jafar | `src/art/chefe.js` (`dev`) + `jafar.js` (8A) | `estilo/`; `figurinos/` (a subir) | provisório, **duplicado** | duas versões diferentes |
-| Tia Paula | `tapete.js`, `chefe.js`, `Graphics` no Final (`dev`) + `paula.js` (8A) | `pessoas/` (a subir) | provisório, **3 versões** | cabelo loiro (Pedro, 01/11); as versões atuais têm coque castanho: errado |
+| Tia Paula | `tapete.js`, `chefe.js`, `Graphics` no Final (`dev`) + `paula.js` (8A) | `pessoas/` (a subir) | provisório, **3 versões** | loira, rabo de cavalo, camiseta preta do Aladdin (Pedro, 01/11). Hoje: só o cabelo virou loiro; coque e vestido roxo ainda errados (8A) |
 | Tia Claudia | `espaco.js` (`dev`) + `claudia.js` (8A) | `pessoas/` (a subir) | provisório, **duplicado** | só "óculos e cabelo preto" é dado real |
 | Capivara | `src/art/objetos.js` (`dev`) + `capivara.js` (8A) | `licenciados/` (divulgação), `estilo/` | provisório | mais escura e menos fofa que a referência |
 | Maçã, sapatilha, coração, fonte, bandeira | `src/art/objetos.js` | `estilo/` | provisório | poucos tons; fonte genérica |
