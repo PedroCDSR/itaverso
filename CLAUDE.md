@@ -122,7 +122,7 @@ export const EVENTO = {
   data: 'Sexta-feira, 20 de novembro de 2026',
   horario: '19h',
   local: 'Teatro do Colégio G9, Itajubá/MG',
-  ingresso: 'R$ 75,00 · compra pelo WhatsApp com a Tia Paula',
+  ingresso: 'R$ 75,00 · compra pelo WhatsApp com a Tia Claudia',
   whatsapp: '553584713436',
   mensagemWhatsapp:
     'Oi! Vim pelo jogo do Aladdin e quero saber dos ingressos para o espetáculo do dia 20/11.',
@@ -130,7 +130,7 @@ export const EVENTO = {
 };
 ```
 
-O botão de ingresso abre `https://wa.me/<whatsapp>?text=<mensagem com encodeURIComponent>`. A compra é feita com a Tia Paula por esse WhatsApp (informação do Pedro, 01/11/2026). A mensagem pronta permite à escola saber quantos contatos vieram do jogo.
+O botão de ingresso abre `https://wa.me/<whatsapp>?text=<mensagem com encodeURIComponent>`. A compra é feita com a **Tia Claudia** por esse WhatsApp (informação do Pedro, 01/11/2026). A mensagem pronta permite à escola saber quantos contatos vieram do jogo.
 
 ## 7. Identidade visual e arte
 
@@ -290,7 +290,7 @@ export const TESTE = [
 
 1. **Título**: logo, nome do jogo, botões JOGAR e SOBRE O ESPETÁCULO (mostra os dados do evento e o botão de ingresso, para quem não quer jogar). Aviso de girar o celular.
 2. **Intro** (3 caixas de texto, com opção de pular): Aladdin está em Itajubá e descobre que vai ter espetáculo no Teatro do Colégio G9, mas precisa buscar os ingressos no Espaço Paula De Marco.
-3. **Fase 1, Itajubá** (60 a 90 s): rua com casas, praça e barracas, morros ao fundo em parallax de 2 ou 3 camadas. Pular a fonte, quicar nos toldos, passar pelas capivaras. Com pisão ou maçã, a capivara pega a maçã e sai feliz comendo, ou adormece com um "zzz". Sapatilhas para coletar e 1 checkpoint no meio. Termina na porta do Espaço Paula De Marco.
+3. **Fase 1, Itajubá** (60 a 90 s): rua com casas, praça e barracas, morros ao fundo em parallax de 2 ou 3 camadas. **Lugares reais, nesta ordem** (pedido do Pedro, 01/11/2026; fotos e detalhes em `references/lugares/reference-notes.md`): Clube Itajubense (no fundo) → fonte da praça com o busto do Teodomiro Santiago → Café do Vadinho → Igreja Matriz → posto Esso, "o menor posto de gasolina do mundo" (sem o logo da marca) → Praça do Soldado (estátua e helicóptero). Pular a fonte, quicar nos toldos, passar pelas capivaras. Com pisão ou maçã, a capivara pega a maçã e sai feliz comendo, ou adormece com um "zzz". Sapatilhas para coletar e 1 checkpoint no meio. Termina na porta do Espaço Paula De Marco.
 4. **Fase 2, Espaço Paula De Marco** (30 a 45 s, sem inimigos): estúdio de dança com espelhos, barras e piso de madeira. Os personagens do espetáculo estão ensaiando; chegar perto de cada um mostra uma fala. Tia Claudia entrega os ingressos e o contador aparece no HUD. Em seguida, alguém chega correndo: o Jafar levou a Tia Paula! Transição para o chefe.
 5. **Fase 3, Resgate** (arena de uma tela): Tia Paula presa numa gaiola no canto. O Jafar flutua de um lado para o outro, lança 3 projéteis em leque a cada poucos segundos e fica vulnerável (piscando) logo depois. 5 acertos de maçã para vencer; maçãs reaparecem no chão da arena. Barra de vida do chefe no topo. Ao vencer, o Jafar some numa nuvem de fumaça e a gaiola se abre.
 6. **Fase 4, Tapete** (35 a 45 s, rolagem automática): Aladdin e Tia Paula voam sobre Itajubá ao entardecer. Segurar sobe, soltar desce. Obstáculos: pássaros, pipas e fios. Bater só faz piscar e perder sapatilhas, nunca para o jogo. Termina na fachada do Teatro do Colégio G9.
@@ -326,10 +326,11 @@ Cada etapa termina com PR contra `dev` e o checklist da seção 3.
 ## 13. Pendências do Pedro
 
 - [x] Conectar o repositório no Netlify (01/11/2026): projeto `aladdin-paulademarco`, produção em https://aladdin-paulademarco.netlify.app (`main`), *Branch deploys* = `dev`, *Deploy Previews* ligados. O menu fica em Project configuration > Developer settings > Branches and deploy contexts.
-- [x] Horário do espetáculo (19h), valor (R$ 75,00) e forma de compra (WhatsApp com a Tia Paula), informados em 01/11/2026
+- [x] Horário do espetáculo (19h), valor (R$ 75,00) e forma de compra (WhatsApp com a Tia Claudia), informados em 01/11/2026
 - [ ] Fotos dos figurinos em `references/figurinos/`
 - [ ] Foto ou descrição da Tia Paula e da Tia Claudia, e o OK das duas para aparecerem no jogo
-- [ ] Fotos de referência da fonte de Itajubá e da fachada do Teatro do Colégio G9
+- [x] Fotos dos lugares da Fase 1 (Clube Itajubense, fonte da praça, Café do Vadinho, Igreja Matriz, posto Esso, Praça do Soldado), enviadas em 01/11/2026
+- [ ] Fotos da fachada do Teatro do Colégio G9 e do estúdio do Espaço
 - [ ] Logo em boa resolução em `public/assets/logo.png`
 - [ ] Música CC0, se não for usar a gerada em código
 - [ ] Revisão dos textos em `src/data/textos.js`

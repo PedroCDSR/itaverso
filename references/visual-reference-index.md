@@ -19,7 +19,7 @@ Situação em 01/11/2026, depois da auditoria e da Etapa 8.0 (guia em `estilo/re
 | Tia Claudia | `espaco.js` (`dev`) + `claudia.js` (8A) | `pessoas/` (a subir) | provisório, **duplicado** | só "óculos e cabelo preto" é dado real |
 | Capivara | `src/art/objetos.js` (`dev`) + `capivara.js` (8A) | `licenciados/` (divulgação), `estilo/` | provisório | mais escura e menos fofa que a referência |
 | Maçã, sapatilha, coração, fonte, bandeira | `src/art/objetos.js` | `estilo/` | provisório | poucos tons; fonte genérica |
-| Rua, casas, chão (Itajubá) | `src/art/tiles.js`, casario em canvas no `Preload` | `estilo/`; `lugares/` (a subir) | provisório | paredes lisas, chão repetido, sem objetos nem primeiro plano |
+| Rua, casas, chão e **lugares reais** (Itajubá) | `src/art/tiles.js`, casario em canvas no `Preload` | `estilo/`; `lugares/` (6 lugares em ordem: Clube Itajubense, fonte com busto, Café do Vadinho, Igreja Matriz, posto Esso, Praça do Soldado) | provisório | paredes lisas, chão repetido, sem objetos nem primeiro plano |
 | Barracas e toldos | `Graphics` na cena Itajubá | `estilo/` (`snes-mercado-toldos.jpg`) | provisório | toldos sem dobras e com 1 a 2 tons |
 | Estúdio do Espaço | `Preload` (canvas) + `tiles-espaco` | `estilo/`; `lugares/` (a subir) | provisório | espelhos lisos, cena vazia |
 | Arena do chefe | `src/levels/chefe.js` + `Graphics` | `estilo/` | provisório | reaproveita os morros; pouca textura |
