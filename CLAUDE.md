@@ -120,9 +120,9 @@ export const EVENTO = {
   titulo: 'Aladdin',
   escola: 'Paula De Marco Espaço de Artes',
   data: 'Sexta-feira, 20 de novembro de 2026',
-  horario: 'A DEFINIR',
+  horario: '19h',
   local: 'Teatro do Colégio G9, Itajubá/MG',
-  ingresso: 'A DEFINIR (valor e forma de compra)',
+  ingresso: 'R$ 75,00 · compra pelo WhatsApp com a Tia Paula',
   whatsapp: '553584713436',
   mensagemWhatsapp:
     'Oi! Vim pelo jogo do Aladdin e quero saber dos ingressos para o espetáculo do dia 20/11.',
@@ -130,7 +130,7 @@ export const EVENTO = {
 };
 ```
 
-O botão de ingresso abre `https://wa.me/<whatsapp>?text=<mensagem com encodeURIComponent>`. A mensagem pronta permite à escola saber quantos contatos vieram do jogo.
+O botão de ingresso abre `https://wa.me/<whatsapp>?text=<mensagem com encodeURIComponent>`. A compra é feita com a Tia Paula por esse WhatsApp (informação do Pedro, 01/11/2026). A mensagem pronta permite à escola saber quantos contatos vieram do jogo.
 
 ## 7. Identidade visual e arte
 
@@ -212,7 +212,7 @@ Todos com design próprio. O elenco se baseia nos figurinos do espetáculo (`ref
 
 - **Aladdin** (jogador): herói ágil, com o figurino do espetáculo.
 - **Tia Claudia** (staff do Espaço): usa óculos e tem cabelo preto. Entrega os ingressos.
-- **Tia Paula De Marco** (diretora da escola): é resgatada e abre o espetáculo. **Cabelo loiro** (informação do Pedro, 01/11/2026). O resto da aparência: A DEFINIR (ver `references/pessoas/`).
+- **Tia Paula De Marco** (diretora da escola): é resgatada e abre o espetáculo. **Loira, de rabo de cavalo, com camiseta preta** (de preferência a camiseta preta do Aladdin; o Pedro vai mandar o print para `references/pessoas/`). Informação do Pedro, 01/11/2026. O resto (rosto, calça, sapatos): neutro e provisório até a foto.
 - **Jasmine, Gênio, Abu e demais personagens do espetáculo**: aparecem rapidamente no Espaço, com uma fala cada.
 - **Jafar** (vilão e chefe): com o figurino do espetáculo.
 - **Capivaras** (inimigos de Itajubá): fofas e trapalhonas, nunca assustadoras.
@@ -326,7 +326,7 @@ Cada etapa termina com PR contra `dev` e o checklist da seção 3.
 ## 13. Pendências do Pedro
 
 - [x] Conectar o repositório no Netlify (01/11/2026): projeto `aladdin-paulademarco`, produção em https://aladdin-paulademarco.netlify.app (`main`), *Branch deploys* = `dev`, *Deploy Previews* ligados. O menu fica em Project configuration > Developer settings > Branches and deploy contexts.
-- [ ] Horário do espetáculo, valor e forma de compra do ingresso
+- [x] Horário do espetáculo (19h), valor (R$ 75,00) e forma de compra (WhatsApp com a Tia Paula), informados em 01/11/2026
 - [ ] Fotos dos figurinos em `references/figurinos/`
 - [ ] Foto ou descrição da Tia Paula e da Tia Claudia, e o OK das duas para aparecerem no jogo
 - [ ] Fotos de referência da fonte de Itajubá e da fachada do Teatro do Colégio G9
