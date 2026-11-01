@@ -183,6 +183,7 @@ h  coração
 K  checkpoint
 P  início do jogador
 E  saída da fase
+N  personagem que conversa (quem é cada um, da esquerda para a direita, vem de uma lista no arquivo da fase)
 ```
 
 Exemplo:
@@ -265,10 +266,13 @@ Cada etapa termina com PR contra `dev` e o checklist da seção 3.
 | 2 | 01/11/2026 | [PR 3](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/3) | Leitor de mapas em texto, Aladdin original provisório (13 quadros em matriz), tiles 16×16, física com pulo variável, coyote e buffer, câmera com zona morta e folga à frente, céu de entardecer e morros. Pulo alto 69 px, pulo curto 34 px. |
 | 3 | 01/11/2026 | [PR 7](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/7) | Fase 1 com 320 colunas: rua, feira com 6 barracas de toldo, praça com fonte, checkpoint, buracos e plataformas, porta do Espaço. 12 capivaras (pisão = dorme; maçã = come e vai embora; de lado = 1 coração), 38 sapatilhas, 9 maçãs, 3 corações. HUD com corações, maçãs, sapatilhas, pausa e som. Casario de Itajubá no fundo (3 camadas). `dist/` com 1,5 MB. |
 
-**Próximo passo (01/11/2026):** o Pedro testa a prévia do PR da Etapa 3 no celular (a fase inteira, do começo até a
-porta do Espaço) e faz o merge no `dev`. Depois, **Etapa 4, Fase 2 (Espaço Paula De Marco)**: sistema de diálogo, NPCs,
-Tia Claudia com os ingressos, contador de ingressos no HUD e a transição para o chefe. A tela provisória `EmBreve`
-sai nessa etapa.
+| 4 | 01/11/2026 | [PR 8](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/8) | Fase 2 com 100 colunas: estúdio com espelhos, barras, piso de madeira e tablados. Diálogo em HTML nítido (Patrick Hand, até 2 linhas, máquina de escrever, avança com toque ou tecla). Jasmine, Gênio e Sultão ensaiando (1 fala cada), Tia Claudia no balcão entrega 4 ingressos que voam até o contador do HUD, Abu chega correndo com a notícia. Cena `Chefe` provisória. `?fase=espaco` abre direto na Fase 2. `dist/` com 1,5 MB. |
+
+**Próximo passo (01/11/2026):** o Pedro testa no celular a prévia do `dev` (Fase 1 até o fim, Fase 2 inteira com as
+conversas e a entrega dos ingressos; dá para abrir direto com `?fase=espaco`) e revisa as falas em
+`src/data/textos.js`. Depois, **Etapa 5, Fase 3 (Resgate)**: arena de uma tela, Tia Paula na gaiola, Jafar flutuando
+com 3 projéteis em leque, 5 acertos de maçã, barra de vida, maçãs que reaparecem e a gaiola abrindo. A cena
+provisória `scenes/Chefe.js` é substituída nessa etapa.
 
 **Decisões técnicas da Etapa 1:**
 - O toque é escutado na **div inteira** (`input.touch.target`), não só no canvas: no celular deitado sobram faixas laterais, e é ali que ficam os polegares.
@@ -297,10 +301,26 @@ sai nessa etapa.
 - Maçã: arco baixo que quica até 3 vezes e rola, para acertar capivaras de perto e de longe (até ~140 px). O `overlap` do Arcade entre dois grupos não disparou para maçã × capivara; a checagem é feita à mão no `update()`.
 - Ao voltar ao checkpoint: vida cheia, 1 s de invencibilidade e no mínimo 3 maçãs. Capivaras dormindo continuam dormindo.
 - Coração só é recolhido se faltar vida; maçã só se houver espaço (máximo 9).
-- A tela "JOGAR" provisória continua até a Etapa 7. Ao chegar na porta, `scenes/EmBreve.js` mostra as sapatilhas e "JOGAR DE NOVO" (sai na Etapa 4).
+- A tela "JOGAR" provisória continua até a Etapa 7. Ao chegar na porta, a Fase 2 começa (a tela `EmBreve` saiu na Etapa 4).
 - Teste automatizado no Chromium (Playwright) conferiu: pisão, maçã, quique no toldo, checkpoint, buraco, 3 danos, coleta, chegada na porta e jogar de novo, sem erros no console.
+
+**Decisões técnicas da Etapa 4:**
+- Modo autônomo autorizado pelo Pedro (01/11/2026): decisões tomadas sem esperar OK e registradas aqui e no PR.
+- O PR da Etapa 3 (PR 7) ainda não tinha merge; a branch `etapa-4-espaco` partiu do `dev` e recebeu a Etapa 3 por merge, porque a Fase 1 precisa levar até a Fase 2. O merge da Etapa 4 no `dev` leva a Etapa 3 junto.
+- **Texto serrilhado (risco da Etapa 2): resolvido com HTML.** O canvas de 480×270 é ampliado inteiro, então qualquer texto do Phaser fica com a resolução do jogo, por mais que se aumente a fonte. A caixa de diálogo (`ui/Dialogo.js`) é uma `div` dentro de `#jogo` (aparece em tela cheia), posicionada sobre o canvas a cada quadro, com todas as medidas em "pixels do jogo" × escala (variável CSS `--u`). Assim a quebra de linha é a mesma em qualquer tela e a letra sai nítida. Resultado conferido em captura de 844×390 com densidade 3 (iPhone deitado).
+- Diálogo: no máximo 2 linhas (no `npm run dev` aparece aviso no console se passar), "máquina de escrever" no relógio da cena (para junto com a pausa), 1º toque completa o texto, o seguinte avança, seta rosa piscando quando dá para avançar. Só conta o toque que **começou** com a caixa aberta (o dedo que segurava ▶ ao chegar no NPC não pula a fala) e há 250 ms mínimos por caixa. Teclas: espaço, Enter, W, X, J, seta para cima. A tecla que tira da pausa não avança a fala (a escuta é na fase de captura). Ao fechar, `Entrada.ignorarAteSoltar()` evita que o mesmo toque vire pulo.
+- Conversa dispara pela distância só em x (44 px), para ninguém passar pulando por cima sem querer. Enquanto conversa, o jogador fica parado. Quem ainda não falou tem um balãozinho "..." e olha para o jogador.
+- Personagens originais e provisórios em `ferramentas/arte/gerar_espaco.py` → `src/art/espaco.js` (as fotos dos figurinos ainda não chegaram; as imagens em `references/figurinos/` são capturas de jogo, que valem só como clima): Jasmine (trança, tiara, top lilás, calça bufante rosa; 2 quadros de balé), Gênio (pele lilás, coque, colete rosa, cauda de fumaça amarela; flutua), Sultão (turbante rosa com pena, barba branca, capa roxa; bate palmas), Tia Claudia (cabelo preto no ombro, óculos de armação roxa, camiseta rosa com os quadradinhos do logo; quadro com os ingressos na mão), Abu (macaquinho com colete rosa e chapéu roxo; correndo e aflito). Nenhum usa as cores ou silhuetas do filme.
+- Mapa da Fase 2 em `ferramentas/mapas/gerar_espaco.py` → `src/levels/espaco.js`. Novo caractere `N` (personagem); quem é cada um vem de `NPCS_ESPACO`, na ordem. Tiles do estúdio usam a mesma `ORDEM` de `tiles.js` com outra textura (`tiles-espaco`): piso de madeira e tablado lilás (atravessa por baixo).
+- Parede com espelhos e barras desenhada em canvas no `Preload` (faixa de 240 px repetida); cartaz "ALADDIN · 20/11", balcão e porta com `Graphics` na cena.
+- Sem inimigos: o botão MAÇÃ some (`ControlesToque.esconderBotao`). Vida cheia ao entrar; maçãs e sapatilhas da Fase 1 continuam.
+- Ingressos: a Tia Claudia entrega 4 (`ESPACO.ingressos` em `config.js`). O HUD mostra o contador só quando `ingressos` não é `null` (a Fase 1 zera para `null`). O total de sapatilhas das duas fases vai em `sapatilhasTotal`.
+- Quem chega correndo é o **Abu**, pela porta do fundo do estúdio: "O Jafar levou a Tia Paula!". A Tia Claudia fecha com "Corre, Aladdin!". Transição com clarão roxo e escurecida para `scenes/Chefe.js`, tela provisória com sapatilhas, ingressos e JOGAR DE NOVO até a Etapa 5.
+- `?fase=espaco` (e `?fase=chefe`) no endereço abre direto naquela fase, para testar no celular. Vale também na produção; não atrapalha quem joga normalmente.
+- Teste automatizado no Chromium (Playwright), sem erros no console: fase inteira com teclado (4 conversas, 13 caixas, 4 ingressos, chegada no Chefe em 28 s com o robô lendo ~1 s por caixa); com toque em 844×390: Fase 1 → porta → Fase 2, dedo antigo não avança a fala, pausa no meio do diálogo e volta sem avançar, toque avança e fecha.
 
 **Riscos anotados:**
 - A Fase 1 tem ~4.900 px: correndo direto dá ~35 s; com capivaras, toldos e coleta, a estimativa é de 60 a 80 s. Medir no celular e ajustar no polimento (Etapa 10).
-- Texto com Patrick Hand num canvas de 480×270 ampliado pode ficar serrilhado. Avaliar no celular na Etapa 4; se ficar ruim, desenhar o texto de diálogo numa resolução maior (por exemplo, câmera com zoom 2 num jogo de 960×540).
+- ~~Texto serrilhado no diálogo~~: resolvido na Etapa 4 com a caixa em HTML. Os outros textos do Phaser (HUD, faixas, avisos) continuam na resolução do jogo; se incomodarem no celular, dá para levá-los para HTML do mesmo jeito.
+- A Fase 2 tem 13 caixas de diálogo. Com leitura de ~2,5 s por caixa, a fase fica perto de 45 s (o limite de cima). Se ficar longa no teste com crianças, cortar falas em `textos.js`.
 - O Phaser completo pesa ~1,2 MB minificado (~330 KB comprimido na transferência). Cabe no orçamento; se apertar, trocar pelo build só com Arcade Physics.

@@ -3,10 +3,11 @@ import { ArteTiles } from '../art/index.js';
 // Lê um mapa em texto (CLAUDE.md, seção 10) e devolve tiles + objetos.
 //
 // Tiles: '#' bloco sólido, '=' plataforma que se atravessa por baixo, 'T' toldo.
-// Objetos: 'F' fonte, 'C' capivara, 'a' maçã, 's' sapatilha, 'h' coração, 'K' checkpoint, 'P' início, 'E' saída.
+// Objetos: 'F' fonte, 'C' capivara, 'a' maçã, 's' sapatilha, 'h' coração, 'K' checkpoint, 'P' início, 'E' saída,
+// 'N' personagem que conversa (NPC; quem é cada um vem de uma lista na própria fase).
 // x/y dos objetos ficam no CENTRO-BAIXO do tile, em pixels (prontos para posicionar sprites "em pé").
 
-const OBJETOS = { F: 'fonte', C: 'capivara', a: 'maca', s: 'sapatilha', h: 'coracao', K: 'checkpoint', P: 'inicio', E: 'saida' };
+const OBJETOS = { F: 'fonte', C: 'capivara', a: 'maca', s: 'sapatilha', h: 'coracao', K: 'checkpoint', P: 'inicio', E: 'saida', N: 'npc' };
 const T = Object.fromEntries(ArteTiles.ORDEM.map((nome, i) => [nome, i]));
 
 export const TIPO_TILE = { vazio: -1, chaoTopo: T.chaoTopo, chao: T.chao, plataforma: T.plataforma, toldo: T.toldo };

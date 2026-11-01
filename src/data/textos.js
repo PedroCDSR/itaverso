@@ -26,11 +26,37 @@ export const TEXTOS = {
     checkpoint: 'Ponto salvo!',
     semMaca: 'Sem maçãs!',
   },
-  // Tela provisória até a Fase 2 existir (Etapa 4)
-  emBreve: {
-    titulo: 'Você chegou ao Espaço!',
-    sapatilhas: (n) => `Sapatilhas: ${n}`,
-    proxima: 'A Fase 2 chega na próxima etapa.',
+  // Fase 2. Cada fala tem no máximo 2 linhas na caixa de diálogo (o modo dev avisa no console se passar).
+  espaco: {
+    nomeFase: 'Fase 2 · Espaço Paula De Marco',
+    objetivo: 'Busque os ingressos com a Tia Claudia!',
+    cartaz: 'ALADDIN · 20/11',
+    balcao: 'INGRESSOS',
+    ingressos: (n) => `+${n} ingressos!`,
+    // ordem dos 'N' no mapa, da esquerda para a direita (levels/espaco.js)
+    npcs: {
+      jasmine: { nome: 'Jasmine', falas: ['Oi, Aladdin! Estou ensaiando o meu balé.', 'Olha só o meu giro!'] },
+      genio: { nome: 'Gênio', falas: ['Três desejos? Hoje só um:', 'que você venha ver a gente no palco!'] },
+      sultao: { nome: 'Sultão', falas: ['Ensaio é coisa séria...', 'mas dançar é muito divertido!'] },
+    },
+    claudia: {
+      nome: 'Tia Claudia',
+      antes: ['Aladdin! Que bom que você chegou!', 'Aqui estão os ingressos para o espetáculo do dia 20/11!'],
+      depois: ['Guarde bem! A gente se vê no Teatro do Colégio G9.'],
+    },
+    abu: { nome: 'Abu', falas: ['Socorro! Socorro!', 'O Jafar levou a Tia Paula!'] },
+    final: {
+      nome: 'Tia Claudia',
+      falas: ['Sem a Tia Paula não tem espetáculo!', 'Corre, Aladdin! Vai salvar a Tia Paula!'],
+    },
+  },
+  // Tela provisória até a Fase 3 existir (Etapa 5)
+  chefe: {
+    titulo: 'Fase 3 · Resgate',
+    aviso: 'O Jafar levou a Tia Paula!',
+    proxima: 'A luta contra o Jafar chega na próxima etapa.',
+    sapatilhas: (n, total) => `Sapatilhas: ${n} / ${total}`,
+    ingressos: (n) => `Ingressos: ${n}`,
     jogarDeNovo: 'JOGAR DE NOVO',
   },
 };

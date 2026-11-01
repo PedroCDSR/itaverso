@@ -86,6 +86,24 @@ export const MACA = {
   duracaoMs: 1600,
 };
 
+// Caixa de diálogo (ui/Dialogo.js). Medidas em pixels do jogo (480x270); o texto é HTML nítido por cima do canvas.
+export const DIALOGO = {
+  largura: 400,
+  topo: 34, // abaixo do HUD
+  tamanhoFonte: 17, // Patrick Hand; com 2 linhas a caixa fica com ~60 px de altura
+  letrasPorSegundo: 55, // efeito de "máquina de escrever" (tocar completa o texto na hora)
+  esperaMinimaMs: 250, // tempo mínimo na tela antes de aceitar o toque (evita pular sem querer)
+  maxLinhas: 2,
+};
+
+// Fase 2, Espaço Paula De Marco (sem inimigos).
+export const ESPACO = {
+  distanciaConversa: 44, // quão perto (x, em px) o jogador chega para o NPC falar
+  ingressos: 4, // quantos ingressos a Tia Claudia entrega
+  intervaloIngressoMs: 260, // um ingresso voando para o HUD a cada...
+  velocidadeAbu: 190, // o Abu chega correndo
+};
+
 export const CHEFE = {
   vida: 5,
 };

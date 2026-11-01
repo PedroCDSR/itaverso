@@ -11,7 +11,7 @@ import { Capivara } from '../objects/Capivara.js';
 
 // Fase 1, Itajubá (CLAUDE.md, seção 11, cena 3).
 // Rua, feira com toldos que quicam, praça com a fonte, capivaras, maçãs, sapatilhas, corações e 1 checkpoint.
-// Termina na porta do Espaço Paula De Marco. O HUD é outra cena, por cima (scenes/HUD.js), e lê o "registry".
+// Termina na porta do Espaço Paula De Marco, que leva à Fase 2 (scenes/Espaco.js). O HUD é outra cena, por cima (scenes/HUD.js), e lê o "registry".
 export class Itajuba extends Phaser.Scene {
   constructor() {
     super('Itajuba');
@@ -85,7 +85,15 @@ export class Itajuba extends Phaser.Scene {
     this.entrada = new Entrada(this);
 
     // estado que o HUD mostra
-    this.registry.set({ vida: J.coracoes, vidaMax: J.coracoes, macas: J.macasIniciais, sapatilhas: 0 });
+    // (ingressos = null: o contador só aparece a partir da Fase 2)
+    this.registry.set({
+      vida: J.coracoes,
+      vidaMax: J.coracoes,
+      macas: J.macasIniciais,
+      sapatilhas: 0,
+      sapatilhasTotalFase1: this.totalSapatilhas,
+      ingressos: null,
+    });
 
     if (this.direto) this.comecar(null);
     else this.criarTelaJogar();
@@ -465,7 +473,7 @@ export class Itajuba extends Phaser.Scene {
     cam.fadeOut(700, 158, 158, 255);
     cam.once('camerafadeoutcomplete', () => {
       this.scene.stop('HUD');
-      this.scene.start('EmBreve', { sapatilhas: this.registry.get('sapatilhas'), total: this.totalSapatilhas });
+      this.scene.start('Espaco');
     });
   }
 
