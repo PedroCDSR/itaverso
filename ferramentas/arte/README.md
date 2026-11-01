@@ -14,11 +14,11 @@ python3 ferramentas/arte/gerar_jogador.py . /tmp
 python3 ferramentas/arte/gerar_tiles.py . /tmp
 ```
 
+Rodar um gerador **sobrescreve** a matriz correspondente em `src/art/`: edições feitas à mão nela se perdem.
+
+A arte da Fase 3 (Jafar, projétil, gaiola e Tia Paula) vem de outro gerador. A Tia Paula tem aparência A DEFINIR:
+o desenho é neutro e fica num sprite separado (`tiaPaula`), para trocar fácil.
+
 ```bash
 python3 ferramentas/arte/gerar_chefe.py . /tmp
 ```
-
-`gerar_chefe.py` faz a arte da Fase 3: Jafar, projétil, gaiola e Tia Paula (aparência A DEFINIR, desenho neutro
-num sprite separado, `tiaPaula`, para trocar fácil).
-
-Rodar um gerador **sobrescreve** a matriz correspondente em `src/art/`: edições feitas à mão nela se perdem.
