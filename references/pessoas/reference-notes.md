@@ -4,7 +4,8 @@
 
 **Situação (01/11/2026):** sem fotos.
 - Tia Claudia: o CLAUDE.md diz só "usa óculos e tem cabelo preto".
-- Tia Paula: aparência A DEFINIR.
+- Tia Paula: **cabelo loiro** (informação do Pedro, 01/11/2026). O resto da aparência, A DEFINIR.
+  As versões provisórias antigas (coque castanho) estão erradas e devem ser trocadas.
 
 **Enquanto não houver fotos:** sprite com qualidade completa, marcado como **provisório**, usando só o que está escrito
 acima; o resto (roupa, penteado) é neutro e fácil de trocar. Não inventar traços que pareçam retratar a pessoa.

@@ -159,7 +159,12 @@ export class Dialogo {
   }
 
   avancar() {
+    // Um mesmo toque pode chegar duas vezes (toque em qualquer lugar + botão PRÓXIMO do canvas):
+    // ignora a segunda chamada no mesmo instante.
+    const agora = performance.now();
+    if (agora - (this.ultimoAvanco || 0) < 120) return;
     if (this.scene.time.now - this.abertaEm < DIALOGO.esperaMinimaMs) return;
+    this.ultimoAvanco = agora;
     if (this.letras < this.texto.length) this.completar();
     else this.proxima();
   }
