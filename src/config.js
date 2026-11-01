@@ -90,8 +90,31 @@ export const CHEFE = {
   vida: 5,
 };
 
+// Fase 4 (Tapete). Segurar = sobe, soltar = desce. Acelera até a velocidade máxima, então a resposta é
+// rápida mas sem tranco. A duração vem do tamanho do mapa: (colunas × 16) / velocidadeRolagem.
 export const TAPETE = {
-  duracaoSeg: 40,
+  velocidadeRolagem: 96, // px/s para a direita (mapa de 240 colunas = 40 s)
+  aceleracaoSubida: 900, // segurando
+  aceleracaoDescida: 650, // soltou (desce um pouco mais devagar do que sobe: mais fácil de controlar)
+  velMaxSubida: 165,
+  velMaxDescida: 140,
+  // ao inverter (estava descendo e segurou), a aceleração ganha este multiplicador: resposta "na hora"
+  multiplicadorVirada: 1.8,
+  // onde o tapete fica na tela (x) e até onde ele pode ir (y do centro do sprite)
+  xNaTela: 120,
+  yMin: 34,
+  yMax: 196,
+  invencivelMs: 1200,
+  sapatilhasPerdidas: 2, // por batida
+  inclinacao: 0.0012, // radianos por px/s de velocidade vertical (o tapete inclina ao subir e descer)
+  // caixa de colisão do tapete com os passageiros, menor que o desenho (64x48) para ser justo
+  corpo: { largura: 44, altura: 30, dy: 2 },
+  // pássaros: andam para a esquerda e ondulam
+  passaroVelocidade: 30,
+  passaroOnda: 10,
+  // pouso no fim: tempo do tapete até a porta do teatro e a pausa antes da cena final
+  pousoMs: 1800,
+  esperaFinalMs: 2200,
 };
 
 // Controles de toque, em pixels do jogo (480x270). Num celular deitado 1 px do jogo vale ~1,4 px da tela,

@@ -1,7 +1,14 @@
 import * as Phaser from 'phaser';
 import { LARGURA, ALTURA, TILE } from '../config.js';
-import { SPRITES_PNG, ArteJogador, ArteTiles, ArteObjetos } from '../art/index.js';
+import { SPRITES_PNG, ArteJogador, ArteTiles, ArteObjetos, ArteTapete } from '../art/index.js';
 import { texturaDeQuadros } from '../art/matriz.js';
+
+// Para testar uma fase direto pelo link: ?fase=tapete abre a Fase 4 (ex.: na prévia do Netlify).
+const FASES = { tapete: 'Tapete', final: 'Final' };
+function faseInicial() {
+  const pedida = new URLSearchParams(window.location.search).get('fase');
+  return FASES[pedida] || 'Itajuba';
+}
 
 // Prepara texturas e animações antes do jogo começar.
 export class Preload extends Phaser.Scene {
@@ -29,10 +36,15 @@ export class Preload extends Phaser.Scene {
       texturaDeQuadros(this, nome, sp.quadros, ArteObjetos.PALETA, sp.largura, sp.altura);
     }
 
+    // Fase 4 (Tapete): tapete com passageiros, pássaro, pipa e sapatilha
+    for (const [nome, sp] of Object.entries(ArteTapete.SPRITES)) {
+      texturaDeQuadros(this, nome, sp.quadros, ArteTapete.PALETA, sp.largura, sp.altura);
+    }
+
     this.criarAnimacoes();
     this.criarCeu();
     this.criarCasas();
-    this.scene.start('Itajuba');
+    this.scene.start(faseInicial());
   }
 
   criarAnimacoes() {
@@ -53,6 +65,9 @@ export class Preload extends Phaser.Scene {
     outra('capivara-dormir', 'capivara', [4, 5], 1.5);
     outra('sapatilha-brilho', 'sapatilha', [0, 0, 0, 1], 4);
     outra('fonte-agua', 'fonte', [0, 1], 4);
+    anim('voo', [0, 1, 2].map((frame) => ({ key: 'voo', frame })), 8);
+    anim('passaro', [0, 1].map((frame) => ({ key: 'passaro', frame })), 6);
+    anim('pipa', [0, 1].map((frame) => ({ key: 'pipa', frame })), 3);
   }
 
   // Casario de Itajubá ao fundo (camada do meio do parallax): sobrados coloniais coloridos, telhado de barro e a
