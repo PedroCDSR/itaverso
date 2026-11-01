@@ -30,5 +30,5 @@ Licença do ZzFX:
 > COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 > OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-Personagens, cenários e sprites: criação original deste projeto. A jogabilidade se inspira no gênero de plataforma
+Personagens, cenários, sprites, `og-image.png` e ícones: criação original deste projeto. A jogabilidade se inspira no gênero de plataforma
 dos anos 90; nenhum arquivo de arte, som ou música de outro jogo é usado.

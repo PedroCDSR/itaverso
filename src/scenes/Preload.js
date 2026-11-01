@@ -1,14 +1,15 @@
 import * as Phaser from 'phaser';
 import { LARGURA, ALTURA, TILE } from '../config.js';
-import { SPRITES_PNG, ArteJogador, ArteTiles, ArteObjetos, ArteEspaco, ArteTapete } from '../art/index.js';
+import { SPRITES_PNG, TEM_LOGO, ArteJogador, ArteTiles, ArteObjetos, ArteEspaco, ArteTapete } from '../art/index.js';
 import { texturaDeQuadros } from '../art/matriz.js';
 import * as ArteChefe from '../art/chefe.js';
 
-// Para testar uma fase direto pelo link: ?fase=espaco abre a Fase 2, ?fase=tapete a Fase 4 (ex.: na prévia do Netlify).
-const FASES = { espaco: 'Espaco', chefe: 'Chefe', tapete: 'Tapete', final: 'Final' };
+// Para testar uma cena direto pelo link (ex.: na prévia do Netlify): ?fase=itajuba, ?fase=espaco, ?fase=chefe,
+// ?fase=tapete, ?fase=final... Sem o parâmetro, o jogo começa no Título.
+const FASES = { titulo: 'Titulo', intro: 'Intro', itajuba: 'Itajuba', espaco: 'Espaco', chefe: 'Chefe', tapete: 'Tapete', final: 'Final' };
 function faseInicial() {
   const pedida = new URLSearchParams(window.location.search).get('fase');
-  return FASES[pedida] || 'Itajuba';
+  return FASES[pedida] || 'Titulo';
 }
 
 // Prepara texturas e animações antes do jogo começar.
@@ -33,6 +34,7 @@ export class Preload extends Phaser.Scene {
   }
 
   preload() {
+    if (TEM_LOGO) this.load.image('logo', 'assets/logo.png');
     for (const [nome, q] of Object.entries(SPRITES_PNG)) {
       this.load.spritesheet(nome, `assets/sprites/${nome}.png`, { frameWidth: q.largura, frameHeight: q.altura });
     }

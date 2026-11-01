@@ -2,7 +2,6 @@ import * as Phaser from 'phaser';
 import { LARGURA, ALTURA, TILE, CORES, CORES_CSS, FONTES, JOGADOR as J, MACA, CHEFE as C } from '../config.js';
 import { TEXTOS } from '../data/textos.js';
 import { Entrada } from '../ui/Entrada.js';
-import { tentarTelaCheia } from '../ui/telaCheia.js';
 import { tocarEfeito } from '../audio/efeitos.js';
 import { tocarMusica, tocarVinheta, pararMusica } from '../audio/musica.js';
 import { Dialogo } from '../ui/Dialogo.js';
@@ -201,10 +200,7 @@ export class Chefe extends Phaser.Scene {
   // Entrada do Jafar (fala), pedido de socorro e, depois, a luta.
   comecar(tela) {
     if (this.jogando) return;
-    if (tela) {
-      tentarTelaCheia(this);
-      tela.destroy();
-    }
+    if (tela) tela.destroy();
     this.jogando = true;
     this.scene.launch('HUD');
     this.scene.bringToTop('HUD');

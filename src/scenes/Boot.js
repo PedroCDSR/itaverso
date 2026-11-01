@@ -1,6 +1,6 @@
 import * as Phaser from 'phaser';
 
-// Primeira cena: só passa para o Preload (texturas e animações). Depois vem o Título (Etapa 7).
+// Primeira cena: só passa para o Preload (texturas e animações). Depois vem o Título.
 export class Boot extends Phaser.Scene {
   constructor() {
     super('Boot');

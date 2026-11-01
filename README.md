@@ -41,6 +41,8 @@ npm run preview
 | Velocidade, pulo, gravidade, vida do chefe | `src/config.js` |
 | Fases (mapas em texto) | `src/levels/` |
 | Sprites (matriz de texto ou PNG) | `src/art/` e `public/assets/sprites/` |
+| Ordem das cenas (fases) | `src/fluxo.js` |
+| Imagem de compartilhamento e ícones | `node ferramentas/og/gerar.mjs` (gera `public/og-image.png` e os ícones) |
 
 ## Branches e Netlify
 

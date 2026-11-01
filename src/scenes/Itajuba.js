@@ -2,7 +2,6 @@ import * as Phaser from 'phaser';
 import { LARGURA, ALTURA, TILE, CORES, CORES_CSS, FONTES, CAMERA, JOGADOR as J, MACA } from '../config.js';
 import { TEXTOS } from '../data/textos.js';
 import { Entrada } from '../ui/Entrada.js';
-import { tentarTelaCheia } from '../ui/telaCheia.js';
 import { tocarEfeito } from '../audio/efeitos.js';
 import { tocarMusica, tocarVinheta, pararMusica } from '../audio/musica.js';
 import { lerMapa, TIPO_TILE } from '../levels/leitor.js';
@@ -16,11 +15,6 @@ import { Capivara } from '../objects/Capivara.js';
 export class Itajuba extends Phaser.Scene {
   constructor() {
     super('Itajuba');
-  }
-
-  // dados.direto = true pula a tela "JOGAR" (ao jogar de novo)
-  init(dados) {
-    this.direto = !!dados?.direto;
   }
 
   create() {
@@ -96,11 +90,9 @@ export class Itajuba extends Phaser.Scene {
       ingressos: null,
     });
 
-    if (this.direto) this.comecar(null);
-    else {
-      tocarMusica('titulo'); // começa a tocar no 1º toque (ou tecla), se o som estiver ligado
-      this.criarTelaJogar();
-    }
+    // a tela de título (Etapa 7) já tem o JOGAR: a fase começa direto
+    this.cameras.main.fadeIn(250, 158, 158, 255);
+    this.comecar();
   }
 
   // ---------------------------------------------------------------- objetos
@@ -241,55 +233,10 @@ export class Itajuba extends Phaser.Scene {
     }
   }
 
-  // ---------------------------------------------------------------- tela JOGAR (provisória até a Etapa 7)
+  // ---------------------------------------------------------------- começo da fase
 
-  criarTelaJogar() {
-    const t = TEXTOS.teste;
-    const tela = this.add.container(0, 0).setDepth(2000).setScrollFactor(0);
-    tela.add(this.add.rectangle(0, 0, LARGURA, ALTURA, CORES.lilas, 0.92).setOrigin(0));
-    tela.add(
-      this.add
-        .text(LARGURA / 2, 64, t.titulo, { fontFamily: FONTES.titulo, fontSize: '24px', color: CORES_CSS.branco })
-        .setOrigin(0.5)
-        .setShadow(2, 2, CORES_CSS.roxo, 0, false, true),
-    );
-    tela.add(
-      this.add
-        .text(LARGURA / 2, 98, TEXTOS.itajuba.nomeFase, { fontFamily: FONTES.dialogo, fontSize: '18px', color: CORES_CSS.roxo })
-        .setOrigin(0.5),
-    );
-    const botao = this.add.rectangle(LARGURA / 2, 150, 140, 40, CORES.rosa).setStrokeStyle(3, CORES.roxo);
-    tela.add(botao);
-    tela.add(
-      this.add
-        .text(LARGURA / 2, 151, TEXTOS.botoes.jogar, { fontFamily: FONTES.titulo, fontSize: '16px', color: CORES_CSS.roxo })
-        .setOrigin(0.5),
-    );
-    const dica = this.sys.game.device.input.touch ? t.tocarJogar : t.dicaTeclado;
-    tela.add(
-      this.add
-        .text(LARGURA / 2, 205, dica, {
-          fontFamily: FONTES.dialogo,
-          fontSize: '15px',
-          color: CORES_CSS.roxo,
-          align: 'center',
-          wordWrap: { width: LARGURA - 40 },
-        })
-        .setOrigin(0.5),
-    );
-    botao.setInteractive({ useHandCursor: true });
-    // pointerup: o navegador só aceita tela cheia quando o dedo sai da tela
-    botao.on('pointerup', () => this.comecar(tela));
-    this.input.keyboard?.once('keydown-ENTER', () => this.comecar(tela));
-  }
-
-  comecar(tela) {
+  comecar() {
     if (this.jogando) return;
-    if (tela) {
-      tentarTelaCheia(this);
-      tela.destroy();
-    }
-    tocarEfeito('botao');
     tocarMusica('itajuba');
     this.jogando = true;
     this.scene.launch('HUD');

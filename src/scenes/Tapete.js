@@ -3,7 +3,8 @@ import { LARGURA, ALTURA, TILE, CORES, CORES_CSS, FONTES, TAPETE as CFG } from '
 import { TEXTOS } from '../data/textos.js';
 import { Entrada } from '../ui/Entrada.js';
 import { BotaoSom } from '../ui/BotaoSom.js';
-import { tentarTelaCheia } from '../ui/telaCheia.js';
+import { BotaoPausa } from '../ui/BotaoPausa.js';
+import { abrirPausa } from '../fluxo.js';
 import { tocarEfeito } from '../audio/efeitos.js';
 import { tocarMusica, tocarVinheta, pararMusica } from '../audio/musica.js';
 import { TAPETE as MAPA } from '../levels/tapete.js';
@@ -250,7 +251,15 @@ export class Tapete extends Phaser.Scene {
       .setScrollFactor(0)
       .setDepth(900)
       .setShadow(1, 1, CORES_CSS.roxo, 0, false, true);
-    new BotaoSom(this, LARGURA - 20, 20);
+    this.botaoSom = new BotaoSom(this, LARGURA - 20, 20);
+    // pausa (Etapa 7): botão ao lado do som, Esc ou P
+    new BotaoPausa(this, LARGURA - 56, 20, () => abrirPausa(this));
+    this.input.keyboard?.on('keydown-ESC', () => abrirPausa(this));
+    this.input.keyboard?.on('keydown-P', () => abrirPausa(this));
+    this.events.on('resume', () => {
+      this.botaoSom.desenhar();
+      this.input.keyboard?.resetKeys();
+    });
   }
 
   criarTelaInicio() {
@@ -286,10 +295,9 @@ export class Tapete extends Phaser.Scene {
     this.tweens.add({ targets: aviso, alpha: 0.35, duration: 500, yoyo: true, repeat: -1 });
     this.telaInicio = tela;
 
-    // começa ao soltar o dedo (o navegador só aceita tela cheia no "pointerup") ou com espaço/W/seta
+    // começa ao soltar o dedo ou com uma tecla
     const comecar = () => {
       if (this.estado !== 'esperando') return;
-      tentarTelaCheia(this);
       tocarEfeito('botao');
       tela.destroy();
       this.estado = 'voando';

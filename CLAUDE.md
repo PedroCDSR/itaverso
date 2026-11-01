@@ -163,7 +163,9 @@ Todos com design original. O elenco se baseia nos figurinos do espetáculo (`ref
 **Mobile:**
 
 - Em modo retrato, mostrar o aviso "Gire o celular" por cima do jogo e pausar.
-- Tentar tela cheia ao tocar em JOGAR no Android. No iPhone isso normalmente não funciona para páginas, então o jogo não pode depender disso.
+- **Sem tela cheia automática** (decisão do Pedro, 01/11/2026): o jogo roda no navegador normal ocupando `100dvh`. No Android, a tela cheia faz o Chrome mostrar por vários segundos a faixa "Para sair da tela cheia..." por cima do começo do jogo. Também não há trava de orientação.
+- Tela cheia **opcional** pelo botão "TELA CHEIA" do menu de pausa (só aparece onde o navegador permite; no iPhone, não).
+- `public/manifest.webmanifest` (`display: fullscreen`, `orientation: landscape`, ícones): quem usar "Adicionar à tela inicial" abre o jogo sem barras e deitado.
 - Layout ocupando 100% da altura visível (`100dvh`), sem rolagem, sem zoom por toque duplo, sem seleção de texto.
 - Pausar automaticamente quando a aba perde o foco.
 
@@ -269,18 +271,22 @@ Cada etapa termina com PR contra `dev` e o checklist da seção 3.
 | 4 | 01/11/2026 | [PR 12](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/12) | Fase 2 com 100 colunas: estúdio com espelhos, barras, piso de madeira e tablados. Diálogo em HTML nítido (Patrick Hand, até 2 linhas, máquina de escrever, avança com toque ou tecla). Jasmine, Gênio e Sultão ensaiando (1 fala cada), Tia Claudia no balcão entrega 4 ingressos que voam até o contador do HUD, Abu chega correndo com a notícia. Cena `Chefe` provisória. `?fase=espaco` abre direto na Fase 2. Já junta as Etapas 6 e 9: o jogo vai da Fase 1 ao Final. `dist/` com 1,56 MB. |
 | 5 | 01/11/2026 | [PR 13](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/13) | Fase 3 (Resgate): arena de uma tela (terraço com arcos ao anoitecer), Tia Paula numa gaiola pendurada no canto, Jafar original e provisório que flutua, avisa piscando, lança 3 projéteis em leque e desce cansado e piscando (vulnerável). 5 acertos de maçã (no máximo 2 por descida), barra de vida no topo, maçãs que reaparecem no chão. Vitória: fumaça, gaiola abre, Tia Paula agradece e vai para o Tapete. Robôs no Chromium venceram em 17,8 s (ágil) e 29,6 s (lento, sem desviar, voltou ao início 1 vez). `dist/` com 1,60 MB. |
 | 6 | 01/11/2026 | [PR 8](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/8) | Fase 4 (Tapete): rolagem automática de 40 s + pouso de ~4 s no Teatro do Colégio G9, segurar sobe / soltar desce (toque em qualquer lugar, espaço, W ou seta para cima), pássaros (sabiás), pipas, postes e fios, sapatilhas no céu, batida = pisca e perde 2 sapatilhas. Tela Final provisória. Teste direto: `?fase=tapete`. Feita antes das Etapas 4 e 5 (modo autônomo). `dist/` = 1,51 MB (já com a Etapa 3). |
+| 7 | 01/11/2026 | [PR 11](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/11) | Título, Sobre o espetáculo, Intro (3 caixas, PULAR), Final completo (cortinas, Tia Paula anuncia, cartão com QUERO INGRESSOS, COMPARTILHAR, INSTAGRAM, JOGAR DE NOVO), menu de pausa (continuar, som, tela cheia opcional, sobre, pular para o final), meta tags + Open Graph + favicon + manifest. Tela cheia automática removida. Fluxo completo: Título → Intro → Itajubá → Espaço → Chefe → Tapete → Final. `dist/` = 1,63 MB (com todas as etapas). |
 | 9 | 01/11/2026 | [PR 10](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/10) | Som feito antes das Etapas 4, 5, 7 e 8. 13 efeitos com ZzFX (pulo, maçã, toldo, pisão, capivara comendo, sapatilha, maçã e coração recolhidos, dano, botão, blip de diálogo, acerto no chefe, projétil), 6 músicas originais em loop (título, Itajubá, Espaço, Chefe, Tapete, Final) e 3 vinhetas (checkpoint, ingresso, vitória), tudo em código. Desbloqueio do áudio refeito para o iPhone. Botão de som e tecla M lembram a escolha. Fase 1, Tapete e Final já ligados. `dist/` com 1,45 MB. |
 
-**Próximo passo (01/11/2026):** as Etapas 3, 4, 5, 6 e 9 estão no `dev`, e o jogo vai de ponta a ponta com todas as
-fases jogáveis: Fase 1 → Fase 2 → Chefe → Tapete → Final provisório. Próxima: **Etapa 7** (Título, Intro, Final de
-verdade, menu de Pausa com "pular para o final", compartilhar e meta tags). Para testar direto: `?fase=espaco`,
-`?fase=chefe`, `?fase=tapete`, `?fase=final`. O Pedro só testa no fim, antes do lançamento, e revisa as falas em
-`src/data/textos.js`.
+**Próximo passo (01/11/2026):** as Etapas 3, 4, 5, 6, 7 e 9 estão no `dev`: o jogo vai de ponta a ponta, do Título ao
+Final de verdade (Título → Intro → Itajubá → Espaço → Chefe → Tapete → Final), com menu de pausa, compartilhar e meta
+tags. Próxima: **Etapa 8 (Arte)**: sprites originais com base nos figurinos (Aladdin, Tia Paula de pé no Final, Tia
+Claudia, Jafar), cenários e logo (`TEM_LOGO`). Depois, **Etapa 10 (Polimento)**: medir a duração total (meta de 2 a
+3 min) e revisar textos. Novas fases que usam o HUD precisam estar em `FASES` (`src/fluxo.js`) para o menu de pausa
+funcionar nelas. Para testar direto: `?fase=itajuba`, `?fase=espaco`, `?fase=chefe`, `?fase=tapete`, `?fase=final`.
+O Pedro só testa no fim, antes do lançamento, e revisa as falas em `src/data/textos.js`.
 
 **Decisões técnicas da Etapa 1:**
 - O toque é escutado na **div inteira** (`input.touch.target`), não só no canvas: no celular deitado sobram faixas laterais, e é ali que ficam os polegares.
 - Os controles leem, a cada quadro, a posição de todos os dedos (`ui/ControlesToque.js`). Multitoque e deslizar de ◀ para ▶ funcionam sem eventos extras. As cenas usam só `ui/Entrada.js` (toque + teclado juntos).
-- "Gire o celular" e "Pausado" são HTML **dentro** da div `#jogo`, porque em tela cheia (Android) só aparece o que está dentro do elemento em tela cheia. Pausa com motivos acumulados em `ui/pausaGlobal.js`.
+- "Gire o celular" e "Pausado" são HTML **dentro** da div `#jogo`, porque em tela cheia só aparece o que está dentro do elemento em tela cheia. Pausa com motivos acumulados em `ui/pausaGlobal.js`.
+- ~~Tela cheia + trava deitado ao tocar em JOGAR no Android.~~ Removido na Etapa 7 (decisão do Pedro): a faixa "Para sair da tela cheia..." do Chrome atrapalhava o começo. Agora a tela cheia é só pelo botão da pausa (`ui/telaCheia.js`), sem trava de orientação, e há o manifest para "Adicionar à tela inicial".
 - Depois de perder o foco, o jogo só volta com um toque, para ninguém levar dano no susto.
 - O aviso de girar só aparece em aparelho de toque (`pointer: coarse`); no computador, nunca.
 - O iPhone silencia o Web Audio quando a chave lateral está no silencioso. Isso é do aparelho e foi mantido de propósito.
@@ -299,12 +305,12 @@ verdade, menu de Pausa com "pular para o final", compartilhar e meta tags). Para
 - A seção 7.1 (gestão rígida de referências) foi removida a pedido do Pedro. Continua valendo a regra 3: as capturas do jogo original em `references/` servem só de clima, nunca de modelo de personagem, sprite ou cenário.
 - Mapa montado por trechos em `ferramentas/mapas/gerar_itajuba.py` (anota alcance do pulo e do toldo). O `src/levels/itajuba.js` gerado é editável à mão.
 - Arte dos objetos (capivara com 6 quadros, maçã, sapatilha, coração cheio/vazio, fonte com água animada, bandeira) em `ferramentas/arte/gerar_objetos.py` → `src/art/objetos.js`. Casario e torre da igreja são desenhados em canvas no `Preload`; barracas e fachada do Espaço, com `Graphics` na cena.
-- HUD é uma cena separada (`scenes/HUD.js`) que lê o `registry` (`vida`, `vidaMax`, `macas`, `sapatilhas`). O botão de pausa usa a mesma tela "Pausado" da Etapa 1 (`pausarAgora()` em `ui/PausaFoco.js`). O menu de pausa completo fica para a Etapa 7.
+- HUD é uma cena separada (`scenes/HUD.js`) que lê o `registry` (`vida`, `vidaMax`, `macas`, `sapatilhas`). O botão de pausa abre o menu de pausa da Etapa 7.
 - Toldo: quica 520 segurando PULAR (≈150 px) e 420 sem segurar (≈98 px). Pisar na capivara segurando PULAR também vai mais alto.
 - Maçã: arco baixo que quica até 3 vezes e rola, para acertar capivaras de perto e de longe (até ~140 px). O `overlap` do Arcade entre dois grupos não disparou para maçã × capivara; a checagem é feita à mão no `update()`.
 - Ao voltar ao checkpoint: vida cheia, 1 s de invencibilidade e no mínimo 3 maçãs. Capivaras dormindo continuam dormindo.
 - Coração só é recolhido se faltar vida; maçã só se houver espaço (máximo 9).
-- A tela "JOGAR" provisória continua até a Etapa 7. Ao chegar na porta, a Fase 2 começa (a tela `EmBreve` saiu na Etapa 4).
+- Ao chegar na porta, a Fase 2 começa (a tela `EmBreve` saiu na Etapa 4; a tela "JOGAR" provisória saiu na Etapa 7).
 - Teste automatizado no Chromium (Playwright) conferiu: pisão, maçã, quique no toldo, checkpoint, buraco, 3 danos, coleta, chegada na porta e jogar de novo, sem erros no console.
 
 **Decisões técnicas da Etapa 4:**
@@ -345,8 +351,8 @@ verdade, menu de Pausa com "pular para o final", compartilhar e meta tags). Para
 - Arte original em `ferramentas/arte/gerar_tapete.py` → `src/art/tapete.js`: tapete ondulando (3 quadros) com a estampa dos quadrados concêntricos do logo (rosa, amarelo, verde, roxo sobre lilás), Aladdin provisório sentado, **Tia Paula provisória** (coque castanho, vestido roxo; aparência A DEFINIR), sabiá-laranjeira, pipa nas cores da escola, sapatilha de ponta.
 - Fachada do teatro, cidade ao fundo (com uma torre de igreja genérica) e telhados são desenhados em código e **genéricos**: refazer quando chegarem as fotos do Teatro do Colégio G9.
 - O sol desce durante a fase (entardecer). Parallax: morros 0,15, cidade 0,35, telhados 1.
-- `?fase=tapete` ou `?fase=final` no link abre a fase direto (útil na prévia do Netlify). Sem o parâmetro abre a Fase 1 (Itajubá).
-- `scenes/Final.js` é **provisória**: cortinas, cartão do evento, QUERO INGRESSOS (WhatsApp) e JOGAR DE NOVO. A Etapa 7 faz a versão completa.
+- `?fase=tapete` ou `?fase=final` no link abre a fase direto (útil na prévia do Netlify). Sem o parâmetro abre o Título (desde a Etapa 7).
+- A tela Final provisória desta etapa foi trocada pela versão completa da Etapa 7.
 - O contador de sapatilhas do tapete usa o `registry` (`sapatilhas`), o mesmo nome do HUD do PR 7.
 - (Etapa 4) JOGAR DE NOVO do Final agora volta à Fase 1.
 
@@ -362,6 +368,22 @@ verdade, menu de Pausa com "pular para o final", compartilhar e meta tags). Para
 - Ligados até agora: Fase 1 (música do título na tela JOGAR, depois a de Itajubá), `EmBreve` e `Final` (música de festa), Tapete (música, sapatilha, batida = `dano`, chegada = vinheta de vitória). Espaço e Chefe provisório ligados na Etapa 4; falta a luta do Chefe (Etapa 5) e Título/Intro (Etapa 7).
 - Volumes em `config.js` (`SOM`): música (0,25) mais baixa que os efeitos (0,7). Pico medido no Chromium: ~0,3 para cada música.
 - Teste no Chromium com `--autoplay-policy=user-gesture-required` (igual ao celular): nenhum contexto antes do toque; contexto `running` depois do toque em JOGAR; música agendando; efeitos de pulo, maçã, pisão e coleta tocando; pausa suspende e o toque retoma; mudo lembrado depois de recarregar; nenhum erro no console. Não dá para testar o iPhone de verdade daqui: fica para o teste final do Pedro.
+
+**Decisões técnicas da Etapa 7:**
+- Feita em paralelo com as Etapas 3, 4, 5, 6 e 9 e juntada depois. Fluxo: Título → Intro → Itajubá → Espaço → Chefe → Tapete → Final (`src/fluxo.js` guarda a primeira fase, o Final e a lista de fases que a pausa conhece). Saíram a tela "JOGAR" provisória da Itajubá, o Final provisório e a tela cheia automática da Itajubá, do Chefe e do Tapete.
+- Som: os botões usam `tocarEfeito('botao')`; o Título e a Intro tocam a música `titulo`; o Final toca `final` e a vinheta `vitoria` quando aparece o cartão.
+- Intro e Final usam a caixa de diálogo em HTML da Etapa 4 (`ui/Dialogo.js`), que fica nítida no celular. A minha versão em canvas foi descartada.
+- `abrirPausa()` traz a Pausa para o topo (`bringToTop`), porque o Chefe traz o HUD para o topo.
+- O botão de pausa do HUD (e o novo botão do Tapete) e as teclas Esc/P abrem o menu de pausa com `abrirPausa()` (`src/fluxo.js`), que pausa a fase e o HUD juntos. `pausarAgora()` saiu do `PausaFoco.js`.
+- Menus em Phaser, com `ui/Botao.js` (ação no `pointerup`, o único momento em que o navegador aceita abrir link, compartilhar e tela cheia). O cartão do evento (`ui/CartaoEvento.js`) é o mesmo no Sobre (Título e Pausa) e no Final; tudo lê de `src/data/`.
+- Pausa e Sobre são cenas sobrepostas: quem chama se pausa (`scene.pause`) e abre a outra por cima; VOLTAR/CONTINUAR retomam. Esc ou P abrem a pausa na fase. O aviso HTML "Pausado" continua só para perda de foco.
+- COMPARTILHAR usa `navigator.share` com o texto e o link da página aberta (prévias do Netlify compartilham a si mesmas). Sem suporte, copia texto + link e o botão mostra "LINK COPIADO!" por 2 s. Links abrem com `window.open` e, se um bloqueador impedir, na mesma aba.
+- JOGAR DE NOVO vai direto para a primeira fase (quem joga de novo já viu a intro) e zera as sapatilhas.
+- Tia Paula no Final, de pé com microfone, usa o **mesmo design provisório** do Tapete (coque castanho, vestido roxo, faixa amarela), desenhado com `Graphics`. A aparência real está A DEFINIR (seção 8): trocar pelo sprite na Etapa 8.
+- Sem `logo.png`, Título e Final mostram o nome da escola em texto. Ao colocar o arquivo, mudar `TEM_LOGO` para `true` em `src/art/index.js` (evita pedido 404).
+- `og-image.png` (1200×630, 81 KB) e ícones (favicon 32, apple-touch 180, manifest 192/512) são gerados por `ferramentas/og/gerar.mjs` com a arte do próprio jogo (céu, morros, tiles, Aladdin provisório, quadrados do logo). Rodar de novo quando a arte mudar. As meta tags `og:image` e `og:url` usam o endereço de produção, porque o WhatsApp exige endereço completo.
+- `?fase=` no link agora aceita `titulo`, `intro`, `itajuba`, `tapete` e `final`; sem o parâmetro, o jogo começa no Título.
+- Teste automatizado (Playwright): jogada completa do Título ao Final, passando por Sobre, Intro, Itajubá (pausa, som, sobre, continuar), Espaço, Chefe, Tapete inteiro (com pausa) e Final (compartilhar, ingressos, Instagram, jogar de novo, pular para o final), sem erros no console.
 
 **Riscos anotados:**
 - A Fase 1 tem ~4.900 px: correndo direto dá ~35 s; com capivaras, toldos e coleta, a estimativa é de 60 a 80 s. Medir no celular e ajustar no polimento (Etapa 10).

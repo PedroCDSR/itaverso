@@ -1,15 +1,9 @@
-// Pausa quando a aba perde o foco (trocou de app, chegou notificação, desligou a tela) e com Esc/P.
+// Pausa quando a aba perde o foco (trocou de app, chegou notificação, desligou a tela).
 // Volta só quando a pessoa toca: assim ninguém leva dano no susto ao voltar para o jogo.
+// (O menu de pausa com opções é a cena Pausa, aberta pelo botão ⏸ ou por Esc/P durante a fase.)
 import { TEXTOS } from '../data/textos.js';
 import { criarSobreposicao } from './sobreposicao.js';
 import { pausar, retomar, estaPausado } from './pausaGlobal.js';
-
-let pausarExterno = () => {};
-
-// Botão de pausa do HUD: mostra a mesma tela "Pausado / Toque para continuar".
-export function pausarAgora() {
-  pausarExterno();
-}
 
 export function iniciarPausaFoco() {
   const el = criarSobreposicao('aviso-pausa', 'translucida');
@@ -22,7 +16,6 @@ export function iniciarPausaFoco() {
     el.classList.add('ativa');
     pausar('foco');
   };
-  pausarExterno = mostrar;
   const continuar = (ev) => {
     if (!estaPausado('foco')) return;
     ev.preventDefault();
@@ -37,13 +30,9 @@ export function iniciarPausaFoco() {
   window.addEventListener('pagehide', mostrar);
   el.addEventListener('pointerup', continuar);
 
-  // Teclado: Esc ou P pausa e continua; Enter e espaço também continuam.
+  // Teclado: Enter, espaço, Esc ou P continuam depois de perder o foco.
   window.addEventListener('keydown', (ev) => {
-    if (ev.repeat) return;
-    if (ev.key === 'Escape' || ev.key === 'p' || ev.key === 'P') {
-      estaPausado('foco') ? continuar(ev) : mostrar();
-    } else if ((ev.key === 'Enter' || ev.key === ' ') && estaPausado('foco')) {
-      continuar(ev);
-    }
+    if (ev.repeat || !estaPausado('foco')) return;
+    if (['Enter', ' ', 'Escape', 'p', 'P'].includes(ev.key)) continuar(ev);
   });
 }
