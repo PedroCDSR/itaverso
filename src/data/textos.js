@@ -14,7 +14,7 @@ export const TEXTOS = {
   },
   teste: {
     titulo: 'ALADDIN',
-    subtitulo: 'Etapa 1 · teste dos controles',
+    subtitulo: 'Etapa 2 · jogador e mapa',
     tocarJogar: 'Toque em JOGAR para começar',
     dicaTeclado: 'Setas ou A/D: andar · Espaço ou W: pular · X ou J: maçã · Esc: pausa',
   },

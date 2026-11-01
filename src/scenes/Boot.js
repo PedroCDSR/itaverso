@@ -1,13 +1,12 @@
 import * as Phaser from 'phaser';
 
-// Primeira cena: por enquanto só passa para a próxima.
-// Nas próximas etapas: Preload (texturas das matrizes de arte, PNGs, áudio) e depois Título.
+// Primeira cena: só passa para o Preload (texturas e animações). Depois vem o Título (Etapa 7).
 export class Boot extends Phaser.Scene {
   constructor() {
     super('Boot');
   }
 
   create() {
-    this.scene.start('Teste');
+    this.scene.start('Preload');
   }
 }
