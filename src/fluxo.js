@@ -1,6 +1,6 @@
 // Ordem das cenas da partida:
-// Título > Intro > Itajuba (Fase 1) > EmBreve (ponte provisória no lugar das Fases 2 e 3) > Tapete (Fase 4) > Final.
-// Nas Etapas 4 e 5, as cenas Espaco e Chefe entram no lugar da EmBreve (o Chefe termina indo para o Tapete).
+// Título > Intro > Itajuba (Fase 1) > Espaco (Fase 2) > Chefe (Fase 3) > Tapete (Fase 4) > Final.
+// Cada fase chama a seguinte no próprio arquivo; aqui ficam só a primeira e o Final.
 export const PRIMEIRA_FASE = 'Itajuba';
 export const FINAL = 'Final';
 
@@ -16,4 +16,5 @@ export function abrirPausa(scene) {
   const fase = FASES.find((k) => sm.get(k) && sm.isActive(k));
   if (!fase) return;
   sm.launch('Pausa', { cena: fase });
+  sm.bringToTop('Pausa'); // algumas fases trazem o HUD para o topo; a pausa precisa ficar por cima dele
 }

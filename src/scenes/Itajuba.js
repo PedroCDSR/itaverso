@@ -2,7 +2,8 @@ import * as Phaser from 'phaser';
 import { LARGURA, ALTURA, TILE, CORES, CORES_CSS, FONTES, CAMERA, JOGADOR as J, MACA } from '../config.js';
 import { TEXTOS } from '../data/textos.js';
 import { Entrada } from '../ui/Entrada.js';
-import { bipe } from '../audio/som.js';
+import { tocarEfeito } from '../audio/efeitos.js';
+import { tocarMusica, tocarVinheta, pararMusica } from '../audio/musica.js';
 import { lerMapa, TIPO_TILE } from '../levels/leitor.js';
 import { ITAJUBA } from '../levels/itajuba.js';
 import { Jogador } from '../objects/Jogador.js';
@@ -10,7 +11,7 @@ import { Capivara } from '../objects/Capivara.js';
 
 // Fase 1, Itajubá (CLAUDE.md, seção 11, cena 3).
 // Rua, feira com toldos que quicam, praça com a fonte, capivaras, maçãs, sapatilhas, corações e 1 checkpoint.
-// Termina na porta do Espaço Paula De Marco. O HUD é outra cena, por cima (scenes/HUD.js), e lê o "registry".
+// Termina na porta do Espaço Paula De Marco, que leva à Fase 2 (scenes/Espaco.js). O HUD é outra cena, por cima (scenes/HUD.js), e lê o "registry".
 export class Itajuba extends Phaser.Scene {
   constructor() {
     super('Itajuba');
@@ -79,7 +80,15 @@ export class Itajuba extends Phaser.Scene {
     this.entrada = new Entrada(this);
 
     // estado que o HUD mostra
-    this.registry.set({ vida: J.coracoes, vidaMax: J.coracoes, macas: J.macasIniciais, sapatilhas: 0 });
+    // (ingressos = null: o contador só aparece a partir da Fase 2)
+    this.registry.set({
+      vida: J.coracoes,
+      vidaMax: J.coracoes,
+      macas: J.macasIniciais,
+      sapatilhas: 0,
+      sapatilhasTotalFase1: this.totalSapatilhas,
+      ingressos: null,
+    });
 
     // a tela de título (Etapa 7) já tem o JOGAR: a fase começa direto
     this.cameras.main.fadeIn(250, 158, 158, 255);
@@ -228,7 +237,7 @@ export class Itajuba extends Phaser.Scene {
 
   comecar() {
     if (this.jogando) return;
-    bipe(520, 0.12);
+    tocarMusica('itajuba');
     this.jogando = true;
     this.scene.launch('HUD');
     this.faixa(TEXTOS.itajuba.objetivo);
@@ -269,7 +278,7 @@ export class Itajuba extends Phaser.Scene {
     // toldo: lança bem alto (mais alto segurando PULAR)
     if (tile.index !== TIPO_TILE.toldo || !this.jogador.body.blocked.down) return;
     this.jogador.quicar(this.entrada.pular ? J.quiqueToldo : J.quiqueToldoSemBotao);
-    bipe(330, 0.12);
+    tocarEfeito('toldo');
   }
 
   pegar(item) {
@@ -278,15 +287,15 @@ export class Itajuba extends Phaser.Scene {
     if (item.tipo === 'maca') {
       if (reg.get('macas') >= J.macasMaximo) return; // bolsa cheia: deixa a maçã ali
       reg.inc('macas', 1);
-      bipe(760, 0.06);
+      tocarEfeito('pegarMaca');
     } else if (item.tipo === 'coracao') {
       if (this.jogador.vida >= J.coracoes) return; // vida cheia: guarda o coração para depois
       this.jogador.vida++;
       reg.set('vida', this.jogador.vida);
-      bipe(1040, 0.15);
+      tocarEfeito('coracao');
     } else {
       reg.inc('sapatilhas', 1);
-      bipe(1320, 0.07);
+      tocarEfeito('sapatilha', { variar: 0.08 });
     }
     this.tweens.killTweensOf(item);
     item.disableBody(false, false);
@@ -300,7 +309,7 @@ export class Itajuba extends Phaser.Scene {
     if (j.body.velocity.y > 0 && j.body.bottom <= c.body.top + 8) {
       c.dormir();
       j.quicar(this.entrada.pular ? J.quiqueInimigo * 1.45 : J.quiqueInimigo);
-      bipe(440, 0.1);
+      tocarEfeito('pisao');
       return;
     }
     this.levarDano(c.x);
@@ -312,7 +321,7 @@ export class Itajuba extends Phaser.Scene {
     const vida = this.jogador.levarDano(deOndeX, agora);
     this.registry.set('vida', vida);
     this.cameras.main.shake(120, 0.006);
-    bipe(180, 0.18);
+    tocarEfeito('dano');
     if (vida <= 0) this.voltarAoCheckpoint(true);
   }
 
@@ -345,7 +354,7 @@ export class Itajuba extends Phaser.Scene {
     m.setVelocity(MACA.velocidadeX * dir + j.body.velocity.x * 0.3, MACA.velocidadeY);
     m.setAngularVelocity(720 * dir);
     this.time.delayedCall(MACA.duracaoMs, () => m.active && m.destroy());
-    bipe(880, 0.05);
+    tocarEfeito('maca');
   }
 
   // Maçã x capivara: checado à mão a cada quadro (o overlap entre dois grupos não disparou no teste).
@@ -355,7 +364,7 @@ export class Itajuba extends Phaser.Scene {
       for (const c of this.capivaras.getChildren()) {
         if (c.perigosa && Phaser.Geom.Intersects.RectangleToRectangle(m.getBounds(), retanguloDoCorpo(c.body))) {
           c.comer(m.x);
-          bipe(990, 0.1);
+          tocarEfeito('capivaraCome');
           m.destroy();
           break;
         }
@@ -399,8 +408,7 @@ export class Itajuba extends Phaser.Scene {
     this.tweens.add({ targets: b, scaleY: 1.12, duration: 100, yoyo: true });
     this.checkpoint = { x: b.x, y: b.y };
     this.aviso(b.x, b.y - 52, TEXTOS.itajuba.checkpoint, CORES_CSS.amarelo);
-    bipe(660, 0.08);
-    this.time.delayedCall(90, () => bipe(990, 0.12));
+    tocarVinheta('checkpoint');
   }
 
   chegouNaPorta() {
@@ -409,14 +417,14 @@ export class Itajuba extends Phaser.Scene {
     const j = this.jogador;
     j.body.setVelocity(0, 0);
     j.play('parado');
-    bipe(784, 0.1);
-    this.time.delayedCall(120, () => bipe(1046, 0.18));
+    pararMusica(0.2);
+    tocarVinheta('vitoria');
     this.tweens.add({ targets: j, alpha: 0, duration: 400 });
     const cam = this.cameras.main;
     cam.fadeOut(700, 158, 158, 255);
     cam.once('camerafadeoutcomplete', () => {
       this.scene.stop('HUD');
-      this.scene.start('EmBreve', { sapatilhas: this.registry.get('sapatilhas'), total: this.totalSapatilhas });
+      this.scene.start('Espaco');
     });
   }
 
@@ -441,7 +449,7 @@ export class Itajuba extends Phaser.Scene {
     const temMaca = this.registry.get('macas') > 0;
     const pulouAntes = j.body.velocity.y < 0;
     const soltouMaca = j.atualizar(e, agora, delta, temMaca);
-    if (!pulouAntes && j.body.velocity.y < -200 && e.pularApertou) bipe(660, 0.08);
+    if (!pulouAntes && j.body.velocity.y < -200 && e.pularApertou) tocarEfeito('pulo');
     if (soltouMaca) this.arremessar();
     else if (e.macaApertou && !temMaca) this.aviso(j.x, j.y - 52, TEXTOS.itajuba.semMaca);
     this.macasAcertaram();

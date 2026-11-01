@@ -49,6 +49,12 @@ export class ControlesToque {
     criar('maca', c.maca, TEXTOS.botoes.maca, '8px');
   }
 
+  // Esconde um botão só (ex.: MAÇÃ no Espaço, onde não há inimigos).
+  esconderBotao(nome) {
+    this.botoes[nome]?.setVisible(false);
+    this.escondidos = { ...this.escondidos, [nome]: true };
+  }
+
   // No tapete os botões somem e vale "segurar em qualquer lugar".
   setModoTapete(ligado) {
     this.modoTapete = ligado;
@@ -80,6 +86,7 @@ export class ControlesToque {
         }
       }
     }
+    if (this.escondidos) for (const nome of Object.keys(this.escondidos)) e[nome] = false;
     this.estado = e;
 
     if (this.visivel && !this.modoTapete) {

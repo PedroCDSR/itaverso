@@ -16,8 +16,8 @@ export class HUD extends Phaser.Scene {
     const estilo = { fontFamily: FONTES.titulo, fontSize: '8px', color: CORES_CSS.branco };
     const sombra = (t) => t.setShadow(1, 1, CORES_CSS.roxo, 0, false, true);
 
-    // fundo suave atrás dos contadores, para ler em cima do céu claro
-    this.add.rectangle(6, 6, 176, 22, CORES.roxo, 0.35).setOrigin(0).setStrokeStyle(1, CORES.roxo, 0.6);
+    // fundo suave atrás dos contadores, para ler em cima do céu claro (cresce quando há ingressos)
+    this.fundo = this.add.rectangle(6, 6, 148, 22, CORES.roxo, 0.35).setOrigin(0).setStrokeStyle(1, CORES.roxo, 0.6);
 
     this.coracoes = [];
     for (let i = 0; i < reg.get('vidaMax'); i++) {
@@ -27,6 +27,12 @@ export class HUD extends Phaser.Scene {
     this.txtMacas = sombra(this.add.text(72, 13, '', estilo));
     this.add.sprite(110, 18, 'sapatilha', 0);
     this.txtSapatilhas = sombra(this.add.text(120, 13, '', estilo));
+    // ingressos: só a partir da Fase 2 (registry 'ingressos' diferente de null)
+    this.iconeIngresso = this.add.image(162, 17, 'ingresso');
+    this.txtIngressos = sombra(this.add.text(173, 13, '', estilo));
+    // a Fase 2 usa esta posição para mandar os ingressos voando até aqui
+    reg.set('posIngressoHud', { x: this.iconeIngresso.x, y: this.iconeIngresso.y });
+    this.ingressosAntes = reg.get('ingressos');
 
     // botão de pausa ao lado do som: abre o menu de pausa (Etapa 7). Esc ou P também abrem.
     const py = 20;
@@ -49,5 +55,15 @@ export class HUD extends Phaser.Scene {
     this.coracoes.forEach((c, i) => c.setFrame(i < vida ? 0 : 1));
     this.txtMacas.setText(`x${reg.get('macas')}`);
     this.txtSapatilhas.setText(`x${reg.get('sapatilhas')}`);
+    const ingressos = reg.get('ingressos');
+    const temIngressos = ingressos !== null && ingressos !== undefined;
+    this.iconeIngresso.setVisible(temIngressos);
+    this.txtIngressos.setVisible(temIngressos).setText(`x${ingressos ?? 0}`);
+    this.fundo.width = temIngressos ? 196 : 148;
+    // pulinho no ícone quando chega ingresso novo
+    if (temIngressos && ingressos > (this.ingressosAntes ?? 0)) {
+      this.tweens.add({ targets: this.iconeIngresso, scale: 1.5, duration: 90, yoyo: true });
+    }
+    this.ingressosAntes = ingressos;
   }
 }

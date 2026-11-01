@@ -86,8 +86,47 @@ export const MACA = {
   duracaoMs: 1600,
 };
 
+// Caixa de diálogo (ui/Dialogo.js). Medidas em pixels do jogo (480x270); o texto é HTML nítido por cima do canvas.
+export const DIALOGO = {
+  largura: 400,
+  topo: 34, // abaixo do HUD
+  tamanhoFonte: 17, // Patrick Hand; com 2 linhas a caixa fica com ~60 px de altura
+  letrasPorSegundo: 55, // efeito de "máquina de escrever" (tocar completa o texto na hora)
+  esperaMinimaMs: 250, // tempo mínimo na tela antes de aceitar o toque (evita pular sem querer)
+  maxLinhas: 2,
+};
+
+// Fase 2, Espaço Paula De Marco (sem inimigos).
+export const ESPACO = {
+  distanciaConversa: 44, // quão perto (x, em px) o jogador chega para o NPC falar
+  ingressos: 4, // quantos ingressos a Tia Claudia entrega
+  intervaloIngressoMs: 260, // um ingresso voando para o HUD a cada...
+  velocidadeAbu: 190, // o Abu chega correndo
+};
+
 export const CHEFE = {
-  vida: 5,
+  // Fase 3, Resgate. Ciclo do Jafar: flutua -> avisa (brilha) -> lança o leque -> desce cansado e piscando
+  // (vulnerável) -> sobe de novo. Só leva dano de maçã enquanto está cansado.
+  vida: 5, // acertos de maçã para vencer
+  // A vida do chefe NÃO volta ao cheio quando o jogador perde os corações: assim ninguém fica preso (decisão da Etapa 5).
+  manterVidaAoReiniciar: true,
+  alturaVoo: 78, // y do centro do Jafar quando flutua (fora do alcance)
+  alturaCansado: 206, // y do centro quando desce cansado (na altura da maçã)
+  limiteEsquerda: 96, // faixa em x onde ele flutua
+  limiteDireita: 360,
+  velocidade: 70, // px/s de um lado para o outro
+  flutuarMs: 2200, // tempo flutuando antes de cada ataque
+  avisoMs: 600, // brilho antes de lançar (dá tempo de se preparar)
+  descerMs: 700, // descida e subida
+  vulneravelMs: 3600, // tempo cansado no chão
+  acertosPorDescida: 2, // depois de tantos acertos ele sobe na hora (evita vencer num sopro, mas sem demorar)
+  invencivelAcertoMs: 350, // depois de um acerto, ignora maçãs por um instante
+  projeteis: 3, // tiros por leque
+  aberturaLequeGraus: 22, // ângulo entre um tiro e o outro
+  velocidadeProjetil: 115,
+  // maçãs no chão da arena: quando alguém pega, outra aparece no mesmo lugar depois de um tempo
+  macaReaparecerMs: 2000,
+  macasMinimasAoReiniciar: 3,
 };
 
 // Fase 4 (Tapete). Segurar = sobe, soltar = desce. Acelera até a velocidade máxima, então a resposta é
@@ -129,4 +168,12 @@ export const CONTROLES = {
   maca: { x: 366, y: 236, raio: 22 },
   // toques acima desta linha (y) não contam como botão, para não atrapalhar o HUD
   alturaMinima: 120,
+};
+
+// Som (Etapa 9). Volumes de 0 a 1.
+export const SOM = {
+  volumeGeral: 0.8,
+  volumeEfeitos: 0.7,
+  volumeMusica: 0.25, // a música fica baixinha, por baixo dos efeitos
+  volumeVinheta: 0.6,
 };

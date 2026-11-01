@@ -85,6 +85,7 @@ export class Pausa extends Phaser.Scene {
   sobre() {
     this.scene.pause();
     this.scene.launch('Sobre', { de: this.scene.key });
+    this.scene.bringToTop('Sobre');
   }
 
   continuar() {

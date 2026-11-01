@@ -1,5 +1,5 @@
 import { CORES, FONTES } from '../config.js';
-import { bipe } from '../audio/som.js';
+import { tocarEfeito } from '../audio/efeitos.js';
 
 // Botão de menu: retângulo na paleta da escola com texto em Press Start 2P.
 // A ação roda no "pointerup" (dedo saindo da tela): é o único momento em que o navegador aceita
@@ -32,7 +32,7 @@ export class Botao {
       const valeu = this.apertado;
       this.soltarVisual();
       if (!valeu || !this.container.visible) return;
-      bipe(520, 0.06);
+      tocarEfeito('botao');
       this.acao();
     });
   }

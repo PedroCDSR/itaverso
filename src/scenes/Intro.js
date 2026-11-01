@@ -5,7 +5,7 @@ import { Botao } from '../ui/Botao.js';
 import { BotaoSom } from '../ui/BotaoSom.js';
 import { Dialogo } from '../ui/Dialogo.js';
 import { fundoEntardecer } from '../ui/fundo.js';
-import { bipe } from '../audio/som.js';
+import { tocarMusica } from '../audio/musica.js';
 import { PRIMEIRA_FASE } from '../fluxo.js';
 
 // Intro (CLAUDE.md, seção 11.2): 3 caixas de texto. Tocar avança; PULAR vai direto para a fase.
@@ -37,32 +37,15 @@ export class Intro extends Phaser.Scene {
       onComplete: () => this.aladdin.play('parado'),
     });
 
-    this.dialogo = new Dialogo(this, { y: 40, dica: t.tocar });
-    this.indice = 0;
-    this.dialogo.mostrar(t.caixas[0]);
+    tocarMusica('titulo'); // continua a música do Título (se já estiver tocando, não reinicia)
+    // caixas em HTML (ui/Dialogo.js): tocar em qualquer lugar ou espaço/Enter avança; no fim, vai para a fase
+    this.dialogo = new Dialogo(this);
+    this.dialogo.mostrar(t.caixas.map((texto) => ({ texto }))).then(() => this.seguir());
 
     new Botao(this, LARGURA - 82, ALTURA - 18, `${t.pular} >>`, () => this.seguir(), { largura: 100, altura: 24 });
     new BotaoSom(this, LARGURA - 20, ALTURA - 52);
 
-    // tocar em qualquer lugar (menos nos botões) avança
-    this.input.on('pointerup', (p, alvos) => {
-      if (alvos.length === 0) this.avancar();
-    });
-    this.input.keyboard?.on('keydown-SPACE', () => this.avancar());
-    this.input.keyboard?.on('keydown-ENTER', () => this.avancar());
     this.input.keyboard?.on('keydown-ESC', () => this.seguir());
-  }
-
-  avancar() {
-    if (!this.dialogo.terminou) {
-      this.dialogo.completar();
-      return;
-    }
-    bipe(600, 0.05);
-    this.indice++;
-    const caixas = TEXTOS.intro.caixas;
-    if (this.indice < caixas.length) this.dialogo.mostrar(caixas[this.indice]);
-    else this.seguir();
   }
 
   seguir() {
@@ -73,7 +56,6 @@ export class Intro extends Phaser.Scene {
   }
 
   update(_, delta) {
-    this.dialogo.atualizar(delta);
     this.morros.tilePositionX += delta * 0.006;
   }
 }

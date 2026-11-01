@@ -6,7 +6,8 @@ import { Titulo } from './scenes/Titulo.js';
 import { Intro } from './scenes/Intro.js';
 import { Itajuba } from './scenes/Itajuba.js';
 import { HUD } from './scenes/HUD.js';
-import { EmBreve } from './scenes/EmBreve.js';
+import { Espaco } from './scenes/Espaco.js';
+import { Chefe } from './scenes/Chefe.js';
 import { Tapete } from './scenes/Tapete.js';
 import { Final } from './scenes/Final.js';
 import { Pausa } from './scenes/Pausa.js';
@@ -40,12 +41,15 @@ const config = {
     // faixas nas laterais, e é exatamente ali que ficam os polegares.
     touch: { target: container },
   },
+  // O som do jogo é todo nosso (src/audio/), com um AudioContext só. Sem isto o Phaser criaria um segundo
+  // contexto, que nunca tocaria nada e ainda contaria no limite de contextos do iPhone.
+  audio: { noAudio: true },
   physics: {
     default: 'arcade',
     arcade: { gravity: { x: 0, y: JOGADOR.gravidade }, debug: false },
   },
-  // Pausa e Sobre ficam no fim da lista: assim aparecem desenhadas por cima das outras cenas (inclusive do HUD).
-  scene: [Boot, Preload, Titulo, Intro, Itajuba, HUD, EmBreve, Tapete, Final, Pausa, Sobre],
+  // Pausa e Sobre ficam no fim da lista: assim aparecem desenhadas por cima das outras cenas.
+  scene: [Boot, Preload, Titulo, Intro, Itajuba, Espaco, Chefe, HUD, Tapete, Final, Pausa, Sobre],
 };
 
 // Espera as fontes antes de criar o jogo: o Phaser desenha texto em canvas e não troca a fonte depois.
@@ -60,7 +64,7 @@ async function iniciar() {
   }
   const jogo = new Phaser.Game(config);
   ligarPausaGlobal(jogo);
-  iniciarSom(jogo);
+  iniciarSom();
   iniciarPausaFoco();
   iniciarAvisoGirar();
   // só no `npm run dev`: deixa o jogo acessível no console do navegador para depurar

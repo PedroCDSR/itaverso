@@ -7,6 +7,7 @@ import { Botao } from '../ui/Botao.js';
 import { BotaoSom } from '../ui/BotaoSom.js';
 import { fundoEntardecer } from '../ui/fundo.js';
 import { novaPartida } from '../estado.js';
+import { tocarMusica } from '../audio/musica.js';
 
 // Tela de título (CLAUDE.md, seção 11.1): logo, nome do jogo, JOGAR e SOBRE O ESPETÁCULO.
 export class Titulo extends Phaser.Scene {
@@ -17,6 +18,7 @@ export class Titulo extends Phaser.Scene {
   create() {
     const t = TEXTOS.titulo;
     this.morros = fundoEntardecer(this);
+    tocarMusica('titulo'); // começa no 1º toque (ou tecla), se o som estiver ligado
     const cx = LARGURA / 2;
 
     // logo da escola (PNG) ou, enquanto ele não existe, o nome da escola em texto

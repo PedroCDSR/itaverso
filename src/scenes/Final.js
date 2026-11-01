@@ -6,7 +6,8 @@ import { BotaoSom } from '../ui/BotaoSom.js';
 import { Dialogo } from '../ui/Dialogo.js';
 import { criarCartaoEvento } from '../ui/CartaoEvento.js';
 import { abrirIngressos, abrirInstagram, compartilhar } from '../ui/links.js';
-import { bipe } from '../audio/som.js';
+import { tocarEfeito } from '../audio/efeitos.js';
+import { tocarMusica, tocarVinheta } from '../audio/musica.js';
 import { sapatilhas, novaPartida } from '../estado.js';
 import { PRIMEIRA_FASE } from '../fluxo.js';
 
@@ -24,6 +25,7 @@ export class Final extends Phaser.Scene {
   create() {
     this.fase = 'cortinas';
     this.cameras.main.fadeIn(300, 0, 0, 0);
+    tocarMusica('final');
     this.desenharPalco();
 
     // Tia Paula no centro do palco, sob o canhão de luz
@@ -33,17 +35,13 @@ export class Final extends Phaser.Scene {
     this.criarCortinas();
     new BotaoSom(this, LARGURA - 17, 17).g.setDepth(4000);
 
-    // caixa no alto, para não tapar o palco
-    this.dialogo = new Dialogo(this, { y: 62, dica: TEXTOS.intro.tocar });
-    this.dialogo.esconder();
-    this.falas = TEXTOS.final.falaTiaPaula;
-    this.indice = 0;
+    // caixa de diálogo em HTML (ui/Dialogo.js), no alto, sem tapar o palco
+    this.dialogo = new Dialogo(this);
 
-    this.input.on('pointerup', (p, alvos) => {
-      if (alvos.length === 0) this.avancar();
-    });
-    this.input.keyboard?.on('keydown-SPACE', () => this.avancar());
-    this.input.keyboard?.on('keydown-ENTER', () => this.avancar());
+    // tocar durante as cortinas acelera a abertura
+    this.input.on('pointerup', () => this.fase === 'cortinas' && this.acelerarCortinas());
+    this.input.keyboard?.on('keydown-SPACE', () => this.fase === 'cortinas' && this.acelerarCortinas());
+    this.input.keyboard?.on('keydown-ENTER', () => this.fase === 'cortinas' && this.acelerarCortinas());
   }
 
   desenharPalco() {
@@ -122,7 +120,7 @@ export class Final extends Phaser.Scene {
       .setDepth(102);
 
     this.time.delayedCall(500, () => {
-      bipe(440, 0.2);
+      tocarEfeito('botao');
       this.tweens.add({ targets: this.cortinaEsq, x: -LARGURA / 2 + 50, duration: 1600, ease: 'Sine.easeInOut' });
       this.tweens.add({
         targets: this.cortinaDir,
@@ -134,33 +132,22 @@ export class Final extends Phaser.Scene {
     });
   }
 
-  comecarFalas() {
+  async comecarFalas() {
+    if (this.fase !== 'cortinas') return;
     this.fase = 'falas';
     this.tweens.add({ targets: this.tiaPaula, y: CHAO_PALCO - 2, yoyo: true, repeat: -1, duration: 500 });
-    this.dialogo.mostrar(this.falas[0]);
+    const nome = TEXTOS.chefe.nomePaula;
+    await this.dialogo.mostrar(TEXTOS.final.falaTiaPaula.map((texto) => ({ nome, texto, cor: CORES_CSS.roxo })));
+    if (this.sys.isActive()) this.mostrarCartao();
   }
 
-  avancar() {
-    if (this.fase === 'cortinas') {
-      // tocou durante as cortinas: acelera
-      this.tweens.getTweens().forEach((tw) => tw.complete());
-      return;
-    }
-    if (this.fase !== 'falas') return;
-    if (!this.dialogo.terminou) {
-      this.dialogo.completar();
-      return;
-    }
-    bipe(600, 0.05);
-    this.indice++;
-    if (this.indice < this.falas.length) this.dialogo.mostrar(this.falas[this.indice]);
-    else this.mostrarCartao();
+  acelerarCortinas() {
+    this.tweens.getTweens().forEach((tw) => tw.complete());
   }
 
   mostrarCartao() {
     this.fase = 'cartao';
-    this.dialogo.esconder();
-    bipe(880, 0.2);
+    tocarVinheta('vitoria');
     const n = sapatilhas(this);
     const tf = TEXTOS.final;
     const c = TEXTOS.cartao;
@@ -200,7 +187,4 @@ export class Final extends Phaser.Scene {
     this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start(PRIMEIRA_FASE));
   }
 
-  update(_, delta) {
-    this.dialogo.atualizar(delta);
-  }
 }

@@ -1,7 +1,22 @@
 // Todos os textos exibidos no jogo (CLAUDE.md, seção 2, regra 6).
 // Frases curtas: no máximo 2 linhas por caixa de diálogo. Tom leve, para crianças.
-// Use \n para quebrar a linha dentro de uma caixa.
 export const TEXTOS = {
+  // Fase 3, Resgate (chefe)
+  chefe: {
+    nomeFase: 'Fase 3 · Resgate',
+    nomeJafar: 'Jafar',
+    nomePaula: 'Tia Paula',
+    jafarEntrada: 'Ha! Sem a Tia Paula, nada de espetáculo!',
+    paulaSocorro: 'Socorro!',
+    paulaAntes: ['Aladdin! Quando o Jafar cansar e descer, acerte maçãs nele!'],
+    objetivo: 'Acerte maçãs no Jafar quando ele cansar!',
+    dicaCansado: 'Agora! Jogue maçãs!',
+    nomeChefe: 'JAFAR',
+    ai: 'ai!',
+    semMaca: 'Pegue maçãs no chão!',
+    jafarDerrotado: 'Nããão! Puf!',
+    paulaObrigada: ['Obrigada, Aladdin! Você foi muito corajoso!', 'Vamos de tapete mágico até o teatro. O espetáculo não pode atrasar!'],
+  },
   mobile: {
     girar: 'Gire o celular',
     girarDetalhe: 'O jogo é com o celular deitado.',
@@ -27,9 +42,9 @@ export const TEXTOS = {
   // Intro: 3 caixas. Toque para avançar.
   intro: {
     caixas: [
-      'Aladdin estava passeando por Itajubá\nquando viu um cartaz enorme...',
-      'Vai ter o espetáculo Aladdin\nno Teatro do Colégio G9!',
-      'Mas os ingressos estão no Espaço\nPaula De Marco. Bora buscar!',
+      'Aladdin estava passeando por Itajubá quando viu um cartaz enorme...',
+      'Vai ter o espetáculo Aladdin no Teatro do Colégio G9!',
+      'Mas os ingressos estão no Espaço Paula De Marco. Bora buscar!',
     ],
     pular: 'PULAR',
     tocar: 'toque para continuar',
@@ -54,8 +69,8 @@ export const TEXTOS = {
   // Tela final
   final: {
     falaTiaPaula: [
-      'Tia Paula: Muito obrigada, Aladdin!\nAgora sim, todo mundo no teatro!',
-      'Senhoras e senhores...\no espetáculo Aladdin vai começar!',
+      'Muito obrigada, Aladdin! Agora sim, todo mundo no teatro!',
+      'Senhoras e senhores... o espetáculo Aladdin vai começar!',
     ],
     // {n} = quantidade de sapatilhas
     sapatilhas: 'Você pegou {n} sapatilhas!',
@@ -89,12 +104,29 @@ export const TEXTOS = {
     checkpoint: 'Ponto salvo!',
     semMaca: 'Sem maçãs!',
   },
-  // Ponte provisória no lugar das Fases 2 e 3 (Etapas 4 e 5)
-  emBreve: {
-    titulo: 'Você chegou ao Espaço!',
-    sapatilhas: (n) => `Sapatilhas: ${n}`,
-    proxima: 'O Espaço e o resgate da Tia Paula\nchegam nas próximas etapas. Agora, de tapete!',
-    continuar: 'VOAR DE TAPETE',
+  // Fase 2. Cada fala tem no máximo 2 linhas na caixa de diálogo (o modo dev avisa no console se passar).
+  espaco: {
+    nomeFase: 'Fase 2 · Espaço Paula De Marco',
+    objetivo: 'Busque os ingressos com a Tia Claudia!',
+    cartaz: 'ALADDIN · 20/11',
+    balcao: 'INGRESSOS',
+    ingressos: (n) => `+${n} ingressos!`,
+    // ordem dos 'N' no mapa, da esquerda para a direita (levels/espaco.js)
+    npcs: {
+      jasmine: { nome: 'Jasmine', falas: ['Oi, Aladdin! Estou ensaiando o meu balé.', 'Olha só o meu giro!'] },
+      genio: { nome: 'Gênio', falas: ['Três desejos? Hoje só um:', 'que você venha ver a gente no palco!'] },
+      sultao: { nome: 'Sultão', falas: ['Ensaio é coisa séria...', 'mas dançar é muito divertido!'] },
+    },
+    claudia: {
+      nome: 'Tia Claudia',
+      antes: ['Aladdin! Que bom que você chegou!', 'Aqui estão os ingressos para o espetáculo do dia 20/11!'],
+      depois: ['Guarde bem! A gente se vê no Teatro do Colégio G9.'],
+    },
+    abu: { nome: 'Abu', falas: ['Socorro! Socorro!', 'O Jafar levou a Tia Paula!'] },
+    final: {
+      nome: 'Tia Claudia',
+      falas: ['Sem a Tia Paula não tem espetáculo!', 'Corre, Aladdin! Vai salvar a Tia Paula!'],
+    },
   },
   tapete: {
     titulo: 'VOANDO PARA O TEATRO!',
