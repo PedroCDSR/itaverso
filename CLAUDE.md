@@ -61,6 +61,7 @@ Jogo de plataforma 2D curto, para celular, que funciona para explicar o que é o
 
 ```
 references/            referências visuais: figurinos/ pessoas/ lugares/ logo/ estilo/ (não vai para o build)
+ferramentas/           geradores de arte (arte/) e de mapas (mapas/), em Python; não vai para o build
 public/
   assets/sprites/      PNGs finais, quando existirem
   assets/audio/        música (MP3)
@@ -262,10 +263,12 @@ Cada etapa termina com PR contra `dev` e o checklist da seção 3.
 | 0 | 01/11/2026 | [PR 1](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/1) | Vite 8 + Phaser 4.2.1, estrutura de pastas, fontes woff2 (33 KB), cena de teste com acentos e dados do evento. |
 | 1 | 01/11/2026 | [PR 2](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/2) | Aviso de girar, controles de toque + teclado, pausa ao perder o foco (volta com toque), som liberado no 1º toque, botão de som, tela cheia + trava deitado no Android. Cena de teste com um bloco que anda, pula e joga maçã. |
 | 2 | 01/11/2026 | [PR 3](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/3) | Leitor de mapas em texto, Aladdin original provisório (13 quadros em matriz), tiles 16×16, física com pulo variável, coyote e buffer, câmera com zona morta e folga à frente, céu de entardecer e morros. Pulo alto 69 px, pulo curto 34 px. |
+| 3 | 01/11/2026 | PR_ETAPA_3 | Fase 1 com 320 colunas: rua, feira com 6 barracas de toldo, praça com fonte, checkpoint, buracos e plataformas, porta do Espaço. 12 capivaras (pisão = dorme; maçã = come e vai embora; de lado = 1 coração), 38 sapatilhas, 9 maçãs, 3 corações. HUD com corações, maçãs, sapatilhas, pausa e som. Casario de Itajubá no fundo (3 camadas). `dist/` com 1,5 MB. |
 
-**Próximo passo (01/11/2026):** o Pedro testa a prévia do PR 3 no celular (sensação de correr e pular) e faz o merge no
-`dev`. Depois, **Etapa 3, Fase 1 (Itajubá)**: capivaras, maçãs com arremesso de verdade, toldos que quicam, fonte,
-sapatilhas, corações, checkpoint, HUD e transição. Apresentar o plano curto e esperar o OK antes de começar.
+**Próximo passo (01/11/2026):** o Pedro testa a prévia do PR da Etapa 3 no celular (a fase inteira, do começo até a
+porta do Espaço) e faz o merge no `dev`. Depois, **Etapa 4, Fase 2 (Espaço Paula De Marco)**: sistema de diálogo, NPCs,
+Tia Claudia com os ingressos, contador de ingressos no HUD e a transição para o chefe. A tela provisória `EmBreve`
+sai nessa etapa.
 
 **Decisões técnicas da Etapa 1:**
 - O toque é escutado na **div inteira** (`input.touch.target`), não só no canvas: no celular deitado sobram faixas laterais, e é ali que ficam os polegares.
@@ -284,6 +287,20 @@ sapatilhas, corações, checkpoint, HUD e transição. Apresentar o plano curto 
 - Tiles via `Tilemap` do Phaser; `=` e `T` só colidem por cima. O mundo não tem chão invisível: cair abaixo do mapa volta ao checkpoint (por enquanto, o `P`).
 - Objetos do mapa (C, a, s, h, K, F, E) aparecem como marcadores coloridos; ganham comportamento na Etapa 3.
 
+**Decisões técnicas da Etapa 3:**
+- Decisões do Pedro (01/11/2026): ele delegou as escolhas. Branch `etapa-3-itajuba`; encostar de lado numa capivara acordada tira 1 coração.
+- A seção 7.1 (gestão rígida de referências) foi removida a pedido do Pedro. Continua valendo a regra 3: as capturas do jogo original em `references/` servem só de clima, nunca de modelo de personagem, sprite ou cenário.
+- Mapa montado por trechos em `ferramentas/mapas/gerar_itajuba.py` (anota alcance do pulo e do toldo). O `src/levels/itajuba.js` gerado é editável à mão.
+- Arte dos objetos (capivara com 6 quadros, maçã, sapatilha, coração cheio/vazio, fonte com água animada, bandeira) em `ferramentas/arte/gerar_objetos.py` → `src/art/objetos.js`. Casario e torre da igreja são desenhados em canvas no `Preload`; barracas e fachada do Espaço, com `Graphics` na cena.
+- HUD é uma cena separada (`scenes/HUD.js`) que lê o `registry` (`vida`, `vidaMax`, `macas`, `sapatilhas`). O botão de pausa usa a mesma tela "Pausado" da Etapa 1 (`pausarAgora()` em `ui/PausaFoco.js`). O menu de pausa completo fica para a Etapa 7.
+- Toldo: quica 520 segurando PULAR (≈150 px) e 420 sem segurar (≈98 px). Pisar na capivara segurando PULAR também vai mais alto.
+- Maçã: arco baixo que quica até 3 vezes e rola, para acertar capivaras de perto e de longe (até ~140 px). O `overlap` do Arcade entre dois grupos não disparou para maçã × capivara; a checagem é feita à mão no `update()`.
+- Ao voltar ao checkpoint: vida cheia, 1 s de invencibilidade e no mínimo 3 maçãs. Capivaras dormindo continuam dormindo.
+- Coração só é recolhido se faltar vida; maçã só se houver espaço (máximo 9).
+- A tela "JOGAR" provisória continua até a Etapa 7. Ao chegar na porta, `scenes/EmBreve.js` mostra as sapatilhas e "JOGAR DE NOVO" (sai na Etapa 4).
+- Teste automatizado no Chromium (Playwright) conferiu: pisão, maçã, quique no toldo, checkpoint, buraco, 3 danos, coleta, chegada na porta e jogar de novo, sem erros no console.
+
 **Riscos anotados:**
+- A Fase 1 tem ~4.900 px: correndo direto dá ~35 s; com capivaras, toldos e coleta, a estimativa é de 60 a 80 s. Medir no celular e ajustar no polimento (Etapa 10).
 - Texto com Patrick Hand num canvas de 480×270 ampliado pode ficar serrilhado. Avaliar no celular na Etapa 4; se ficar ruim, desenhar o texto de diálogo numa resolução maior (por exemplo, câmera com zoom 2 num jogo de 960×540).
 - O Phaser completo pesa ~1,2 MB minificado (~330 KB comprimido na transferência). Cabe no orçamento; se apertar, trocar pelo build só com Arcade Physics.
