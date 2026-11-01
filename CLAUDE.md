@@ -244,6 +244,16 @@ Cada etapa termina com PR contra `dev` e o checklist da seção 3.
 | # | Data | PR | Observações |
 |---|---|---|---|
 | 0 | 01/11/2026 | [PR 1](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/1) | Vite 8 + Phaser 4.2.1, estrutura de pastas, fontes woff2 (33 KB), cena de teste com acentos e dados do evento. |
+| 1 | 01/11/2026 | [PR 2](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/2) | Aviso de girar, controles de toque + teclado, pausa ao perder o foco (volta com toque), som liberado no 1º toque, botão de som, tela cheia + trava deitado no Android. Cena de teste com um bloco que anda, pula e joga maçã. |
+
+**Decisões técnicas da Etapa 1:**
+- O toque é escutado na **div inteira** (`input.touch.target`), não só no canvas: no celular deitado sobram faixas laterais, e é ali que ficam os polegares.
+- Os controles leem, a cada quadro, a posição de todos os dedos (`ui/ControlesToque.js`). Multitoque e deslizar de ◀ para ▶ funcionam sem eventos extras. As cenas usam só `ui/Entrada.js` (toque + teclado juntos).
+- "Gire o celular" e "Pausado" são HTML **dentro** da div `#jogo`, porque em tela cheia (Android) só aparece o que está dentro do elemento em tela cheia. Pausa com motivos acumulados em `ui/pausaGlobal.js`.
+- Depois de perder o foco, o jogo só volta com um toque, para ninguém levar dano no susto.
+- O aviso de girar só aparece em aparelho de toque (`pointer: coarse`); no computador, nunca.
+- O iPhone silencia o Web Audio quando a chave lateral está no silencioso. Isso é do aparelho e foi mantido de propósito.
+- No `npm run dev` o jogo fica em `window.jogo` para depurar no console.
 
 **Riscos anotados:**
 - Texto com Patrick Hand num canvas de 480×270 ampliado pode ficar serrilhado. Avaliar no celular na Etapa 4; se ficar ruim, desenhar o texto de diálogo numa resolução maior (por exemplo, câmera com zoom 2 num jogo de 960×540).
