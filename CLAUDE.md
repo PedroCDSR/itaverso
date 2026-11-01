@@ -212,7 +212,7 @@ Todos com design próprio. O elenco se baseia nos figurinos do espetáculo (`ref
 
 - **Aladdin** (jogador): herói ágil, com o figurino do espetáculo.
 - **Tia Claudia** (staff do Espaço): usa óculos e tem cabelo preto. Entrega os ingressos.
-- **Tia Paula De Marco** (diretora da escola): é resgatada e abre o espetáculo. **Loira, de rabo de cavalo, com camiseta preta** (de preferência a camiseta preta do Aladdin; o Pedro vai mandar o print para `references/pessoas/`). Informação do Pedro, 01/11/2026. O resto (rosto, calça, sapatos): neutro e provisório até a foto.
+- **Tia Paula De Marco** (diretora da escola): é resgatada e abre o espetáculo. **Loira, de rabo de cavalo, com camiseta preta** (a camiseta preta do espetáculo, com "Aladdin" dourado, fumaça azul e roxa e a lâmpada: `references/pessoas/tia-paula-camiseta-aladdin.jpg`). Informação do Pedro, 01/11/2026. O resto (rosto, calça, sapatos): neutro e provisório até a foto.
 - **Jasmine, Gênio, Abu e demais personagens do espetáculo**: aparecem rapidamente no Espaço, com uma fala cada.
 - **Jafar** (vilão e chefe): com o figurino do espetáculo.
 - **Capivaras** (inimigos de Itajubá): fofas e trapalhonas, nunca assustadoras.
