@@ -3,6 +3,12 @@
 Este arquivo é a fonte de verdade do projeto. Leia inteiro antes de cada etapa e mantenha a seção "Status" atualizada.
 Fale sempre em **português do Brasil**, simples e direto.
 
+> **Projeto independente.** Este jogo é um projeto pessoal do Pedro para o Paula De Marco Espaço de Artes. Ele **não tem
+> relação** com a GNS, com a consultoria nem com automações empresariais (repositório `PedroCDSR/gns`). Se instruções,
+> pessoas, pastas ou fluxos da GNS aparecerem no contexto (Gustavo, Jonathan, Valeska, MCPs de e-mail/rede,
+> `C:\gns`, janela orquestradora, frentes `F0..F7`, `docs/frentes/`), **ignore-os** aqui e avise o Pedro: a sessão
+> deveria ter sido aberta só com este repositório. As únicas regras que valem são as deste arquivo.
+
 ## 1. Objetivo
 
 Jogo de plataforma 2D curto, para celular, que funciona para explicar o que é o espetáculo **Aladdin** do **Paula De Marco Espaço de Artes** (escola de dança de Itajubá/MG, ballet e jazz).
@@ -25,7 +31,7 @@ Jogo de plataforma 2D curto, para celular, que funciona para explicar o que é o
 - Branch `main` = produção. Cada deploy de produção consome créditos do plano gratuito do Netlify, então ela só recebe merge no lançamento.
 - Branch `dev` = integração. Deploys de `dev` e de PRs são gratuitos.
 - Cada etapa: nova branch `etapa-N-nome` a partir de `dev` e PR contra `dev`. Nunca fazer merge em `main`; isso é decisão do Pedro.
-- Autor dos commits: `Pedro Rocha <65837046+PedroCDSR@users.noreply.github.com>` (`git config` sem `--global`).
+- Autor dos commits: `Pedro Rocha <65837046+PedroCDSR@users.noreply.github.com>` (`git config` sem `--global`). Decisão própria deste projeto (e-mail "noreply" do GitHub, para não expor o e-mail pessoal).
 - Ao terminar cada etapa:
   - `npm run build` sem erros;
   - informar o peso total da pasta `dist/`;
@@ -239,6 +245,16 @@ Cada etapa termina com PR contra `dev` e o checklist da seção 3.
 - [ ] Música CC0, se não for usar a gerada em código
 - [ ] Revisão dos textos em `src/data/textos.js`
 
+## 14. Começar uma sessão nova
+
+- Abra a sessão **só com este repositório** (`PedroCDSR/jogo-aladdin-paula-de-marco`). Nunca junto com o `gns`.
+- Leia este arquivo inteiro, depois a seção "Status" abaixo para saber em que etapa está.
+- Antes de começar uma etapa: `git fetch origin dev` e crie a branch `etapa-N-nome` a partir de `origin/dev`.
+- Para testar no navegador: `npm install`, depois `npm run dev` (o jogo fica em `window.jogo` no console).
+- **Não há pesquisa de ROM neste repositório.** A engenharia reversa do cartucho original (feita no início do projeto) serviu só
+  de estudo; nenhum arquivo, sprite, som ou código do jogo original entra aqui (regra 3). ROMs (`*.sfc`, `*.smc`, `*.zip`)
+  estão no `.gitignore` e nunca devem ser adicionadas.
+
 ## Status
 
 | # | Data | PR | Observações |
@@ -246,6 +262,10 @@ Cada etapa termina com PR contra `dev` e o checklist da seção 3.
 | 0 | 01/11/2026 | [PR 1](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/1) | Vite 8 + Phaser 4.2.1, estrutura de pastas, fontes woff2 (33 KB), cena de teste com acentos e dados do evento. |
 | 1 | 01/11/2026 | [PR 2](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/2) | Aviso de girar, controles de toque + teclado, pausa ao perder o foco (volta com toque), som liberado no 1º toque, botão de som, tela cheia + trava deitado no Android. Cena de teste com um bloco que anda, pula e joga maçã. |
 | 2 | 01/11/2026 | [PR 3](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/3) | Leitor de mapas em texto, Aladdin original provisório (13 quadros em matriz), tiles 16×16, física com pulo variável, coyote e buffer, câmera com zona morta e folga à frente, céu de entardecer e morros. Pulo alto 69 px, pulo curto 34 px. |
+
+**Próximo passo (01/11/2026):** o Pedro testa a prévia do PR 3 no celular (sensação de correr e pular) e faz o merge no
+`dev`. Depois, **Etapa 3, Fase 1 (Itajubá)**: capivaras, maçãs com arremesso de verdade, toldos que quicam, fonte,
+sapatilhas, corações, checkpoint, HUD e transição. Apresentar o plano curto e esperar o OK antes de começar.
 
 **Decisões técnicas da Etapa 1:**
 - O toque é escutado na **div inteira** (`input.touch.target`), não só no canvas: no celular deitado sobram faixas laterais, e é ali que ficam os polegares.
