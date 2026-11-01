@@ -29,20 +29,37 @@ export const FONTES = {
   dialogo: '"Patrick Hand"',
 };
 
-// Jogador (pixels por segundo; valores provisórios)
+// Jogador (pixels e segundos). Ajuste aqui e teste no celular.
+// Altura do pulo ≈ forcaPulo² / (2 × gravidade): 360² / 1800 = 72 px = 4,5 tiles.
 export const JOGADOR = {
-  velocidade: 140,
+  velocidade: 140, // corrida máxima
+  aceleracaoChao: 1400, // quanto mais alto, mais "na hora" ele arranca
+  aceleracaoAr: 900, // controle no ar (um pouco menor que no chão)
+  freio: 1800, // parar ao soltar o direcional
   gravidade: 900,
-  forcaPulo: 340,
-  // fator aplicado à velocidade vertical ao soltar o pulo cedo (pulo variável)
+  gravidadeQuedaExtra: 500, // cai mais rápido do que sobe: pulo mais "firme"
+  quedaMaxima: 520,
+  forcaPulo: 360,
+  // ao soltar o pulo durante a subida, a velocidade vertical é multiplicada por isto (pulo variável)
   cortePulo: 0.45,
-  coyoteMs: 100,
-  bufferPuloMs: 100,
+  coyoteMs: 100, // ainda dá para pular logo depois de sair da beirada
+  bufferPuloMs: 100, // apertar pular pouco antes de tocar o chão também vale
   quiqueInimigo: 260,
   quiqueToldo: 520,
   coracoes: 3,
   invencivelMs: 1000,
   macasIniciais: 5,
+  // corpo de colisão dentro do quadro 32x48 (menor que o desenho, para não "enroscar" nas beiradas)
+  corpo: { largura: 14, altura: 36, x: 9, y: 11 },
+};
+
+// Câmera: zona morta no meio da tela onde o jogador anda sem a câmera mexer
+export const CAMERA = {
+  zonaMortaLargura: 64,
+  zonaMortaAltura: 48,
+  suavidade: 0.15,
+  // a câmera fica um pouco à frente do jogador, mostrando mais do caminho
+  folgaFrente: 40,
 };
 
 export const CHEFE = {

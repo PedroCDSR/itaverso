@@ -245,6 +245,7 @@ Cada etapa termina com PR contra `dev` e o checklist da seção 3.
 |---|---|---|---|
 | 0 | 01/11/2026 | [PR 1](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/1) | Vite 8 + Phaser 4.2.1, estrutura de pastas, fontes woff2 (33 KB), cena de teste com acentos e dados do evento. |
 | 1 | 01/11/2026 | [PR 2](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/2) | Aviso de girar, controles de toque + teclado, pausa ao perder o foco (volta com toque), som liberado no 1º toque, botão de som, tela cheia + trava deitado no Android. Cena de teste com um bloco que anda, pula e joga maçã. |
+| 2 | 01/11/2026 | (PR `etapa-2-jogador` → `dev`) | Leitor de mapas em texto, Aladdin original provisório (13 quadros em matriz), tiles 16×16, física com pulo variável, coyote e buffer, câmera com zona morta e folga à frente, céu de entardecer e morros. Pulo alto 69 px, pulo curto 34 px. |
 
 **Decisões técnicas da Etapa 1:**
 - O toque é escutado na **div inteira** (`input.touch.target`), não só no canvas: no celular deitado sobram faixas laterais, e é ali que ficam os polegares.
@@ -254,6 +255,14 @@ Cada etapa termina com PR contra `dev` e o checklist da seção 3.
 - O aviso de girar só aparece em aparelho de toque (`pointer: coarse`); no computador, nunca.
 - O iPhone silencia o Web Audio quando a chave lateral está no silencioso. Isso é do aparelho e foi mantido de propósito.
 - No `npm run dev` o jogo fica em `window.jogo` para depurar no console.
+
+**Decisões técnicas da Etapa 2:**
+- **Referências visuais (01/11/2026):** das capturas do Aladdin de SNES usamos só o clima: paleta quente de arenito e terracota, céu de entardecer lilás → rosa, camadas de cenário, toldos de feira (aqui nas cores da escola), contorno escuro com sombra em 2 tons. **Nada** do visual dos personagens (Aladdin/Abu/guardas/Jasmine) nem do palácio.
+- Aladdin **provisório e original**: cabelo cacheado escuro, faixa rosa na cabeça, túnica verde com faixa rosa, calça areia, sandálias. Redesenhar com os figurinos.
+- A arte nasce de geradores em `ferramentas/arte/` (Python) que escrevem as matrizes em `src/art/`. O jogo só lê as matrizes; dá para editar à mão.
+- PNG final: colocar em `public/assets/sprites/` e registrar em `SPRITES_PNG` (`src/art/index.js`). A lista evita pedidos 404.
+- Tiles via `Tilemap` do Phaser; `=` e `T` só colidem por cima. O mundo não tem chão invisível: cair abaixo do mapa volta ao checkpoint (por enquanto, o `P`).
+- Objetos do mapa (C, a, s, h, K, F, E) aparecem como marcadores coloridos; ganham comportamento na Etapa 3.
 
 **Riscos anotados:**
 - Texto com Patrick Hand num canvas de 480×270 ampliado pode ficar serrilhado. Avaliar no celular na Etapa 4; se ficar ruim, desenhar o texto de diálogo numa resolução maior (por exemplo, câmera com zoom 2 num jogo de 960×540).
