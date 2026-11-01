@@ -22,6 +22,7 @@ fundo puxado para o lilás.
 Diferenças que ficam (e o motivo):
 - Alturas comprimidas para caber na tela (convenção do gênero); portas e janelas mantidas do tamanho do herói.
 - Busto e estátua sem traços de rosto: as fotos não mostram os rostos de perto (seção 7.1, não inventar).
-- Posto: placa oval com as cores e a palavra POSTO, **sem** o logo nem o nome da marca (marca registrada).
+- Posto: placa oval com aro azul e **ESSO** em vermelho no campo branco (decisão do Pedro, 01/11/2026: "pode chamar
+  de Esso"). Letras de pixel desenhadas por nós, sem decalcar o logotipo oficial.
 - Café: a lotérica vizinha virou uma placa clara sem nome; pessoas, carros, postes e fios ficaram de fora.
 - Helicóptero de perfil (no jogo o cenário é de lado) e sem inscrições.

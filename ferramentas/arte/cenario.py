@@ -400,18 +400,20 @@ class Tela:
             if self.dentro(x, y) and self.mat[y, x] == mat and self.dentro(x, y - 1) and self.mat[y - 1, x] == 0:
                 self.px(x, y - 1, mat, 1)
 
-    def texto(self, x, y, s, mat, tom, sombra=None):
-        """Escreve com a FONTE. sombra = (mat, tom) para uma sombra 1 px abaixo-direita (letra em relevo)."""
+    def texto(self, x, y, s, mat, tom, sombra=None, escala=1):
+        """Escreve com a FONTE. sombra = (mat, tom) para uma sombra 1 px abaixo-direita (letra em relevo).
+        escala=2 desenha cada pixel da letra como um bloco 2x2 (placas grandes)."""
         cx = x
+        e = escala
         for ch in s:
             g = FONTE[ch]
             for j, linha in enumerate(g):
                 for i, c in enumerate(linha):
                     if c == '#':
                         if sombra:
-                            self.px(cx + i + 1, y + j + 1, *sombra)
-                        self.px(cx + i, y + j, mat, tom)
-            cx += len(g[0]) + 1
+                            self.ret(cx + i * e + 1, y + j * e + 1, cx + i * e + e, y + j * e + e, *sombra)
+                        self.ret(cx + i * e, y + j * e, cx + i * e + e - 1, y + j * e + e - 1, mat, tom)
+            cx += (len(g[0]) + 1) * e
         return cx
 
     def manchas(self, x0, y0, x1, y1, mat, n, tam=(1, 3), delta=1, so_tom=None):

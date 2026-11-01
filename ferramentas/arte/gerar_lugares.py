@@ -757,7 +757,7 @@ def igreja():
 
 
 # ===============================================================================================================
-# 5. "O menor posto de gasolina do mundo" (sem o logo nem a palavra da marca)
+# 5. Posto Esso, "o menor posto de gasolina do mundo"
 # ===============================================================================================================
 
 def posto():
@@ -780,20 +780,23 @@ def posto():
     t.relevo(t.mascara_ret(px - 18, 40, px + 18, 50))
     for y in (43, 46):
         t.hlinha(px - 15, px + 15, y, M['azul'], 3)
-    # oval: aro azul, aro branco, campo branco com POSTO em vermelho
+    # oval: aro azul, aro branco e campo branco com ESSO em vermelho (decisão do Pedro, 01/11/2026).
+    # Letras de pixel nossas (fonte do cenario.py ampliada 2x), sem decalcar o logotipo.
     oy = 18
     t.elipse(px, oy, 23, 15, M['azul'], 2)
     t.aplicar(t.mascara_elipse(px, oy, 23, 15) & ~t.mascara_elipse(px - 1, oy + 1, 22, 14), M['azul'], 1)
     t.elipse(px, oy, 20, 12, bc, 1)
-    t.elipse(px, oy, 18, 10, bc, 0)
-    t.ret(px - 16, oy - 4, px + 16, oy + 4, vm, 2)
+    t.elipse(px, oy, 19, 11, bc, 0)
+    t.aplicar(t.mascara_elipse(px, oy, 19, 11) & ~t.mascara_elipse(px - 1, oy - 1, 19, 11), bc, 2)
     yy, xx = np.mgrid[0:A, 0:L]
-    faixa = t.mascara_ret(px - 18, oy - 4, px + 18, oy + 4) & t.mascara_elipse(px, oy, 18, 10)
-    t.aplicar(faixa, vm, 2)
-    t.aplicar(faixa & (yy == oy - 4), vm, 1)
-    t.aplicar(faixa & (yy == oy + 4), vm, 3)
-    tx = int(px - largura_texto('POSTO') / 2)
-    t.texto(tx, oy - 2, 'POSTO', bc, 0)
+    txt = 'ESSO'
+    larg2 = largura_texto(txt) * 2
+    tx = int(px - larg2 / 2) + 1
+    t.texto(tx + 1, oy - 4, txt, vm, 4, escala=2)      # sombra das letras
+    t.texto(tx, oy - 5, txt, vm, 2, escala=2)
+    for y in (oy - 5,):                                 # luz no alto das letras
+        sel = (t.mat[y] == vm) & (t.tom[y] == 2)
+        t.tom[y][sel] = 1
     t.px(px - 12, oy - 9, bc, 0); t.px(px - 11, oy - 10, bc, 0)        # brilho do acrílico
     # --- plataforma com meio-fio amarelo ---
     t.ret(2, base - 7, L - 3, base, M['concreto'], 2)
@@ -1239,7 +1242,7 @@ def telas(pan, lugares):
     """6 telas de 480x270 (o que o jogador vê), uma por lugar, ampliadas 2x."""
     ordem = [('clube', '1. Clube Itajubense (fundo)'), ('fonte', '2. Fonte da praça e busto'),
              ('cafe', '3. Café do Vadinho'), ('igreja', '4. Igreja Matriz'),
-             ('posto', '5. O menor posto do mundo'), ('soldado', '6. Praça do Soldado')]
+             ('posto', '5. Posto Esso, o menor do mundo'), ('soldado', '6. Praça do Soldado')]
     k, gap, topo = 2, 16, 40
     W = 2 * TELA_L * k + 3 * gap
     H = 3 * (TELA_A * k + topo) + 2 * gap + 60
@@ -1325,7 +1328,7 @@ NOTAS = {
     'posto': [
         'Fiel: cabine minúscula branca de azulejos, beiral vermelho com platibanda de losangos, 2 colunas inclinadas listradas, painel de',
         'pedra com moldura vermelha, janelas quadriculadas, plataforma com meio-fio amarelo, placa oval alta no poste com a treliça.',
-        'Trocado de propósito: a placa oval tem as cores (azul, branco, vermelho) e a palavra POSTO, sem o logo nem o nome da marca.'],
+        'Placa: oval com aro azul e ESSO em vermelho no campo branco (decisão do Pedro), com letras de pixel nossas, sem decalcar o logotipo.'],
     'soldado': [
         'Fiel: soldado de bronze de capacete apontando com o braço direito, fuzil em pé ao lado, cinto com cartucheiras, pedestal branco',
         'alto e manchado com placa; helicóptero cinza-claro com nariz preto, cabine envidraçada, motores, pás caídas e a bandeira do Brasil.',
@@ -1352,7 +1355,7 @@ if __name__ == '__main__':
             cena([(ca, 70)], ca.width + 90, 10), NOTAS['cafe'])
     prancha('4-igreja-matriz.png', '4 · Igreja Matriz', ['4-igreja-matriz-1.jpg', '4-igreja-matriz-2.jpg'],
             cena([(ig, 70)], ig.width + 90, 10), NOTAS['igreja'])
-    prancha('5-posto-menor-do-mundo.png', '5 · "O menor posto de gasolina do mundo" (sem a marca)',
+    prancha('5-posto-menor-do-mundo.png', '5 · Posto Esso, "o menor posto de gasolina do mundo"',
             ['5-posto-esso-menor-do-mundo.jpg'], cena([(po, 70)], po.width + 90, 10), NOTAS['posto'])
     es, he, ar = estatua(), helicoptero(), arvore()
     prancha('6-praca-do-soldado.png', '6 · Praça do Soldado: estátua e helicóptero',
