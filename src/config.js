@@ -13,6 +13,7 @@ export const CORES = {
   amarelo: 0xf9fcbb,
   roxo: 0x6d6bd9,
   verde: 0x6cc24a,
+  branco: 0xffffff,
 };
 export const CORES_CSS = {
   rosa: '#FFB0FA',
@@ -50,4 +51,18 @@ export const CHEFE = {
 
 export const TAPETE = {
   duracaoSeg: 40,
+};
+
+// Controles de toque, em pixels do jogo (480x270). Num celular deitado 1 px do jogo vale ~1,4 px da tela,
+// então raio 24 dá um botão de ~68 px reais (mínimo pedido: 64 px).
+// As áreas de toque são maiores que o desenho: cada metade de baixo da tela é dividida entre os botões dela.
+export const CONTROLES = {
+  opacidade: 0.35,
+  opacidadeApertado: 0.7,
+  esquerda: { x: 40, y: 228, raio: 24 },
+  direita: { x: 104, y: 228, raio: 24 },
+  pular: { x: 436, y: 222, raio: 30 },
+  maca: { x: 366, y: 236, raio: 22 },
+  // toques acima desta linha (y) não contam como botão, para não atrapalhar o HUD
+  alturaMinima: 120,
 };
