@@ -1,7 +1,7 @@
 """Gera a arte da Fase 4 (Tapete) como matrizes de texto: design ORIGINAL.
 
 - voo (64x48, 3 quadros): tapete mágico com a estampa dos quadrados arredondados concêntricos do logo,
-  ondulando, com o Aladdin (provisório, igual ao do jogador) e a Tia Paula (provisória: aparência A DEFINIR).
+  ondulando, com a Tia Paula (provisória: aparência A DEFINIR).
 - passaro (18x14, 2 quadros): sabiá-laranjeira, voando para a esquerda.
 - pipa (18x28, 2 quadros): pipa de papel nas cores da escola, com rabiola balançando.
 - sapatilha (14x12, 1 quadro): sapatilha de ponta rosa, coletável do céu.
@@ -131,42 +131,7 @@ def tapete(fase):
     return q
 
 
-# ---------- Aladdin sentado (mesmo visual provisório do jogador) ----------
-
-def aladdin(q, ox, oy):
-    cx, cy = 17 + ox, 11 + oy
-    # pernas dobradas para a frente (calça areia), pé no tapete
-    q.linha(14 + ox, 31 + oy, 23 + ox, 30 + oy, 5, 'C')
-    q.linha(23 + ox, 30 + oy, 25 + ox, 34 + oy, 4, 'c')
-    q.ret(24 + ox, 34 + oy, 27 + ox, 34 + oy, 's')
-    # túnica
-    for y in range(19 + oy, 32 + oy):
-        q.ret(11 + ox, y, 21 + ox, y, 'g')
-        q.ret(11 + ox, y, 12 + ox, y, 'G')
-    q.px(19 + ox, 19 + oy, 's'); q.px(19 + ox, 20 + oy, 's'); q.px(18 + ox, 19 + oy, 's')
-    q.ret(11 + ox, 27 + oy, 21 + ox, 28 + oy, 'r')
-    q.ret(11 + ox, 28 + oy, 21 + ox, 28 + oy, 'R')
-    # cabeça
-    q.elipse(cx - 1, cy - 1, 6.2, 5.5, 'h')
-    for bx, by in ((-6, -2), (-5, 2), (-3, -5), (1, -6), (4, -5)):
-        q.elipse(cx + bx, cy + by, 1.8, 1.8, 'h')
-    q.elipse(cx + 2, cy + 2, 4.2, 4.6, 's')
-    q.ret(cx + 1, cy + 5, cx + 4, cy + 6, 's')
-    q.ret(cx - 1, cy + 5, cx, cy + 6, 'S')
-    q.px(cx - 1, cy + 2, 'S'); q.px(cx - 1, cy + 3, 'S')
-    q.ret(cx - 6, cy - 3, cx + 5, cy - 2, 'r')
-    q.ret(cx - 6, cy - 2, cx + 5, cy - 2, 'R')
-    # pontas da faixa ao vento (voando: bem esticadas para trás)
-    q.linha(cx - 7, cy - 2, cx - 12, cy - 1, 2, 'r')
-    q.linha(cx - 7, cy - 1, cx - 11, cy + 1, 2, 'R')
-    q.px(cx - 2, cy - 5, 'H'); q.px(cx - 1, cy - 5, 'H')
-    q.px(cx + 3, cy + 1, 'w'); q.px(cx + 3, cy + 2, 'w')
-    q.px(cx + 4, cy + 1, 'e'); q.px(cx + 4, cy + 2, 'e')
-    q.px(cx + 3, cy, 'h'); q.px(cx + 4, cy, 'h')
-    q.px(cx + 4, cy + 4, 'm'); q.px(cx + 5, cy + 4, 'm')
-    # braço da frente apoiado no joelho
-    q.linha(19 + ox, 21 + oy, 22 + ox, 26 + oy, 3, 's')
-    q.linha(22 + ox, 26 + oy, 25 + ox, 28 + oy, 3, 's')
+# O Aladdin sentado vem do sprite único do jogador (gerar_jogador.py, quadros "sentado").
 
 
 # ---------- Tia Paula sentada (PROVISÓRIA: aparência A DEFINIR, ver CLAUDE.md seção 8) ----------
@@ -208,11 +173,10 @@ def voo(fase):
     q = tapete(fase)
     pas = Quadro(64, 48)
     paula(pas, 0, 1)
-    ala = Quadro(64, 48)
-    aladdin(ala, 19, 0)
-    # cada passageiro sobe e desce junto com o pedaço de tapete em que está sentado
+    # a passageira sobe e desce junto com o pedaço de tapete em que está sentada.
+    # O Aladdin NÃO é desenhado aqui: a cena Tapete põe por cima o quadro "sentado" do sprite do jogador
+    # (fonte única, CLAUDE.md seção 7), deslocado por ONDA_ALADDIN.
     q.colar(pas, 0, onda(17, fase))
-    q.colar(ala, 0, onda(37, fase))
     q.contorno()
     return q.texto()
 
@@ -282,8 +246,10 @@ def sapatilha():
     return q.texto()
 
 
+FASES_VOO = (0, 2 * math.pi / 3, 4 * math.pi / 3)
+
 SPRITES = {
-    'voo': (64, 48, [voo(f) for f in (0, 2 * math.pi / 3, 4 * math.pi / 3)]),
+    'voo': (64, 48, [voo(f) for f in FASES_VOO]),
     'passaro': (18, 14, [passaro(True), passaro(False)]),
     'pipa': (18, 28, [pipa(0), pipa(math.pi)]),
     'sapatilhaCeu': (14, 12, [sapatilha()]),
@@ -293,7 +259,7 @@ SPRITES = {
 def escrever_js(caminho):
     linhas = [
         '// Arte da Fase 4 (Tapete): design ORIGINAL, gerado por ferramentas/arte/gerar_tapete.py.',
-        '// Tapete com a estampa dos quadrados arredondados concêntricos do logo; Aladdin provisório (igual ao jogador);',
+        '// Tapete com a estampa dos quadrados arredondados concêntricos do logo (o Aladdin sentado vem de jogador.js);',
         '// Tia Paula PROVISÓRIA (aparência A DEFINIR); sabiá-laranjeira; pipa nas cores da escola; sapatilha.',
         "// Cada caractere é uma cor da PALETA ('.' = transparente). Pode editar à mão.",
         '',
@@ -315,6 +281,8 @@ def escrever_js(caminho):
         linhas.append('    ],')
         linhas.append('  },')
     linhas.append('};')
+    linhas += ['', '// Deslocamento vertical (px) do tapete embaixo do Aladdin em cada quadro de "voo" (ele balança junto).',
+               'export const ONDA_ALADDIN = [' + ', '.join(str(onda(37, f)) for f in FASES_VOO) + '];']
     open(caminho, 'w').write('\n'.join(linhas) + '\n')
 
 

@@ -6,12 +6,12 @@ referência nova ou uma arte for implementada.
 Situação: `provisório` (design ou qualidade ainda não final) · `em validação` · `validado` (prancha comparativa feita e
 diferenças anotadas) · `aguardando referência` (qualidade final, mas o design depende de foto do Pedro).
 
-Situação em 01/11/2026, depois da auditoria:
+Situação em 01/11/2026, depois da auditoria e da Etapa 8.0 (guia em `estilo/reference-notes.md`):
 
 | Arte do jogo | Arquivo no jogo | Referências | Situação | Diferenças anotadas |
 |---|---|---|---|---|
-| Aladdin (jogador) | `src/art/jogador.js` (no `dev`, Etapa 2); versão nova na branch `etapa-8a-personagens` | `estilo/` (qualidade); `figurinos/` (a subir) | provisório | ≈ 15% da altura da tela (alvo ≈ 21%); 2 tons por material (alvo 3 a 4); figurino inventado |
-| Aladdin sentado no tapete | `src/art/tapete.js` | idem | provisório, **duplicado** | deve sair do sprite único do Aladdin |
+| Aladdin (jogador) | `src/art/jogador.js` (48×64, 23 quadros), gerado por `ferramentas/arte/gerar_jogador.py` + `modelo.py` | `estilo/` (qualidade e escala); `figurinos/` (a subir) | **provisório** (design) · **validado** (escala e acabamento, Etapa 8.0) | Atingido: 58 px = 21,5% da tela (alvo 21–22%), 4 tons por material + contorno colorido, luz de cima e da frente, corrida de 8 quadros, arremesso com antecipação. Fica: figurino inventado (sem fotos); herói 3 a 4 pontos percentuais menor que no SNES (tela 16:9 mostra mais caminho); idle com a mão na cintura lê um pouco "cheio" no peito. Pranchas: `ferramentas/arte/previas/8-0-*.png` |
+| Aladdin sentado no tapete | quadros `sentado1..3` de `src/art/jogador.js`, posto por cima do tapete na cena `Tapete` | idem | **fonte única** desde a Etapa 8.0 (provisório como o jogador) | A Tia Paula do tapete ainda está na escala antiga (≈ 34 px sentada): parece menor que o Aladdin até ser refeita na 8A |
 | Jasmine, Gênio, Sultão, Abu | `src/art/espaco.js` (`dev`) + `jasmine.js`, `genio.js`, `sultao.js`, `abu.js` (8A) | `estilo/`; `figurinos/` (a subir) | provisório, **duplicado** | proporção "cabeçuda", 2 tons, pouco detalhe |
 | Bailarina (8A) | `bailarina.js` (8A) | `estilo/` | provisório | idem |
 | Jafar | `src/art/chefe.js` (`dev`) + `jafar.js` (8A) | `estilo/`; `figurinos/` (a subir) | provisório, **duplicado** | duas versões diferentes |

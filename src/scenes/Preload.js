@@ -135,12 +135,8 @@ export class Preload extends Phaser.Scene {
     const i = (nome) => ArteJogador.ORDEM.indexOf(nome);
     const quadros = (...nomes) => nomes.map((n) => ({ key: 'jogador', frame: i(n) }));
     const anim = (key, frames, frameRate, repeat = -1) => this.anims.create({ key, frames, frameRate, repeat });
-    anim('parado', quadros('parado1', 'parado2'), 2);
-    anim('correndo', quadros('correndo1', 'correndo2', 'correndo3', 'correndo4', 'correndo5', 'correndo6'), 12);
-    anim('pulando', quadros('pulando'), 1);
-    anim('caindo', quadros('caindo'), 1);
-    anim('arremessando', quadros('arremessando1', 'arremessando2'), 14, 0);
-    anim('dano', quadros('dano'), 1);
+    // animações do jogador definidas junto com a arte (src/art/jogador.js, gerado por gerar_jogador.py)
+    for (const [nome, a] of Object.entries(ArteJogador.ANIMACOES)) anim(nome, quadros(...a.quadros), a.fps, a.repetir);
 
     const outra = (key, textura, frames, frameRate, repeat = -1) =>
       this.anims.create({ key, frames: frames.map((frame) => ({ key: textura, frame })), frameRate, repeat });

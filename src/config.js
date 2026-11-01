@@ -30,7 +30,9 @@ export const FONTES = {
 };
 
 // Jogador (pixels e segundos). Ajuste aqui e teste no celular.
-// Altura do pulo ≈ forcaPulo² / (2 × gravidade): 360² / 1800 = 72 px = 4,5 tiles.
+// Altura do pulo ≈ forcaPulo² / (2 × gravidade): 380² / 1800 = 80 px = 5 tiles.
+// Escala 48x64 (Etapa 8.0): o herói tem ~58 px; o pulo subiu de 72 para 80 px para manter a agilidade
+// (≈ 1,4× a altura dele) sem alcançar o muro de 6 tiles da Fase 1, que continua pedindo o toldo.
 export const JOGADOR = {
   velocidade: 140, // corrida máxima
   aceleracaoChao: 1400, // quanto mais alto, mais "na hora" ele arranca
@@ -39,7 +41,7 @@ export const JOGADOR = {
   gravidade: 900,
   gravidadeQuedaExtra: 500, // cai mais rápido do que sobe: pulo mais "firme"
   quedaMaxima: 520,
-  forcaPulo: 360,
+  forcaPulo: 380,
   // ao soltar o pulo durante a subida, a velocidade vertical é multiplicada por isto (pulo variável)
   cortePulo: 0.45,
   coyoteMs: 100, // ainda dá para pular logo depois de sair da beirada
@@ -53,14 +55,18 @@ export const JOGADOR = {
   invencivelMs: 1000,
   macasIniciais: 5,
   macasMaximo: 9,
-  // corpo de colisão dentro do quadro 32x48 (menor que o desenho, para não "enroscar" nas beiradas)
-  corpo: { largura: 14, altura: 36, x: 9, y: 11 },
+  // corpo de colisão dentro do quadro 48x64 (menor que o desenho, para não "enroscar" nas beiradas).
+  // Desenho: corpo de ~58 px (linhas 6 a 63, sola na 62). Caixa: 18x46, do ombro ao pé; cabe nos vãos de 3 tiles.
+  corpo: { largura: 18, altura: 46, x: 15, y: 17 },
+  // arremesso: a maçã sai depois da antecipação (1º quadro da animação, braço lá atrás)
+  antecipacaoMacaMs: 60,
+  arremessoMs: 190,
 };
 
 // Câmera: zona morta no meio da tela onde o jogador anda sem a câmera mexer
 export const CAMERA = {
   zonaMortaLargura: 64,
-  zonaMortaAltura: 48,
+  zonaMortaAltura: 56,
   suavidade: 0.15,
   // a câmera fica um pouco à frente do jogador, mostrando mais do caminho
   folgaFrente: 40,
@@ -80,7 +86,8 @@ export const CAPIVARA = {
 export const MACA = {
   velocidadeX: 240,
   velocidadeY: -100,
-  alturaSaida: 22, // altura da mão, acima do pé
+  alturaSaida: 26, // altura da mão, acima do pé (escala 48x64)
+  frenteSaida: 14, // distância da mão até o centro do corpo, na direção do arremesso
   quique: 0.45,
   quiquesMaximo: 3, // some depois disso
   duracaoMs: 1600,
@@ -141,13 +148,15 @@ export const TAPETE = {
   multiplicadorVirada: 1.8,
   // onde o tapete fica na tela (x) e até onde ele pode ir (y do centro do sprite)
   xNaTela: 120,
-  yMin: 34,
+  yMin: 44, // escala 48x64: o Aladdin sentado é mais alto; com 44 a cabeça ainda cabe na tela
   yMax: 196,
   invencivelMs: 1200,
   sapatilhasPerdidas: 2, // por batida
   inclinacao: 0.0012, // radianos por px/s de velocidade vertical (o tapete inclina ao subir e descer)
   // caixa de colisão do tapete com os passageiros, menor que o desenho (64x48) para ser justo
-  corpo: { largura: 44, altura: 30, dy: 2 },
+  corpo: { largura: 44, altura: 34, dy: 0 },
+  // Aladdin sentado (quadro "sentado" do jogador, origem no pé do quadro) em relação ao centro do tapete
+  aladdin: { x: 12, y: 15 },
   // pássaros: andam para a esquerda e ondulam
   passaroVelocidade: 30,
   passaroOnda: 10,

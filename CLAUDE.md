@@ -230,6 +230,8 @@ Todos com design próprio. O elenco se baseia nos figurinos do espetáculo (`ref
 **Física do jogador:**
 
 - Pulo variável (soltar cedo = pulo mais baixo), coyote time de 100 ms e buffer de pulo de 100 ms, para o toque ficar justo.
+- Escala 48×64 (Etapa 8.0): caixa de colisão de 18×46 (cabe em vãos de 3 tiles), pulo alto de 80 px (5 tiles), pulo
+  curto de ~38 px, toldo de ~150 px segurando PULAR. O muro de 6 tiles da Fase 1 continua pedindo o toldo.
 - Cair em cima de um inimigo derrota o inimigo e dá um quique.
 - Maçãs: começa com 5 e recolhe mais pelo caminho. Arremesso em arco curto.
 - Toldo: superfície que lança o jogador bem alto.
@@ -356,13 +358,16 @@ Cada etapa termina com PR contra `dev` e o checklist da seção 3.
 | 6 | 01/11/2026 | [PR 8](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/8) | Fase 4 (Tapete): rolagem automática de 40 s + pouso de ~4 s no Teatro do Colégio G9, segurar sobe / soltar desce (toque em qualquer lugar, espaço, W ou seta para cima), pássaros (sabiás), pipas, postes e fios, sapatilhas no céu, batida = pisca e perde 2 sapatilhas. Tela Final provisória. Teste direto: `?fase=tapete`. Feita antes das Etapas 4 e 5 (modo autônomo). `dist/` = 1,51 MB (já com a Etapa 3). |
 | 7 | 01/11/2026 | [PR 11](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/11) | Título, Sobre o espetáculo, Intro (3 caixas, PULAR), Final completo (cortinas, Tia Paula anuncia, cartão com QUERO INGRESSOS, COMPARTILHAR, INSTAGRAM, JOGAR DE NOVO), menu de pausa (continuar, som, tela cheia opcional, sobre, pular para o final), meta tags + Open Graph + favicon + manifest. Tela cheia automática removida. Fluxo completo: Título → Intro → Itajubá → Espaço → Chefe → Tapete → Final. `dist/` = 1,63 MB (com todas as etapas). |
 | 9 | 01/11/2026 | [PR 10](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/10) | Som feito antes das Etapas 4, 5, 7 e 8. 13 efeitos com ZzFX (pulo, maçã, toldo, pisão, capivara comendo, sapatilha, maçã e coração recolhidos, dano, botão, blip de diálogo, acerto no chefe, projétil), 6 músicas originais em loop (título, Itajubá, Espaço, Chefe, Tapete, Final) e 3 vinhetas (checkpoint, ingresso, vitória), tudo em código. Desbloqueio do áudio refeito para o iPhone. Botão de som e tecla M lembram a escolha. Fase 1, Tapete e Final já ligados. `dist/` com 1,45 MB. |
+| 8.0 | 01/11/2026 | [PR 17](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/17) | Guia de linguagem visual com medidas das capturas (`references/estilo/reference-notes.md`) e paleta de cenário. Escala 48×64: Aladdin redesenhado (provisório no design, final na qualidade) com o renderizador de volumes `ferramentas/arte/modelo.py`: 58 px = 21,5% da tela, 4 tons por material, contorno colorido, 23 quadros (parado 4, corrida 8, pulo 2, queda 2, arremesso 3 com antecipação, dano 1, sentado 3). Aladdin do tapete sai do mesmo sprite. Caixa 18×46, pulo 80 px. Pranchas em `ferramentas/arte/previas/8-0-*.png`. Robô novo (`ferramentas/teste/jogar.mjs`) jogou do Título ao Final em 157 s e 260 s (duas jogadas; a diferença é o robô caindo no buraco das colunas 164 a 168), sem erros. `dist/` = 1,69 MB. |
 
-**Próximo passo (01/11/2026):** as Etapas 3, 4, 5, 6, 7 e 9 estão no `dev`: o jogo vai de ponta a ponta, do Título ao
-Final de verdade (Título → Intro → Itajubá → Espaço → Chefe → Tapete → Final), com menu de pausa, compartilhar e meta
-tags. As instruções de arte foram revisadas (regra 3, seção 7.1, `references/`). Próximas, uma por vez:
-**8.0** guia de linguagem visual e escala 48×64 → **8A** personagens (partindo da branch `etapa-8a-personagens`) →
-**8B** cenários (partindo da branch `etapa-8b-cenarios`) → **10** polimento, revisão geral e relatório final. Novas fases que usam o HUD precisam estar em `FASES` (`src/fluxo.js`) para o menu de pausa
-funcionar nelas. Para testar direto: `?fase=itajuba`, `?fase=espaco`, `?fase=chefe`, `?fase=tapete`, `?fase=final`.
+**Próximo passo (01/11/2026):** as Etapas 3 a 7, 8.0 e 9 estão no `dev`: o jogo vai de ponta a ponta (Título → Intro →
+Itajubá → Espaço → Chefe → Tapete → Final), com o herói novo na escala 48×64. Próximas, uma por vez:
+**8A** personagens na escala 48×64 com `ferramentas/arte/modelo.py` (Jasmine, Gênio, Sultão, Abu, Tia Claudia, Tia
+Paula loira, Jafar, capivara; aproveitar só o que servir da branch `etapa-8a-personagens`, que ainda está em 32×48) →
+**8B** cenários (partindo da branch `etapa-8b-cenarios`) → **10** polimento, revisão geral e relatório final. Novas
+fases que usam o HUD precisam estar em `FASES` (`src/fluxo.js`) para o menu de pausa funcionar nelas. Para testar
+direto: `?fase=itajuba`, `?fase=espaco`, `?fase=chefe`, `?fase=tapete`, `?fase=final`. Jogada automática:
+`node ferramentas/teste/jogar.mjs` com o `npm run dev` rodando.
 O Pedro só testa no fim, antes do lançamento, e revisa as falas em `src/data/textos.js`.
 
 **Decisões técnicas da Etapa 1:**
@@ -472,6 +477,34 @@ O Pedro só testa no fim, antes do lançamento, e revisa as falas em `src/data/t
 - Intro: botão **PRÓXIMO** (rosa) ao lado de PULAR; na última caixa vira **COMEÇAR**. Tocar em qualquer lugar continua avançando; `Dialogo.avancar()` ignora a 2ª chamada do mesmo toque (botão do canvas + toque na tela).
 - Tutorial no começo da Fase 1 (`ui/Tutorial.js`, textos em `TEXTOS.tutorial`): setas pulando em cima de ◀ ▶, PULAR e MAÇÃ (no computador, o texto mostra as teclas), um passo por vez, cada um some quando a pessoa faz a ação (ou depois de 9 s). Enquanto explica os botões, as capivaras da tela esperam paradas. Depois, quando a primeira capivara acordada se aproxima: "Pule em cima da capivara para ela dormir!" com a seta em cima dela. Só aparece na primeira partida (`tutorialVisto` no registry).
 - Jasmine: "Olha só a minha pirueta!".
+
+**Decisões técnicas da Etapa 8.0 (guia e escala):**
+- Medidas tiradas das capturas reduzidas à tela nativa do SNES (256×224): herói com ≈ 54 a 56 px = 24 a 25% da tela
+  (a leitura antiga de 28% contava o chapéu). Alvo mantido em 56 a 60 px (21 a 22%) porque a nossa tela é 16:9 e
+  precisa mostrar mais caminho. Atingido: 58 px. Detalhes, paleta de cenário e regras de luz e contorno no guia.
+- **Renderizador de volumes** (`ferramentas/arte/modelo.py`): cada parte do corpo é uma cápsula ou elipse com material;
+  a luz (de cima e da frente) escolhe 1 de 4 tons; parte de trás 1 tom mais escura; linha de separação onde uma parte
+  passa na frente da outra; contorno colorido do material vizinho. Rosto, brilhos e dobras são pintados à mão por cima.
+  Foi escolhido no lugar do `pixel.py` da 8A (formas chapadas de 2 tons) porque mantém a qualidade igual em 23 quadros.
+  A 8A deve usar o mesmo renderizador.
+- **Aladdin provisório** (sem fotos do figurino): cabelo preto cacheado, faixa rosa amarrada na cabeça com pontas ao
+  vento, túnica verde curta sem mangas com gola em V, faixa rosa na cintura, calça areia justa no tornozelo com barra
+  de couro, sandálias, argola e bracelete dourados. Nada do design da Disney (sem colete, sem fez, sem calça bufante).
+- Animações ficam junto da arte (`ANIMACOES` em `src/art/jogador.js`); o `Preload` só lê. A maçã sai 60 ms depois do
+  toque (quadro de antecipação); o dano interrompe o arremesso.
+- Física: caixa 18×46 (offset 15,17), pulo 360 → 380 (72 → 80 px), câmera com zona morta de 56 px de altura, maçã sai
+  26 px acima do pé e 14 px à frente. Os mapas não têm teto baixo (conferido por script: nenhum vão menor que 3 tiles);
+  o muro de 6 tiles ainda exige o toldo. Uma capivara da Fase 1 passou da coluna 152 para a 155: com o herói maior, o
+  recuo do dano o jogava no buraco logo atrás.
+- Tapete: o Aladdin sentado é o quadro `sentado` do sprite do jogador, dentro de um container com o tapete (a textura
+  `voo` agora só tem o tapete e a Tia Paula) e balança com a onda (`ONDA_ALADDIN`). `yMin` 34 → 44 e caixa 44×34 para
+  a cabeça dele caber na tela. A Tia Paula do tapete ficou menor que ele até a 8A.
+- `og-image.png` e ícones regenerados com o herói novo (`ferramentas/og/gerar.mjs` ajustado para 48×64).
+- O robô da Etapa 10 (`robo.mjs`) não conseguia apertar os controles (troca o protótipo de `Entrada`, e o Vite pode
+  servir outra cópia do módulo). O `jogar.mjs` troca o método da **instância** da cena ativa; pula paredes e buracos,
+  joga maçã, recua para pegar o toldo, desvia no Chefe e no Tapete. Na mesma máquina, o robô fez a versão antiga em
+  185 s e a nova em 157 s (antes de juntar o tutorial do `dev`) e 260 s (com o tutorial, que espera até 9 s por passo). O trecho "degrau → bloco estreito → buraco" (colunas 158 a 168) derruba quem pula
+  segurando ▶ nas duas versões: é desenho da fase, para avaliar no polimento.
 
 **Revisão das instruções de arte (01/11/2026):**
 - Motivo: a arte ficou longe das referências enviadas pelo Pedro. Auditoria no Git:

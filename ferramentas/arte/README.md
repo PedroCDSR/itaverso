@@ -4,6 +4,10 @@ Scripts que **montam** as matrizes de `src/art/` a partir de partes (cabeça, t�
 O jogo usa só as matrizes; os scripts servem para redesenhar rápido (por exemplo, quando chegarem as fotos dos
 figurinos). Também dá para editar as matrizes à mão, sem rodar nada.
 
+**Personagens (desde a Etapa 8.0):** `modelo.py` é o renderizador comum (volumes com luz em 4 tons, linha de
+separação e contorno colorido; ver `references/estilo/reference-notes.md`) e `pixel.py` tem a saída em JS e a prévia.
+`gerar_jogador.py` é o exemplo completo: esqueleto, poses e animações do Aladdin em quadros de 48×64.
+
 Precisa de Python 3. O Pillow é opcional: serve só para gerar a imagem de prévia.
 
 ```bash

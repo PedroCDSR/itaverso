@@ -8,6 +8,7 @@ import { abrirPausa } from '../fluxo.js';
 import { tocarEfeito } from '../audio/efeitos.js';
 import { tocarMusica, tocarVinheta, pararMusica } from '../audio/musica.js';
 import { TAPETE as MAPA } from '../levels/tapete.js';
+import { ONDA_ALADDIN } from '../art/tapete.js';
 
 // Fase 4 (CLAUDE.md, seção 11.6): Aladdin e Tia Paula voam de tapete sobre Itajubá ao entardecer.
 // A câmera anda sozinha para a direita; o tapete fica sempre no mesmo x da tela e só sobe e desce.
@@ -45,7 +46,14 @@ export class Tapete extends Phaser.Scene {
     this.criarTeatro();
 
     // tapete com os passageiros
-    this.tapete = this.add.sprite(CFG.xNaTela, 120, 'voo', 0).setDepth(50).play('voo');
+    // O tapete é um container: tapete + Tia Paula (textura "voo") e, por cima, o Aladdin sentado, que é o quadro
+    // "sentado" do MESMO sprite do jogador (fonte única). Ele balança junto com a onda do tapete.
+    this.tapeteVoo = this.add.sprite(0, 0, 'voo', 0).play('voo');
+    this.aladdinSentado = this.add.sprite(CFG.aladdin.x, CFG.aladdin.y, 'jogador').setOrigin(0.5, 1).play('sentado');
+    this.tapeteVoo.on('animationupdate', (anim, quadro) => {
+      this.aladdinSentado.y = CFG.aladdin.y + ONDA_ALADDIN[quadro.index - 1];
+    });
+    this.tapete = this.add.container(CFG.xNaTela, 120, [this.tapeteVoo, this.aladdinSentado]).setDepth(50);
     this.yTapete = 120;
 
     this.cameras.main.setBounds(0, 0, this.fimRolagem + LARGURA, ALTURA);
