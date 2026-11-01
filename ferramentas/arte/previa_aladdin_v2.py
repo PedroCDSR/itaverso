@@ -55,8 +55,8 @@ def desenhar(p):
     def braco(ombro, ang, dobra, esc, mao_tipo, bracelete):
         cot = ponto(ombro, GJ.BRACO, ang)
         mao = ponto(cot, GJ.ANTEBRACO, ang + dobra)
-        b.capsula(ombro, cot, 2.0, 1.75, PELE, esc)
-        b.capsula(cot, mao, 1.75, 1.45, PELE, esc)
+        b.capsula(ombro, cot, 1.7, 1.5, PELE, esc)      # braço mais fino (corpo esguio)
+        b.capsula(cot, mao, 1.5, 1.25, PELE, esc)
         m2 = ponto(mao, 1.2, ang + dobra)
         if mao_tipo == 'punho':
             b.elipse(m2, 2.1, 2.1, PELE, esc)
@@ -70,7 +70,7 @@ def desenhar(p):
         j, t, ang_pe = GJ.junta_perna(quadril, coxa, joelho, pe_ang)
         # calça larga: coxa e canela grossas, e o pano "atrasa" (vai para trás) com o vento
         atras = ponto(mistura(j, t, 0.45), 1.2 + 2.2 * vento, -90)
-        b.capsula(quadril, j, 4.4, 4.0, CALCA, esc, achatar=0.9)
+        b.capsula(quadril, j, 4.0, 3.8, CALCA, esc, achatar=0.9)
         b.capsula(j, atras, 4.0, 4.2, CALCA, esc, achatar=0.9)
         b.capsula(atras, t, 4.2, 2.6, CALCA, esc, achatar=0.9)
         # barra franzida no tornozelo (punho rosa)
@@ -111,13 +111,13 @@ def desenhar(p):
     if p['sentado']:
         perna(quadril_t, p['coxa_t'], p['joelho_t'], p['pe_t'], 1)
     # tronco: peito à mostra (pele) e colete verde aberto por cima
-    b.capsula(peito, (hx, hy - 1.5), 4.2, 3.6, PELE, separar=False, achatar=0.92)
-    b.elipse((peito[0] + 0.4, peito[1] - 0.8), 4.4, 3.2, PELE, separar=False, achatar=0.9)
+    b.capsula(peito, (hx, hy - 1.5), 3.7, 2.9, PELE, separar=False, achatar=0.92)   # tronco esguio, cintura fina
+    b.elipse((peito[0] + 0.4, peito[1] - 0.8), 3.9, 3.0, PELE, separar=False, achatar=0.9)
     pz = pescoco
     # lado de trás do colete (mais largo, vista 3/4) e lado da frente (estreito)
-    b.poligono([(pz[0] - 5.4, pz[1] + 1.2), (pz[0] - 0.2, pz[1] + 0.8), (hx - 0.6, hy - 2.6), (hx - 5.6, hy - 2.0)],
+    b.poligono([(pz[0] - 4.8, pz[1] + 1.2), (pz[0] - 0.2, pz[1] + 0.8), (hx - 0.6, hy - 2.6), (hx - 4.4, hy - 2.0)],
                COLETE, separar=False)
-    b.poligono([(pz[0] + 2.4, pz[1] + 1.4), (pz[0] + 5.4, pz[1] + 2.6), (hx + 5.4, hy - 2.4), (hx + 3.0, hy - 3.0)],
+    b.poligono([(pz[0] + 2.4, pz[1] + 1.4), (pz[0] + 4.8, pz[1] + 2.6), (hx + 4.2, hy - 2.4), (hx + 2.6, hy - 3.0)],
                COLETE, separar=False)
     for a_, b_ in (((pz[0] - 0.2, pz[1] + 0.8), (hx - 0.6, hy - 2.6)), ((pz[0] + 2.4, pz[1] + 1.4), (hx + 3.0, hy - 3.0))):
         n = 10
@@ -127,17 +127,17 @@ def desenhar(p):
     b.capsula(pescoco, (cab[0] - 0.4, cab[1] + 2.0), 2.0, 2.0, PELE, separar=False)
     # faixa larga na cintura
     fy = hy - 2.2
-    b.capsula((hx - 5.0, fy + 0.4), (hx + 5.2, fy), 2.3, 2.3, FAIXA, separar=False, achatar=0.9)
+    b.capsula((hx - 4.4, fy + 0.4), (hx + 4.6, fy), 2.1, 2.1, FAIXA, separar=False, achatar=0.9)
     b.elipse(no, 2.0, 1.8, FAIXA, 1, separar=False)
     # cabeça (igual à de hoje: cachos, faixa rosa com pontas)
     cx, cy = cab
     for dx, dy, r in ((-3.8, -0.4, 2.7), (-4.4, 2.4, 2.4), (-3.2, 4.6, 2.0), (-1.4, -3.4, 2.5), (1.6, -3.9, 2.3),
                       (-3.8, -3.0, 2.3), (4.0, -2.8, 2.0), (-5.6, 0.8, 1.8), (-1.2, 5.4, 1.6)):
         b.elipse((cx + dx, cy + dy), r, r, CABELO, separar=False)
-    b.elipse((cx + 0.8, cy + 0.6), 4.4, 4.9, PELE, separar=False, achatar=0.65)
-    b.elipse((cx + 2.4, cy + 3.0), 2.6, 2.3, PELE, separar=False, achatar=0.6)
+    b.elipse((cx + 0.8, cy + 0.4), 4.0, 5.0, PELE, separar=False, achatar=0.65)     # rosto mais fino
+    b.elipse((cx + 2.6, cy + 3.4), 2.0, 2.1, PELE, separar=False, achatar=0.6)      # queixo estreito
     b.elipse((cx - 1.8, cy + 1.2), 1.2, 1.7, PELE, 1, separar=False, achatar=0.8)
-    for dx, dy, r in ((-0.2, -3.4, 1.9), (2.2, -3.6, 1.8), (4.2, -2.6, 1.4), (-2.4, -2.4, 1.7)):
+    for dx, dy, r in ((-0.2, -3.6, 2.1), (2.2, -3.9, 2.0), (4.2, -2.8, 1.5), (-2.4, -2.6, 1.8), (0.9, -5.0, 1.6)):
         b.elipse((cx + dx, cy + dy), r, r * 0.9, CABELO, separar=False)
     b.capsula((cx - 0.6, cy - 1.0), (cx - 0.4, cy + 1.8), 0.8, 0.6, CABELO, separar=False)
     b.capsula((cx - 4.8, cy - 2.6), (cx + 3.4, cy - 4.4), 0.8, 0.7, FAIXA, separar=False)
@@ -150,20 +150,41 @@ def desenhar(p):
         braco(ombro_f, p['ombro_f'], p['cotovelo_f'], 0, p['mao_f'], True)
     if not p['braco_t_atras']:
         braco(ombro_t, p['ombro_t'], p['cotovelo_t'], 0, p['mao_t'], False)
-    # rosto
-    if p['rosto'] == 'piscando':
-        ox1, ox2, oy = cx + 1.2, cx + 4.0, cy + 0.6
-        b.px(ox1, oy + 1, 'e'); b.px(ox1 + 1, oy + 1, 'e'); b.px(ox2, oy + 1, 'e')
-        b.px(ox1 - 0.5, oy - 1.4, 'I'); b.px(ox1 + 0.6, oy - 1.8, 'I'); b.px(ox1 + 1.6, oy - 1.8, 'I')
-        b.px(ox2, oy - 1.6, 'I'); b.px(ox2 + 1, oy - 1.4, 'I')
-        b.tom_em(cx + 5.2, cy + 2.1, PELE, 2); b.tom_em(cx + 4.4, cy + 2.9, PELE, 2)
-        b.px(cx + 3.0, cy + 4.4, 'q'); b.px(cx + 4.0, cy + 4.2, 'q')
-        b.tom_em(cx + 0.2, cy + 5.6, PELE, 3); b.tom_em(cx + 1.2, cy + 5.9, PELE, 2)
-    else:
-        GJ.rosto(b, cx, cy, p['rosto'])
+    # rosto (versão 2): olhos maiores (2x2 com brilho), sobrancelha grossa e reta, nariz marcado, sorriso de canto.
+    rosto2(b, cx, cy, p['rosto'])
     b.px(cx - 1.4, cy + 3.3, 'y')
     b.tom_em(hx + 1, fy - 1, FAIXA, 0)
     return b
+
+
+def rosto2(b, cx, cy, tipo):
+    if tipo in ('dano', 'esforco'):
+        GJ.rosto(b, cx, cy, tipo)
+        return
+    ox1, ox2, oy = cx + 0.6, cx + 3.4, cy + 0.4
+    if tipo == 'piscando':
+        b.px(ox1, oy + 1, 'e'); b.px(ox1 + 1, oy + 1, 'e'); b.px(ox2, oy + 1, 'e')
+    else:
+        # olho de perto: 2x2 (branco + pupila grande) com brilho; olho de longe: pupila e fio de branco
+        b.px(ox1, oy, 'w'); b.px(ox1, oy + 1, 'w'); b.px(ox1 + 1, oy, 'e'); b.px(ox1 + 1, oy + 1, 'e')
+        b.px(ox1 + 1, oy + 2, 'e'); b.px(ox1 + 2, oy + 1, 'e')
+        b.px(ox1 + 1, oy, 'w')                     # brilho no olho
+        b.px(ox2, oy, 'e'); b.px(ox2, oy + 1, 'e'); b.px(ox2, oy + 2, 'e'); b.px(ox2 - 1, oy + 1, 'w')
+    # sobrancelhas grossas, um pouco arqueadas (expressão confiante)
+    for x, y in ((ox1 - 0.6, oy - 1.4), (ox1 + 0.4, oy - 1.9), (ox1 + 1.4, oy - 1.9), (ox2 - 0.2, oy - 1.9),
+                 (ox2 + 0.8, oy - 1.4)):
+        b.px(x, y, 'I')
+    # nariz: ponta e sombra embaixo
+    b.tom_em(cx + 4.4, cy + 2.2, PELE, 2)
+    b.tom_em(cx + 3.8, cy + 3.0, PELE, 3)
+    # boca: sorriso de canto (sobe para o lado de trás do rosto)
+    if tipo == 'feliz':
+        b.px(cx + 1.8, cy + 4.0, 'q'); b.px(cx + 2.8, cy + 4.6, 'n'); b.px(cx + 3.8, cy + 4.2, 'q')
+    else:
+        b.px(cx + 1.8, cy + 4.0, 'q'); b.px(cx + 2.8, cy + 4.6, 'q'); b.px(cx + 3.8, cy + 4.6, 'q')
+    b.tom_em(cx + 0.4, cy + 5.4, PELE, 3)       # sombra do queixo
+    b.tom_em(cx + 1.4, cy + 6.0, PELE, 2)
+    b.tom_em(cx - 0.4, cy + 2.6, PELE, 2)       # maçã do rosto (rosto mais anguloso)
 
 
 def aterrissagem():
@@ -257,6 +278,26 @@ def main():
         d.text((x, chao + 36), f'{im.height} px', font=fonte(15), fill=(200, 190, 220))
         x += max(g.width + 40, 260)
     out.save(os.path.join(SAIDA, 'aladdin-v1-x-v2.png'))
+    # 1b. close do rosto (12x): hoje × versão 2, parado e correndo
+    k2 = 12
+    pares = [('hoje · parado', atual['parado1']), ('v2 · parado', q['parado1']), ('v2 · piscando', q['piscando']),
+             ('hoje · correndo', atual['correndo3']), ('v2 · correndo', q['correndo3'])]
+    cw, ch = 22, 20
+    out = Image.new('RGBA', (len(pares) * (cw * k2 + 24) + 24, ch * k2 + 110), (34, 26, 48, 255))
+    d = ImageDraw.Draw(out)
+    d.text((20, 12), 'Rosto: hoje × versão 2 (12×). Rosto mais fino, queixo estreito, olhos maiores com brilho, '
+           'sobrancelha marcada, sorriso de canto', font=fonte(18, True), fill='white')
+    for i, (rot, im) in enumerate(pares):
+        bb = im.getbbox()
+        topo = bb[1]
+        a_ = [x for x in range(L) if im.getpixel((x, topo + 8))[3]]
+        cx0 = (min(a_) + max(a_)) // 2 - cw // 2 if a_ else bb[0]
+        f = Image.new('RGBA', (cw, ch), FUNDO)
+        f.alpha_composite(im.crop((cx0, topo - 1, cx0 + cw, topo - 1 + ch)))
+        X = 24 + i * (cw * k2 + 24)
+        out.alpha_composite(f.resize((cw * k2, ch * k2), Image.NEAREST), (X, 50))
+        d.text((X, 58 + ch * k2), rot, font=fonte(17, True), fill=(255, 214, 251))
+    out.save(os.path.join(SAIDA, 'aladdin-rosto.png'))
     # 2. todos os quadros
     k = 4
     nomes = list(q)
