@@ -794,6 +794,7 @@ class Abu:
         self.CLARO = P('claro', R['pelo_claro'], (0.78, 0.42, 0.12))
         self.TOPETE = P('topete', R['preto_cab'], (0.82, 0.52, 0.22))
         self.LENCO = P('lenco', R['rosa'], (0.86, 0.50, 0.16))
+        self.CHAPEU = P('chapeu', R['azul'], (0.80, 0.46, 0.14))
 
     def desenhar(self, pose_):
         b = Boneco(self.L, self.A)
@@ -833,6 +834,10 @@ class Abu:
         b.elipse((cx, cy), 4.6, 4.4, P)                                                     # cabeça
         b.elipse((cx + 1.6, cy + 1.2), 3.0, 2.8, C, separar=False)                         # rosto claro
         b.elipse((cx + 0.2, cy - 3.6), 3.6, 1.6, self.TOPETE, separar=False)               # topete do macaco-prego
+        # chapeuzinho azul (boina redonda inclinada com bolinha; pedido do Pedro, 01/11/2026)
+        b.elipse((cx + 0.6, cy - 4.6), 4.2, 2.6, self.CHAPEU, separar=False)
+        b.capsula((cx - 3.4, cy - 3.2), (cx + 4.4, cy - 4.0), 0.8, 0.8, self.CHAPEU, 1, separar=False)
+        b.elipse((cx + 1.4, cy - 7.4), 1.2, 1.2, self.CHAPEU, separar=False)
         b.capsula((cx - 3, cy + 4.5), (cx + 3, cy + 5.2), 1.3, 1.3, self.LENCO, separar=False)   # lenço
         b.poligono([(cx - 3, cy + 4), (cx - 6, cy + 8), (cx - 2, cy + 6)], self.LENCO, separar=False)
         olho = 'e'
@@ -923,8 +928,8 @@ def poses():
         ], 'pele lilás, turbante magenta com joia verde, cavanhaque, brinco de argola, colete rosa aberto, faixa '
            'e braceletes dourados, cauda de fumaça amarela'),
         'abu': ('Abu', [('parado', ab.img('parado')), ('correndo', ab.img('correndo')), ('aflito', ab.img('aflito'))],
-                'macaco-prego (o macaquinho brasileiro), topete escuro, rosto e barriga claros, lenço rosa da escola '
-                '(sem colete e chapéu do filme)'),
+                'macaco-prego (o macaquinho brasileiro), chapeuzinho azul (boina com bolinha), rosto e barriga claros, '
+                'lenço rosa da escola'),
     }
 
 

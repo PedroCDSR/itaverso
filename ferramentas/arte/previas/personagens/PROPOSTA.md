@@ -68,7 +68,8 @@ Alturas atingidas: Tia Paula 57, Tia Claudia 57, Jasmine 54, Sultão 70, Jafar 6
 
 Mudanças de design em relação ao jogo de hoje (todas provisórias até as fotos):
 - Tia Paula: coque castanho e vestido roxo → loira, rabo de cavalo, camiseta preta do espetáculo, jeans e tênis.
-- Abu: colete e chapéu (lembravam o Abu do filme) → **macaco-prego** com lenço rosa da escola.
+- Abu: colete e chapéu (lembravam o Abu do filme) → **macaco-prego** com lenço rosa da escola e
+  **chapeuzinho azul** (boina redonda com bolinha, não o fez do filme; pedido do Pedro).
 - Gênio: cabelo em coque (lembrava o do filme) → turbante magenta com joia; ganhou tamanho de "gigante".
 - Jasmine: calça bufante → saia longa de dança com cinto de moedas (bailarina da escola).
 - Jafar e Sultão: mesmo design, agora no tamanho e no acabamento certos.
