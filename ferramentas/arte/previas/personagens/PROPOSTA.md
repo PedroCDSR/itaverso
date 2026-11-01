@@ -31,14 +31,13 @@ as cenas.
 | Tia Paula | 48 px, 3 versões | 56–58 px (48×64) | socorro 2, feliz 2, parada 4, sentada no tapete 3, microfone no palco 2 | **loira, rabo de cavalo, camiseta preta com "Aladdin" dourado e fumaça azul/roxa**; resto neutro |
 | Abu | 31 px, 9 cores | 24–30 px | parado 4, correr 6, aflito 2 | macaquinho com colete rosa e chapéu roxo; mais volume (4 tons) |
 | Jafar | 50 px, 4 q. | 64–74 px (64×80) | flutuar 4 (capa ondulando), aviso 2, lançar 3, cansado 2, tonto 2 | mantém o design próprio (capuz roxo pontudo, bigode enrolado, varinha de estrela, cauda de fumaça); nada do filme |
-| Capivara | 20 px, 2 tons | 24–28 px de altura | andar 4, comer 3, dormir 2 (+ "zzz") | fofa e trapalhona, 4 tons de pelo |
 | Aladdin | 58 px, 23 q. | — | — | fica como está (8.0) |
 
 Novos (pedido do voo do tapete): **tucano** e **maritaca**, já desenhados na prévia `../tapete/aves.png`.
 
 ## Ordem sugerida
 
-Tia Paula (aparece em 3 fases) → Jafar (chefe) → Tia Claudia e Jasmine → Gênio e Sultão → Abu → capivara. Para cada
+Tia Paula (aparece em 3 fases) → Jafar (chefe) → Tia Claudia e Jasmine → Gênio e Sultão → Abu. Para cada
 um: prancha "sprite atual × novo × escala do herói" em `ferramentas/arte/previas/personagens/` antes de ligar no jogo.
 
 ## O que depende do Pedro
@@ -46,3 +45,32 @@ um: prancha "sprite atual × novo × escala do herói" em `ferramentas/arte/prev
 - Fotos dos figurinos (Jasmine, Gênio, Sultão, Abu, Jafar): sem elas, o design continua provisório, mas com a
   qualidade completa.
 - Foto ou descrição e o OK da Tia Paula e da Tia Claudia.
+
+## Desenhos da proposta (01/11/2026)
+
+Gerados por `python3 ferramentas/arte/elenco_proposta.py` (mesmo renderizador e luz do herói, escala por personagem):
+
+| Arquivo | Conteúdo |
+|---|---|
+| `proposta-elenco.png` | todos lado a lado na escala do jogo, com o Aladdin |
+| `proposta-tia-paula.png` | parada, socorro (gaiola), feliz, microfone (Final), sentada (tapete): **um sprite para as 3 cenas** |
+| `proposta-tia-claudia.png` | parada, fala, entrega os ingressos |
+| `proposta-jasmine.png` | parada, pirueta 1 e 2 |
+| `proposta-sultao.png` | parado, palmas |
+| `proposta-jafar.png` | flutuando, lançando, cansado/tonto |
+| `proposta-genio.png` | flutuando, "tchan!" |
+| `proposta-abu.png` | parado, correndo, aflito |
+| `nativo/*.png` | cada quadro em 1× |
+
+Alturas atingidas: Tia Paula 57, Tia Claudia 57, Jasmine 54, Sultão 70, Jafar 65–69, Gênio 89–92, Abu 25–31 (herói 58).
+
+**A capivara fica como está** (decisão do Pedro, 01/11/2026).
+
+Mudanças de design em relação ao jogo de hoje (todas provisórias até as fotos):
+- Tia Paula: coque castanho e vestido roxo → loira, rabo de cavalo, camiseta preta do espetáculo, jeans e tênis.
+- Abu: colete e chapéu (lembravam o Abu do filme) → **macaco-prego** com lenço rosa da escola.
+- Gênio: cabelo em coque (lembrava o do filme) → turbante magenta com joia; ganhou tamanho de "gigante".
+- Jasmine: calça bufante → saia longa de dança com cinto de moedas (bailarina da escola).
+- Jafar e Sultão: mesmo design, agora no tamanho e no acabamento certos.
+
+Se aprovar, a 8A troca os sprites no jogo com as animações completas da tabela acima.
