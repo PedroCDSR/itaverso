@@ -1,0 +1,13 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# Arquivos com hash no nome (gerados pelo Vite) podem ficar no cache do navegador por 1 ano:
+# quem joga de novo não baixa tudo outra vez (economiza banda do plano gratuito).
+[[headers]]
+  for = "/js/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
