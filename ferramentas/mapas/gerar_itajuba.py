@@ -96,10 +96,58 @@ for x in (280, 283, 286, 289): put(x, 12, 's')
 put(305, 14, 'E')
 # muro do fim
 bloco(W - 2, W - 1, 0)
+# Lugares reais (só cenário; ordem do Pedro): (chave, coluna, deslocamento em px, deslocamento do pé em px).
+# O clube fica no fundo, com o pé 4 px abaixo da rua (escondido atrás do chão).
+LUGARES = [('clube', 7, 0, 4), ('cafe', 121, 0, 0), ('igreja', 170, 0, 0), ('posto', 189, 8, 0),
+           ('arvore', 275, 4, 0), ('estatua', 270, 0, 0), ('helicoptero', 277, 8, 0), ('arvore2', 293, 0, 0)]
+
+# --- nível fácil (src/dificuldade.js): ~40% mais curto e sem buracos ---
+# Corta trechos inteiros do mapa acima (colunas inclusivas) e tapa qualquer buraco que sobrar. Os 6 lugares reais
+# continuam todos lá: só mudam de coluna junto com o corte.
+CORTES = [(15, 26), (56, 71), (84, 95), (141, 157), (199, 269)]
+
+
+def cortada(c):
+    return any(a <= c <= b for a, b in CORTES)
+
+
+def nova_coluna(c):
+    return c - sum(min(b, c - 1) - a + 1 for a, b in CORTES if a < c)
+
+
+ficam = [c for c in range(W) if not cortada(c)]
+f = [[g[y][c] for c in ficam] for y in range(H)]
+for x in range(len(ficam)):
+    if f[H - 1][x] != '#':          # buraco: chão normal de volta
+        for y in range(15, H):
+            f[y][x] = '#'
+LUGARES_FACIL = [(k, nova_coluna(c), dx, dy) for k, c, dx, dy in LUGARES]
+
+
+def escrever(nome, grade):
+    print(f'export const {nome} = [')
+    for l in grade:
+        print(f"  '{''.join(l)}',")
+    print('];')
+
+
+def escrever_lugares(nome, lista):
+    print(f'export const {nome} = [')
+    for k, c, dx, dy in lista:
+        print(f"  ['{k}', {c}, {dx}, {dy}],")
+    print('];')
+
+
 print('// Fase 1, Itajubá (CLAUDE.md, seção 11): rua de saída, feira com toldos, praça com a fonte, checkpoint,')
 print('// segunda metade com buracos e plataformas, e a rua final até a porta do Espaço Paula De Marco (E).')
 print('// Legenda em leitor.js e no CLAUDE.md (seção 10). Todas as linhas precisam ter o mesmo tamanho.')
 print('// Gerado por ferramentas/mapas/gerar_itajuba.py; dá para editar à mão.')
-print('export const ITAJUBA = [')
-for l in g: print(f"  '{''.join(l)}',")
-print('];')
+print('// ITAJUBA: níveis médio e difícil. ITAJUBA_FACIL: nível fácil (~40% mais curto, sem buracos).')
+print('// *_LUGARES: lugares reais de fundo, [chave, coluna, deslocamento x em px, deslocamento do pé em px].')
+escrever('ITAJUBA', g)
+print()
+escrever_lugares('ITAJUBA_LUGARES', LUGARES)
+print()
+escrever('ITAJUBA_FACIL', f)
+print()
+escrever_lugares('ITAJUBA_FACIL_LUGARES', LUGARES_FACIL)

@@ -6,7 +6,8 @@ import { Entrada } from '../ui/Entrada.js';
 import { tocarEfeito } from '../audio/efeitos.js';
 import { tocarMusica, tocarVinheta, pararMusica } from '../audio/musica.js';
 import { lerMapa, TIPO_TILE } from '../levels/leitor.js';
-import { ITAJUBA } from '../levels/itajuba.js';
+import { ITAJUBA, ITAJUBA_LUGARES, ITAJUBA_FACIL, ITAJUBA_FACIL_LUGARES } from '../levels/itajuba.js';
+import { mapaCurto } from '../dificuldade.js';
 import { Jogador } from '../objects/Jogador.js';
 import { Capivara } from '../objects/Capivara.js';
 
@@ -22,7 +23,10 @@ export class Itajuba extends Phaser.Scene {
     this.jogando = false;
     this.terminou = false;
     this.voltando = false; // no meio da volta ao checkpoint
-    const mapa = lerMapa(ITAJUBA, 'ITAJUBA');
+    // nível fácil: mapa ~40% mais curto e sem buracos (src/dificuldade.js)
+    const curto = mapaCurto();
+    const mapa = curto ? lerMapa(ITAJUBA_FACIL, 'ITAJUBA_FACIL') : lerMapa(ITAJUBA, 'ITAJUBA');
+    this.lugares = curto ? ITAJUBA_FACIL_LUGARES : ITAJUBA_LUGARES;
     this.mapa = mapa;
 
     // --- fundo em 3 camadas: céu parado, morros bem devagar, casario mais perto ---
@@ -152,18 +156,13 @@ export class Itajuba extends Phaser.Scene {
 
   // Lugares reais da Fase 1, nesta ordem (CLAUDE.md, seção 11.3; references/lugares/): Clube Itajubense (no fundo),
   // fonte da praça (objeto 'F' do mapa), Café do Vadinho, Igreja Matriz, posto Esso e Praça do Soldado.
-  // São só cenário (sem colisão), em PNG (ferramentas/arte/gerar_cenarios.py); a coluna de cada um fica aqui.
+  // São só cenário (sem colisão), em PNG (ferramentas/arte/gerar_cenarios.py); as colunas ficam em levels/itajuba.js.
   criarLugares(mapa) {
     const chao = (mapa.linhas - 2) * TILE; // topo do chão (y 240)
-    const lugar = (chave, col, dx = 0, base = chao) => this.add.image(col * TILE + dx, base, chave).setOrigin(0, 1).setDepth(1);
-    lugar('clube', 7, 0, chao + 4); // no fundo: o pé fica escondido atrás do chão
-    lugar('cafe', 121);
-    lugar('igreja', 170);
-    lugar('posto', 189, 8);
-    lugar('arvore', 275, 4);
-    lugar('estatua', 270);
-    lugar('helicoptero', 277, 8);
-    lugar('arvore2', 293);
+    // a coluna de cada lugar vem do arquivo do mapa (muda no mapa curto do nível fácil)
+    for (const [chave, col, dx, dy] of this.lugares) {
+      this.add.image(col * TILE + dx, chao + dy, chave).setOrigin(0, 1).setDepth(1);
+    }
   }
 
   // Fachada do Espaço Paula De Marco, com placa e porta (a saída da fase).
