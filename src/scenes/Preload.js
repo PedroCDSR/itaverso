@@ -1,7 +1,14 @@
 import * as Phaser from 'phaser';
 import { LARGURA, ALTURA, TILE } from '../config.js';
-import { SPRITES_PNG, ArteJogador, ArteTiles, ArteObjetos, ArteEspaco } from '../art/index.js';
+import { SPRITES_PNG, ArteJogador, ArteTiles, ArteObjetos, ArteEspaco, ArteTapete } from '../art/index.js';
 import { texturaDeQuadros } from '../art/matriz.js';
+
+// Para testar uma fase direto pelo link: ?fase=espaco abre a Fase 2, ?fase=tapete a Fase 4 (ex.: na prévia do Netlify).
+const FASES = { espaco: 'Espaco', chefe: 'Chefe', tapete: 'Tapete', final: 'Final' };
+function faseInicial() {
+  const pedida = new URLSearchParams(window.location.search).get('fase');
+  return FASES[pedida] || 'Itajuba';
+}
 
 // Prepara texturas e animações antes do jogo começar.
 export class Preload extends Phaser.Scene {
@@ -35,15 +42,16 @@ export class Preload extends Phaser.Scene {
       texturaDeQuadros(this, nome, sp.quadros, ArteEspaco.PALETA, sp.largura, sp.altura);
     }
 
+    // Fase 4 (Tapete): tapete com passageiros, pássaro, pipa e sapatilha
+    for (const [nome, sp] of Object.entries(ArteTapete.SPRITES)) {
+      texturaDeQuadros(this, nome, sp.quadros, ArteTapete.PALETA, sp.largura, sp.altura);
+    }
+
     this.criarAnimacoes();
     this.criarCeu();
     this.criarCasas();
     this.criarEstudio();
-
-    // ?fase=espaco abre direto na Fase 2 (para testar no celular sem jogar a Fase 1 inteira)
-    const fase = new URLSearchParams(window.location.search).get('fase');
-    const inicio = { espaco: 'Espaco', chefe: 'Chefe' }[fase] || 'Itajuba';
-    this.scene.start(inicio);
+    this.scene.start(faseInicial());
   }
 
   // Parede do estúdio (Fase 2): espelhos grandes com barra de balé na frente, entre pilares lilás.
@@ -130,6 +138,9 @@ export class Preload extends Phaser.Scene {
     outra('abu-correr', 'abu', [1, 2], 10);
     outra('abu-aflito', 'abu', [0, 3], 6); // pulando de aflição
     outra('balao-pensando', 'balao', [0, 1, 2], 3);
+    anim('voo', [0, 1, 2].map((frame) => ({ key: 'voo', frame })), 8);
+    anim('passaro', [0, 1].map((frame) => ({ key: 'passaro', frame })), 6);
+    anim('pipa', [0, 1].map((frame) => ({ key: 'pipa', frame })), 3);
   }
 
   // Casario de Itajubá ao fundo (camada do meio do parallax): sobrados coloniais coloridos, telhado de barro e a

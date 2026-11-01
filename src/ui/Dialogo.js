@@ -10,6 +10,7 @@
 // Primeiro toque durante a "máquina de escrever" completa o texto; o seguinte vai para a próxima caixa.
 import { CORES_CSS, DIALOGO } from '../config.js';
 import { estaPausado } from './pausaGlobal.js';
+import { tocarEfeito } from '../audio/efeitos.js';
 
 let estiloPronto = false;
 
@@ -137,6 +138,8 @@ export class Dialogo {
       callback: () => {
         this.letras++;
         this.desenharTexto();
+        // "voz" da máquina de escrever: um blip a cada 3 letras (espaços não contam)
+        if (this.letras % 3 === 0 && this.texto[this.letras - 1] !== ' ') tocarEfeito('blip', { variar: 0.12, volume: 0.6 });
         if (this.letras >= this.texto.length) this.completar();
       },
     });

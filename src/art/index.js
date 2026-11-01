@@ -11,3 +11,4 @@ export * as ArteJogador from './jogador.js';
 export * as ArteTiles from './tiles.js';
 export * as ArteObjetos from './objetos.js';
 export * as ArteEspaco from './espaco.js';
+export * as ArteTapete from './tapete.js';

@@ -3,7 +3,8 @@ import { LARGURA, ALTURA, TILE, CORES, CORES_CSS, FONTES, CAMERA, JOGADOR as J, 
 import { TEXTOS } from '../data/textos.js';
 import { Entrada } from '../ui/Entrada.js';
 import { Dialogo } from '../ui/Dialogo.js';
-import { bipe } from '../audio/som.js';
+import { tocarEfeito } from '../audio/efeitos.js';
+import { tocarMusica, tocarVinheta, pararMusica } from '../audio/musica.js';
 import { lerMapa, TIPO_TILE } from '../levels/leitor.js';
 import { ESPACO as MAPA, NPCS_ESPACO } from '../levels/espaco.js';
 import { Jogador } from '../objects/Jogador.js';
@@ -91,6 +92,7 @@ export class Espaco extends Phaser.Scene {
       ingressos: 0,
     });
     this.scene.launch('HUD');
+    tocarMusica('espaco');
     this.faixa(TEXTOS.espaco.nomeFase, 100, () => this.faixa(TEXTOS.espaco.objetivo, 0));
   }
 
@@ -179,7 +181,7 @@ export class Espaco extends Phaser.Scene {
   pegar(item) {
     if (!item.active) return;
     this.registry.inc('sapatilhas', 1);
-    bipe(1320, 0.07);
+    tocarEfeito('sapatilha', { variar: 0.08 });
     this.tweens.killTweensOf(item);
     item.disableBody(false, false);
     this.tweens.add({ targets: item, y: item.y - 14, alpha: 0, scale: 1.4, duration: 220, onComplete: () => item.destroy() });
@@ -239,9 +241,10 @@ export class Espaco extends Phaser.Scene {
             onComplete: () => {
               ing.destroy();
               this.registry.inc('ingressos', 1);
-              bipe(880 + i * 120, 0.08);
+              tocarEfeito('pegarMaca', { variar: 0.1 });
               if (i === n - 1) {
                 this.aviso(npc.x, npc.y - 60, TEXTOS.espaco.ingressos(n));
+                tocarVinheta('ingresso');
                 npc.setFrame(0);
                 this.time.delayedCall(500, resolve);
               }
@@ -267,7 +270,7 @@ export class Espaco extends Phaser.Scene {
     const porta = this.porta ?? { x: this.mapa.larguraPx - 20, y: 15 * TILE };
     const abu = this.add.sprite(porta.x, porta.y, 'abu', 1).setOrigin(0.5, 1).setDepth(9).setFlipX(true);
     abu.play('abu-correr');
-    bipe(1200, 0.06);
+    tocarEfeito('botao');
     // o jogador e a Tia Claudia olham para a porta
     j.olhandoDireita = true;
     j.setFlipX(false);
@@ -295,8 +298,8 @@ export class Espaco extends Phaser.Scene {
 
   irParaOChefe() {
     this.terminou = true;
-    bipe(392, 0.15);
-    this.time.delayedCall(140, () => bipe(311, 0.2));
+    pararMusica(0.6);
+    tocarEfeito('dano');
     const cam = this.cameras.main;
     cam.flash(250, 109, 107, 217);
     cam.fadeOut(800, 46, 26, 51);
@@ -328,7 +331,7 @@ export class Espaco extends Phaser.Scene {
     }
 
     j.atualizar(this.entrada, agora, delta, false);
-    if (this.entrada.pularApertou && j.body.velocity.y < -200) bipe(660, 0.08);
+    if (this.entrada.pularApertou && j.body.velocity.y < -200) tocarEfeito('pulo');
 
     // chegou perto de alguém que ainda não falou: conversa (só a distância em x conta, para não passar
     // pulando por cima sem querer)

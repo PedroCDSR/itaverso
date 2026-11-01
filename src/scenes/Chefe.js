@@ -1,9 +1,11 @@
 import * as Phaser from 'phaser';
 import { LARGURA, CORES, CORES_CSS, FONTES } from '../config.js';
 import { TEXTOS } from '../data/textos.js';
+import { tocarEfeito } from '../audio/efeitos.js';
+import { tocarMusica } from '../audio/musica.js';
 
 // Fase 3, Resgate: TELA PROVISÓRIA até a luta contra o Jafar existir (Etapa 5).
-// Mostra o que foi recolhido até aqui e o botão de jogar de novo.
+// Mostra o que foi recolhido até aqui e o botão CONTINUAR, que leva à Fase 4 (Tapete).
 export class Chefe extends Phaser.Scene {
   constructor() {
     super('Chefe');
@@ -12,6 +14,7 @@ export class Chefe extends Phaser.Scene {
   create() {
     const t = TEXTOS.chefe;
     const reg = this.registry;
+    tocarMusica('chefe');
     this.cameras.main.setBackgroundColor('#2E1A33').fadeIn(500, 46, 26, 51);
     const titulo = (y, texto, tam, cor) =>
       this.add
@@ -43,10 +46,14 @@ export class Chefe extends Phaser.Scene {
 
     const botao = this.add.rectangle(LARGURA / 2, 214, 190, 40, CORES.rosa).setStrokeStyle(3, CORES.lilas);
     this.add
-      .text(LARGURA / 2, 215, t.jogarDeNovo, { fontFamily: FONTES.titulo, fontSize: '12px', color: CORES_CSS.roxo })
+      .text(LARGURA / 2, 215, t.continuar, { fontFamily: FONTES.titulo, fontSize: '12px', color: CORES_CSS.roxo })
       .setOrigin(0.5);
-    const deNovo = () => this.scene.start('Itajuba', { direto: true });
-    botao.setInteractive({ useHandCursor: true }).on('pointerup', deNovo);
-    this.input.keyboard?.once('keydown-ENTER', deNovo);
+    const continuar = () => {
+      tocarEfeito('botao');
+      this.scene.start('Tapete');
+    };
+    botao.setInteractive({ useHandCursor: true }).on('pointerup', continuar);
+    this.input.keyboard?.once('keydown-ENTER', continuar);
+    this.input.keyboard?.once('keydown-SPACE', continuar);
   }
 }

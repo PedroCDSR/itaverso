@@ -15,6 +15,10 @@ python3 ferramentas/arte/gerar_tiles.py . /tmp
 ```
 
 ```bash
+python3 ferramentas/arte/gerar_tapete.py . /tmp
+```
+
+```bash
 python3 ferramentas/arte/gerar_objetos.py . /tmp
 ```
 

@@ -50,13 +50,31 @@ export const TEXTOS = {
       falas: ['Sem a Tia Paula não tem espetáculo!', 'Corre, Aladdin! Vai salvar a Tia Paula!'],
     },
   },
-  // Tela provisória até a Fase 3 existir (Etapa 5)
+  // Tela provisória até a Fase 3 existir (Etapa 5): por enquanto ela leva direto ao Tapete
   chefe: {
     titulo: 'Fase 3 · Resgate',
     aviso: 'O Jafar levou a Tia Paula!',
-    proxima: 'A luta contra o Jafar chega na próxima etapa.',
+    proxima: 'A luta contra o Jafar chega numa próxima etapa.',
     sapatilhas: (n, total) => `Sapatilhas: ${n} / ${total}`,
     ingressos: (n) => `Ingressos: ${n}`,
+    continuar: 'CONTINUAR',
+  },
+  tapete: {
+    titulo: 'VOANDO PARA O TEATRO!',
+    dicaToque: 'Segure a tela para subir. Solte para descer.',
+    dicaTeclado: 'Segure espaço, W ou seta para cima para subir. Solte para descer.',
+    comecarToque: 'Toque para voar',
+    comecarTeclado: 'Aperte espaço para voar',
+    perdeu: '-{n}',
+    teatro: 'TEATRO',
+    teatroNome: 'Colégio G9',
+    chegou: 'Chegamos ao Teatro do Colégio G9!',
+  },
+  final: {
+    titulo: 'O ESPETÁCULO VAI COMEÇAR!',
+    sapatilhas: 'Você pegou {n} sapatilhas!',
+    provisorio: '(tela final provisória: a de verdade vem na Etapa 7)',
+    ingressos: 'QUERO INGRESSOS',
     jogarDeNovo: 'JOGAR DE NOVO',
   },
 };
