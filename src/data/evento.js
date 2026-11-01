@@ -5,14 +5,14 @@ export const EVENTO = {
   data: 'Sexta-feira, 20 de novembro de 2026',
   horario: '19h',
   local: 'Teatro do Colégio G9, Itajubá/MG',
-  ingresso: 'R$ 75,00 · compra pelo WhatsApp com a Tia Paula',
+  ingresso: 'R$ 75,00 · compra pelo WhatsApp com a Tia Claudia',
   whatsapp: '553584713436',
   mensagemWhatsapp:
     'Oi! Vim pelo jogo do Aladdin e quero saber dos ingressos para o espetáculo do dia 20/11.',
   instagram: 'https://www.instagram.com/espacodeartespaulademarco/',
 };
 
-// Link do botão QUERO INGRESSOS: abre o WhatsApp (a compra é com a Tia Paula) com a mensagem pronta.
+// Link do botão QUERO INGRESSOS: abre o WhatsApp (a compra é com a Tia Claudia) com a mensagem pronta.
 export function linkWhatsapp() {
   return `https://wa.me/${EVENTO.whatsapp}?text=${encodeURIComponent(EVENTO.mensagemWhatsapp)}`;
 }
