@@ -243,7 +243,7 @@ Cada etapa termina com PR contra `dev` e o checklist da seção 3.
 
 | # | Data | PR | Observações |
 |---|---|---|---|
-| 0 | 01/11/2026 | (ver PR `etapa-0-base` → `dev`) | Vite 8 + Phaser 4.2.1, estrutura de pastas, fontes woff2 (33 KB), cena de teste com acentos e dados do evento. |
+| 0 | 01/11/2026 | [PR 1](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/1) | Vite 8 + Phaser 4.2.1, estrutura de pastas, fontes woff2 (33 KB), cena de teste com acentos e dados do evento. |
 
 **Riscos anotados:**
 - Texto com Patrick Hand num canvas de 480×270 ampliado pode ficar serrilhado. Avaliar no celular na Etapa 4; se ficar ruim, desenhar o texto de diálogo numa resolução maior (por exemplo, câmera com zoom 2 num jogo de 960×540).
