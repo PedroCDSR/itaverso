@@ -2,6 +2,7 @@ import * as Phaser from 'phaser';
 import { LARGURA, ALTURA, TILE } from '../config.js';
 import { SPRITES_PNG, ArteJogador, ArteTiles, ArteObjetos, ArteEspaco, ArteTapete } from '../art/index.js';
 import { texturaDeQuadros } from '../art/matriz.js';
+import * as ArteChefe from '../art/chefe.js';
 
 // Para testar uma fase direto pelo link: ?fase=espaco abre a Fase 2, ?fase=tapete a Fase 4 (ex.: na prévia do Netlify).
 const FASES = { espaco: 'Espaco', chefe: 'Chefe', tapete: 'Tapete', final: 'Final' };
@@ -16,6 +17,21 @@ export class Preload extends Phaser.Scene {
     super('Preload');
   }
 
+  // Fase 3, Resgate: Jafar, projétil, gaiola e Tia Paula (art/chefe.js) e as animações deles.
+  criarArteChefe() {
+    for (const [nome, sp] of Object.entries(ArteChefe.SPRITES)) {
+      texturaDeQuadros(this, nome, sp.quadros, ArteChefe.PALETA, sp.largura, sp.altura);
+    }
+    const anim = (key, textura, frames, frameRate, repeat = -1) =>
+      this.anims.create({ key, frames: frames.map((frame) => ({ key: textura, frame })), frameRate, repeat });
+    anim('jafar-flutuar', 'jafar', [0, 1], 3);
+    anim('jafar-lancar', 'jafar', [2], 1);
+    anim('jafar-tonto', 'jafar', [3], 1);
+    anim('projetil-girar', 'projetil', [0, 1], 10);
+    anim('paula-presa', 'tiaPaula', [0, 1], 3);
+    anim('paula-feliz', 'tiaPaula', [2, 3], 3);
+  }
+
   preload() {
     for (const [nome, q] of Object.entries(SPRITES_PNG)) {
       this.load.spritesheet(nome, `assets/sprites/${nome}.png`, { frameWidth: q.largura, frameHeight: q.altura });
@@ -23,6 +39,8 @@ export class Preload extends Phaser.Scene {
   }
 
   create() {
+    this.criarArteChefe();
+
     // Jogador: matriz -> textura (só se não veio PNG)
     const J = ArteJogador;
     texturaDeQuadros(this, 'jogador', J.ORDEM.map((n) => J.QUADROS[n]), J.PALETA, J.LARGURA, J.ALTURA);

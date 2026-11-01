@@ -1,6 +1,22 @@
 // Todos os textos exibidos no jogo (CLAUDE.md, seção 2, regra 6).
 // Frases curtas: no máximo 2 linhas por caixa de diálogo. Tom leve, para crianças.
 export const TEXTOS = {
+  // Fase 3, Resgate (chefe)
+  chefe: {
+    nomeFase: 'Fase 3 · Resgate',
+    nomeJafar: 'Jafar',
+    nomePaula: 'Tia Paula',
+    jafarEntrada: 'Ha! Sem a Tia Paula, nada de espetáculo!',
+    paulaSocorro: 'Socorro!',
+    paulaAntes: ['Aladdin! Quando o Jafar cansar e descer, acerte maçãs nele!'],
+    objetivo: 'Acerte maçãs no Jafar quando ele cansar!',
+    dicaCansado: 'Agora! Jogue maçãs!',
+    nomeChefe: 'JAFAR',
+    ai: 'ai!',
+    semMaca: 'Pegue maçãs no chão!',
+    jafarDerrotado: 'Nããão! Puf!',
+    paulaObrigada: ['Obrigada, Aladdin! Você foi muito corajoso!', 'Vamos de tapete mágico até o teatro. O espetáculo não pode atrasar!'],
+  },
   mobile: {
     girar: 'Gire o celular',
     girarDetalhe: 'O jogo é com o celular deitado.',
@@ -51,14 +67,6 @@ export const TEXTOS = {
     },
   },
   // Tela provisória até a Fase 3 existir (Etapa 5): por enquanto ela leva direto ao Tapete
-  chefe: {
-    titulo: 'Fase 3 · Resgate',
-    aviso: 'O Jafar levou a Tia Paula!',
-    proxima: 'A luta contra o Jafar chega numa próxima etapa.',
-    sapatilhas: (n, total) => `Sapatilhas: ${n} / ${total}`,
-    ingressos: (n) => `Ingressos: ${n}`,
-    continuar: 'CONTINUAR',
-  },
   tapete: {
     titulo: 'VOANDO PARA O TEATRO!',
     dicaToque: 'Segure a tela para subir. Solte para descer.',
