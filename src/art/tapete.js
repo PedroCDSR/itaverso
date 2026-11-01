@@ -1,6 +1,6 @@
 // Arte da Fase 4 (Tapete): design ORIGINAL, gerado por ferramentas/arte/gerar_tapete.py.
 // Tapete com a estampa dos quadrados arredondados concêntricos do logo (o Aladdin sentado vem de jogador.js);
-// pipa nas cores da escola; sapatilha. Tia Paula e aves vêm de public/assets/sprites/ (gerar_elenco.py).
+// pipa nas cores da escola (a sapatilha do céu é a mesma da Fase 1, em objetos.js). Tia Paula e aves vêm de public/assets/sprites/ (gerar_elenco.py).
 // Cada caractere é uma cor da PALETA ('.' = transparente). Pode editar à mão.
 
 export const PALETA = {
@@ -258,26 +258,6 @@ export const SPRITES = {
         '.......kkkk.......',
         '.........knk......',
         '........kyyyk.....',
-      ],
-    ],
-  },
-  sapatilhaCeu: {
-    largura: 14,
-    altura: 12,
-    quadros: [
-      [
-        '..k......k....',
-        '.kyk....kyk...',
-        'kyyyk..kyyyk..',
-        '.kkyk..kykk...',
-        '..kyk..kyk....',
-        '..kyykkyykk...',
-        '..kRyRRyRrrkk.',
-        '.krrRRRRrrrrrk',
-        '.krrrrrrrrrrrr',
-        '.krrrrrrrrrrrr',
-        '..kkrRRRRRRRrk',
-        '....kkkkkkkkk.',
       ],
     ],
   },

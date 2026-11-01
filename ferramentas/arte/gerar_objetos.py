@@ -29,6 +29,17 @@ PALETA = {
     'x': '#FF5A7A',  # coração
     'X': '#C23A5A',
     'v': '#F9FCBB',  # amarelo claro da escola
+    # sapatilhas de ponta em rosa bebê (proposta aprovada pelo Pedro em 01/11/2026); dígitos para não colidir
+    '1': '#7A3A5C',  # contorno vinho-rosado
+    '2': '#F7A9C4',  # laço
+    '3': '#E07FA3',  # laço sombra / nó
+    '4': '#EC8FB2',  # fitas cruzadas
+    '5': '#FBC6D6',  # cetim
+    '6': '#F2A9C0',  # cetim meia-sombra
+    '7': '#DC8AA8',  # cetim sombra
+    '8': '#FFF0F5',  # brilho do cetim
+    '9': '#FFF1DC',  # palmilha creme
+    '0': '#EBD3B6',  # palmilha sombra
     'V': '#D9D59A',
     # fonte (pedra e água)
     's': '#E6DCCB',
@@ -147,25 +158,40 @@ def maca():
     return q.contorno().texto()
 
 
+# Um pé visto de frente (a ponta embaixo): laço no alto, fitas cruzadas em X sobre a palmilha creme, cetim com
+# brilho à esquerda e sombra à direita. O outro pé é o espelho.
+PE_SAPATILHA = [
+    '.11...11.',
+    '1221.1221',
+    '123212321',
+    '122333221',
+    '.1133311.',
+    '.1543461.',
+    '154999461',
+    '159404961',
+    '159949961',
+    '159404961',
+    '154999461',
+    '155999671',
+    '155556671',
+    '185556671',
+    '185556771',
+    '.1556671.',
+    '.1566771.',
+    '..11111..',
+]
+
+
 def sapatilha(brilho=0):
-    # sapatilha de ponta vista de lado, com fitas cruzadas
-    q = Quadro(16, 12)
-    q.elipse(8, 7.5, 6, 2.6, 'r')
-    q.ret(2, 8, 13, 9, 'R')  # sola
-    q.ret(3, 5, 6, 6, 'r')
-    q.px(13, 7, 'R')
-    # boca da sapatilha
-    q.ret(5, 5, 9, 5, 'R')
-    # fitas
-    for (x, y) in ((4, 4), (5, 3), (6, 2), (7, 1), (3, 3), (2, 2), (6, 4), (8, 3), (9, 2)):
-        q.px(x, y, 'R')
-    q.px(10, 6, 'w')
+    """Par de sapatilhas de ponta rosa bebê, lado a lado (19x18). Quadro 1: faíscas no cetim."""
+    # pé direito: espelho; a sombra (7) vira meia-sombra (6) e o brilho (8) vira sombra (7), como na prévia
+    troca = str.maketrans({'7': '6', '8': '7'})
+    direito = [l[::-1].translate(troca) for l in PE_SAPATILHA]
+    linhas = [[*(e + '.' + d)] for e, d in zip(PE_SAPATILHA, direito)]
     if brilho:
-        q.px(12, 2, 'v')
-        q.px(13, 1, 'w')
-        q.px(14, 2, 'v')
-        q.px(13, 3, 'v')
-    return q.contorno().texto()
+        for x, y, c in ((1, 13, 'w'), (1, 12, 'w'), (2, 13, 'w'), (14, 8, 'v')):
+            linhas[y][x] = c
+    return [''.join(l) for l in linhas]
 
 
 def coracao(cheio=True):
@@ -215,7 +241,7 @@ SPRITES = {
         capivara('dormir', respira=0), capivara('dormir', respira=1),
     ]),
     'maca': (10, 10, [maca()]),
-    'sapatilha': (16, 12, [sapatilha(0), sapatilha(1)]),
+    'sapatilha': (19, 18, [sapatilha(0), sapatilha(1)]),
     'coracao': (11, 10, [coracao(True), coracao(False)]),
     'bandeira': (16, 40, [bandeira(False), bandeira(True)]),
 }
