@@ -34,6 +34,9 @@ const config = {
     // faixas nas laterais, e é exatamente ali que ficam os polegares.
     touch: { target: container },
   },
+  // O som do jogo é todo nosso (src/audio/), com um AudioContext só. Sem isto o Phaser criaria um segundo
+  // contexto, que nunca tocaria nada e ainda contaria no limite de contextos do iPhone.
+  audio: { noAudio: true },
   physics: {
     default: 'arcade',
     arcade: { gravity: { x: 0, y: JOGADOR.gravidade }, debug: false },
@@ -53,7 +56,7 @@ async function iniciar() {
   }
   const jogo = new Phaser.Game(config);
   ligarPausaGlobal(jogo);
-  iniciarSom(jogo);
+  iniciarSom();
   iniciarPausaFoco();
   iniciarAvisoGirar();
   // só no `npm run dev`: deixa o jogo acessível no console do navegador para depurar

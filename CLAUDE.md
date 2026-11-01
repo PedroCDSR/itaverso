@@ -265,11 +265,13 @@ Cada etapa termina com PR contra `dev` e o checklist da seção 3.
 | 1 | 01/11/2026 | [PR 2](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/2) | Aviso de girar, controles de toque + teclado, pausa ao perder o foco (volta com toque), som liberado no 1º toque, botão de som, tela cheia + trava deitado no Android. Cena de teste com um bloco que anda, pula e joga maçã. |
 | 2 | 01/11/2026 | [PR 3](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/3) | Leitor de mapas em texto, Aladdin original provisório (13 quadros em matriz), tiles 16×16, física com pulo variável, coyote e buffer, câmera com zona morta e folga à frente, céu de entardecer e morros. Pulo alto 69 px, pulo curto 34 px. |
 | 3 | 01/11/2026 | [PR 7](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/7) | Fase 1 com 320 colunas: rua, feira com 6 barracas de toldo, praça com fonte, checkpoint, buracos e plataformas, porta do Espaço. 12 capivaras (pisão = dorme; maçã = come e vai embora; de lado = 1 coração), 38 sapatilhas, 9 maçãs, 3 corações. HUD com corações, maçãs, sapatilhas, pausa e som. Casario de Itajubá no fundo (3 camadas). `dist/` com 1,5 MB. |
+| 9 | 01/11/2026 | PR_SOM | Som feito antes das Etapas 4 a 8 (a pedido do Pedro). 13 efeitos com ZzFX (pulo, maçã, toldo, pisão, capivara comendo, sapatilha, maçã e coração recolhidos, dano, botão, blip de diálogo, acerto no chefe, projétil), 6 músicas originais em loop (título, Itajubá, Espaço, Chefe, Tapete, Final) e 3 vinhetas (checkpoint, ingresso, vitória), tudo em código. Desbloqueio do áudio refeito para o iPhone. Botão de som e tecla M lembram a escolha. `dist/` com 1,4 MB. |
 
-**Próximo passo (01/11/2026):** a Etapa 3 (PR 7) foi testada no Chromium e mergeada no `dev` pelo Claude, pela regra
-nova da seção 3. Próxima: **Etapa 4, Fase 2 (Espaço Paula De Marco)**: sistema de diálogo, NPCs, Tia Claudia com os
-ingressos, contador de ingressos no HUD e a transição para o chefe. A tela provisória `EmBreve` sai nessa etapa. O Pedro
-só testa no fim, antes do lançamento.
+**Próximo passo (01/11/2026):** a Etapa 9 (som) foi feita fora de ordem, testada no Chromium e mergeada no `dev` pelo
+Claude. Continua faltando a **Etapa 4, Fase 2 (Espaço Paula De Marco)**: sistema de diálogo, NPCs, Tia Claudia com os
+ingressos, contador de ingressos no HUD e a transição para o chefe. A tela provisória `EmBreve` sai nessa etapa. Cada
+cena nova liga a sua música e os seus efeitos (ver "Decisões técnicas da Etapa 9"). O Pedro só testa no fim, antes do
+lançamento.
 
 **Decisões técnicas da Etapa 1:**
 - O toque é escutado na **div inteira** (`input.touch.target`), não só no canvas: no celular deitado sobram faixas laterais, e é ali que ficam os polegares.
@@ -301,7 +303,20 @@ só testa no fim, antes do lançamento.
 - A tela "JOGAR" provisória continua até a Etapa 7. Ao chegar na porta, `scenes/EmBreve.js` mostra as sapatilhas e "JOGAR DE NOVO" (sai na Etapa 4).
 - Teste automatizado no Chromium (Playwright) conferiu: pisão, maçã, quique no toldo, checkpoint, buraco, 3 danos, coleta, chegada na porta e jogar de novo, sem erros no console.
 
+**Decisões técnicas da Etapa 9 (som):**
+- Tudo em código, sem arquivo de áudio: efeitos com o ZzFX (só o gerador `zzfxG`, em `src/audio/zzfx.js`, MIT, registrado no `CREDITS.md`) e músicas tocadas por um tocador próprio (`src/audio/musica.js`). Peso extra no build: ~10 KB.
+- **Um AudioContext só** (`src/audio/som.js`), com volume geral. O Phaser roda com `audio: { noAudio: true }`, para não criar um segundo contexto que nunca tocaria (o iPhone limita contextos).
+- **Desbloqueio revisado (Etapa 1):** o contexto só é criado dentro de um gesto (nada de aviso no console antes do toque). Os ouvintes de gesto (`touchend`, `pointerup`, `click`, `keydown`, `pointerdown`) ficam ligados o tempo todo: no iPhone o primeiro evento pode não contar como gesto, e o iOS também interrompe o áudio em ligações e troca de app. A cada toque, se o som não está rodando, tenta de novo (resume + som vazio).
+- Efeitos e música podem ser agendados enquanto o contexto ainda está "acordando" (o `resume()` é assíncrono): o som do botão JOGAR, que é o mesmo toque que libera o áudio, toca.
+- Pausa (aba sem foco, celular em pé) suspende o contexto: música e efeitos param juntos e voltam no toque que tira a pausa.
+- Mudo: volume geral a zero e contexto suspenso (economiza bateria). A escolha fica no `localStorage` (`aladdin-som-mudo`). Tecla **M** no computador. Os botões de som se redesenham sozinhos (`quandoMudarMudo`).
+- **Como usar nas cenas novas:** `tocarEfeito('nome')` (`src/audio/efeitos.js`; prontos para as próximas etapas: `blip` para cada caixa ou letra de diálogo, `acertoChefe`, `projetil`, `botao`), `tocarMusica('espaco' | 'chefe' | 'tapete' | 'final' | 'titulo')` no `create()` da cena e `tocarVinheta('ingresso' | 'vitoria' | 'checkpoint')`. Pedir uma música antes do 1º toque é seguro: ela começa quando o som ligar. A vinheta abaixa a música enquanto toca.
+- Partituras em texto (`src/audio/musicas.js`): uma colcheia por ficha, `-` segura, `.` é silêncio, bateria `k s h`. Melodias compostas para o jogo, curtas (4 a 8 compassos), em tons maiores (Lá menor só no chefe), onda quadrada filtrada + baixo em triângulo.
+- Volumes em `config.js` (`SOM`): música (0,25) mais baixa que os efeitos (0,7). Pico medido no Chromium: ~0,3 para cada música.
+- Teste no Chromium com `--autoplay-policy=user-gesture-required` (igual ao celular): nenhum contexto antes do toque; contexto `running` depois do toque em JOGAR; música agendando; efeitos de pulo, maçã, pisão e coleta tocando; pausa suspende e o toque retoma; mudo lembrado depois de recarregar; nenhum erro no console. Não dá para testar o iPhone de verdade daqui: fica para o teste final do Pedro.
+
 **Riscos anotados:**
 - A Fase 1 tem ~4.900 px: correndo direto dá ~35 s; com capivaras, toldos e coleta, a estimativa é de 60 a 80 s. Medir no celular e ajustar no polimento (Etapa 10).
 - Texto com Patrick Hand num canvas de 480×270 ampliado pode ficar serrilhado. Avaliar no celular na Etapa 4; se ficar ruim, desenhar o texto de diálogo numa resolução maior (por exemplo, câmera com zoom 2 num jogo de 960×540).
+- Som no iPhone: só testado em Chromium. Se não tocar depois do 1º toque no Safari, conferir primeiro a chave de silencioso (decisão da Etapa 1: o jogo respeita a chave).
 - O Phaser completo pesa ~1,2 MB minificado (~330 KB comprimido na transferência). Cabe no orçamento; se apertar, trocar pelo build só com Arcade Physics.
