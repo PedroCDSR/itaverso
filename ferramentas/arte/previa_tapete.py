@@ -20,7 +20,7 @@ from PIL import Image, ImageDraw
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import gerar_lugares as GL  # noqa: E402
-from cenario import M, Tela, largura_texto  # noqa: E402
+from cenario import M, MATERIAIS, Tela, largura_texto  # noqa: E402
 from previa_elenco import carregar_sprites  # noqa: E402
 
 REPO = GL.REPO
@@ -324,20 +324,73 @@ def sol(img, x, y, r=26):
         d.ellipse([x - rr, y - rr, x + rr, y + rr], fill=c)
 
 
+CEU_CREPUSCULO = ['#2E2A66', '#383274', '#443A84', '#544292', '#6A4A9E', '#8652A4', '#A65AA4', '#C8649C',
+                  '#E2748E', '#F2887E', '#F9A070']
+LUZ_JANELA = ['#FFF2B0', '#FFD878', '#F2B050']
+
+
+def ceu_crepusculo(w):
+    """Crepúsculo: o sol já se pôs atrás da serra; brilho laranja no horizonte, azul-violeta em cima, estrelas."""
+    a = np.zeros((A_TELA, w, 4), np.uint8)
+    c = CEU_CREPUSCULO
+    for y in range(A_TELA):
+        for xb in range(0, w, 8):
+            f = y / 200 + (0.012 if (xb // 8) % 2 else 0)
+            a[y, xb:xb + 8, :3] = GL.hex_rgb(c[min(len(c) - 1, int(f * len(c)))])
+    a[:, :, 3] = 255
+    img = Image.fromarray(a, 'RGBA')
+    d = ImageDraw.Draw(img)
+    rnd = np.random.RandomState(8)
+    for _ in range(w // 12):
+        x, y = rnd.randint(0, w), rnd.randint(2, 80)
+        d.point((x, y), fill='#FFF6D8' if rnd.rand() < 0.4 else '#B8A8F0')
+    for _ in range(w // 160):
+        x, y = rnd.randint(0, w), rnd.randint(6, 60)
+        d.line([(x - 2, y), (x + 2, y)], fill='#FFF6D8'); d.line([(x, y - 2), (x, y + 2)], fill='#FFF6D8')
+    for _ in range(max(2, w // 300)):   # nuvens finas com a barriga laranja (última luz do sol)
+        x, y = rnd.randint(-40, w), rnd.randint(70, 130)
+        cw = rnd.randint(60, 120)
+        d.rectangle([x, y, x + cw, y + 1], fill='#8A5AA8')
+        d.rectangle([x + 6, y + 2, x + cw - 8, y + 3], fill='#F2A07A')
+    return img
+
+
+def acender_janelas(img, cor_ar, forca, chance=0.55, semente=1):
+    """Crepúsculo: puxa a camada para a cor do ar e acende parte das janelas de vidro (amarelo quente, sem o
+    tingido). A escolha é por janela (bloco de 6x7 px), para a janela acender inteira."""
+    a0 = np.array(img)
+    alvo = set()
+    for nome in ('vidro', 'vidro_escuro'):
+        for cor in MATERIAIS[nome][1][:5]:
+            alvo.add(GL.hex_rgb(cor))
+    a = np.array(GL.tingir(img, cor_ar, forca))
+    rnd = np.random.RandomState(semente)
+    liga = {}
+    ys, xs = np.nonzero(a0[:, :, 3])
+    for y, x in zip(ys, xs):
+        if tuple(a0[y, x, :3]) in alvo:
+            k = (x // 6, y // 7)
+            if k not in liga:
+                liga[k] = rnd.rand() < chance
+            if liga[k]:
+                tom = 0 if (y % 7) < 2 else 1 if (x % 6) < 3 else 2
+                a[y, x, :3] = GL.hex_rgb(LUZ_JANELA[tom])
+    return Image.fromarray(a, 'RGBA')
+
+
 def panorama(W=3000):
-    img = GL.ceu(W)
-    sol(img, 2300, 150)
-    img.alpha_composite(GL.morros(W))
+    img = ceu_crepusculo(W)
+    img.alpha_composite(GL.tingir(GL.morros(W), '#3A3070', 0.40))
     meio = Image.new('RGBA', (W, A_TELA), (0, 0, 0, 0))
     mc = morro_coroados()
     meio.alpha_composite(mc, (790, A_TELA - mc.height + 30))
-    img.alpha_composite(GL.tingir(meio, AR, 0.10))
-    img.alpha_composite(GL.tingir(cidade(W), AR, 0.22))
+    img.alpha_composite(acender_janelas(meio, '#4A3A80', 0.32, 0.7, 2))
+    img.alpha_composite(acender_janelas(cidade(W), '#4A3A80', 0.38, 0.5, 3))
     perto = Image.new('RGBA', (W, A_TELA), (0, 0, 0, 0))
     perto.alpha_composite(GL.casario(W, semente=9, base=312))
     un = unifei()
     perto.alpha_composite(un, (1900, A_TELA - un.height))
-    img.alpha_composite(perto)
+    img.alpha_composite(acender_janelas(perto, '#4A3A80', 0.22, 0.45, 4))
     # aves: bandos de maritacas e tucanos em alturas diferentes
     tc = [tucano(True), tucano(False)]
     mt = [maritaca(True), maritaca(False)]

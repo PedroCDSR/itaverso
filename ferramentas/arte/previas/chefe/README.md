@@ -23,3 +23,5 @@ Proposta:
 Ajustes no jogo quando for implementar: `gBase` de 170 para ~126 (topo da gaiola em y 30), a Tia Paula vai para a
 camada entre as grades (desenhar gaiola de trás → Tia Paula → gaiola da frente), e o tween de balanço move as 3 peças
 juntas. A arena nova (noite, serra verde, chão de paralelepípedo, Jafar maior) também aparece nas telas.
+
+**Hora do dia (Pedro, 01/11/2026):** a luta é **ao pôr do sol** (sol grande encostando na serra, céu lilás → rosa → laranja), para o voo seguinte acontecer no crepúsculo. Sequência do dia: Fase 1 fim de tarde → Espaço (interno) → Chefe pôr do sol → Tapete crepúsculo → Final à noite no teatro (19h).

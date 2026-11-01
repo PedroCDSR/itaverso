@@ -143,26 +143,28 @@ def paula(pose_nome):
 # Arena (noite caindo): céu escuro, serra, terraço com arcos, chão de paralelepípedo, 2 plataformas
 # ---------------------------------------------------------------------------------------------------------------
 
-CEU_NOITE = ['#241C48', '#2C2356', '#352A66', '#403276', '#4C3A84', '#5A4290', '#6A4A9A', '#7C54A2']
+# Pôr do sol (a luta acontece quando o sol encosta na serra; em seguida o voo é no crepúsculo)
+CEU_POR_DO_SOL = ['#6C64CC', '#7E72D6', '#9480DA', '#AE8AD6', '#C892CC', '#E09CBC', '#F2A8A6', '#FBB88C', '#FFC878']
 
 
 def arena():
     a = np.zeros((A_T, L_T, 4), np.uint8)
+    ceu = CEU_POR_DO_SOL
     for y in range(A_T):
         for xb in range(0, L_T, 8):
-            f = y / 210 + (0.015 if (xb // 8) % 2 else 0)
-            a[y, xb:xb + 8, :3] = GL.hex_rgb(CEU_NOITE[min(len(CEU_NOITE) - 1, int(f * len(CEU_NOITE)))])
+            f = y / 190 + (0.015 if (xb // 8) % 2 else 0)
+            a[y, xb:xb + 8, :3] = GL.hex_rgb(ceu[min(len(ceu) - 1, int(f * len(ceu)))])
     a[:, :, 3] = 255
     img = Image.fromarray(a, 'RGBA')
     d = ImageDraw.Draw(img)
-    rnd = np.random.RandomState(3)
-    for _ in range(40):
-        x, y = rnd.randint(0, L_T), rnd.randint(4, 120)
-        d.point((x, y), fill='#FFF6D8' if rnd.rand() < 0.5 else '#C8B8F0')
-    for x, y in ((60, 30), (300, 22)):
-        d.line([(x - 2, y), (x + 2, y)], fill='#FFF6D8'); d.line([(x, y - 2), (x, y + 2)], fill='#FFF6D8')
-    d.ellipse([200, 40, 222, 62], fill='#FFF2B0'); d.ellipse([207, 38, 229, 60], fill=CEU_NOITE[1])  # lua
-    img.alpha_composite(GL.tingir(GL.morros(L_T), '#2A2252', 0.45))
+    # sol grande e baixo, encostando na serra (em faixas, sem degradê)
+    sx, sy = 150, 122
+    for r, cor in ((44, '#FFC890'), (36, '#FFD49A'), (28, '#FFE2A0'), (22, '#FFF0B0'), (17, '#FFF8D0')):
+        d.ellipse([sx - r, sy - r, sx + r, sy + r], fill=cor)
+    for y, x0, x1 in ((40, 300, 400), (56, 340, 460), (30, 20, 90)):   # nuvens compridas iluminadas por baixo
+        d.rectangle([x0, y, x1, y + 2], fill='#F6C2C8')
+        d.rectangle([x0 + 8, y + 3, x1 - 10, y + 4], fill='#FFD8A8')
+    img.alpha_composite(GL.tingir(GL.morros(L_T), '#B0607A', 0.22))
     # terraço: colunas com arcos ao fundo
     t = Tela(L_T, A_T, semente=4)
     cr = M['creme']
@@ -181,7 +183,7 @@ def arena():
     t.hlinha(0, L_T - 1, 228, cr, 1)
     t.reboco(0, 150, L_T - 1, 239, cr, n=12)
     t.contorno()
-    img.alpha_composite(GL.tingir(t.imagem(), '#2A2252', 0.35))
+    img.alpha_composite(GL.tingir(t.imagem(), '#E8906A', 0.12))   # luz quente do sol baixo
     # plataformas de madeira (mapa: colunas 4-8 e 20-24 na linha 11)
     p = Tela(L_T, A_T, semente=5)
     for c0 in (4, 20):
@@ -275,14 +277,14 @@ def gaiola_atual():
 def main():
     os.makedirs(SAIDA, exist_ok=True)
     k = 5
-    fundo_cor = (46, 36, 86, 255)
+    fundo_cor = (232, 156, 188, 255)
     itens = [('hoje no jogo', gaiola_atual()), ('nova: fechada (luta)', gaiola_com(paula('socorro'))),
              ('nova: aberta (vitória)', gaiola_com(None, aberta=True))]
     W = sum(i.width * k + 40 for _, i in itens) + 40
     H = max(i.height for _, i in itens) * k + 150
     out = Image.new('RGBA', (W, H), (34, 26, 48, 255))
     dr = ImageDraw.Draw(out)
-    GL.rotulo(dr, (20, 14), 'Gaiola da Tia Paula: hoje × proposta (ampliado 5×, sobre o céu da noite da arena)', 24)
+    GL.rotulo(dr, (20, 14), 'Gaiola da Tia Paula: hoje × proposta (ampliado 5×, sobre o céu do pôr do sol)', 24)
     x = 30
     for rot, im in itens:
         f = Image.new('RGBA', im.size, fundo_cor)

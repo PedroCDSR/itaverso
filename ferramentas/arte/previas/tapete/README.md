@@ -11,7 +11,7 @@ Gerado por `python3 ferramentas/arte/previa_tapete.py`.
 | `aves.png` | tucano-toco e maritaca, 2 quadros de asa cada (6×) |
 | `nativo/*.png` | hotel, morro com o hotel, UNIFEI, tucano e maritaca em 1× |
 
-Camadas (iguais às da cena): céu de entardecer com sol baixo · Serra da Mantiqueira verde (0,15) · morro do Coroados
+Camadas (iguais às da cena): céu de crepúsculo com estrelas · Serra da Mantiqueira verde (0,15) · morro do Coroados
 e cidade com casario e prédios, puxados para o lilás (0,35) · telhados de perto e UNIFEI (1) · aves e tapete.
 
 - **Hotel Coroados:** prédio comprido de 2 andares, branco com faixas e pilares vermelhos, telhado de barro com placas
@@ -25,3 +25,5 @@ e cidade com casario e prédios, puxados para o lilás (0,35) · telhados de per
 **Falta:** as fotos do Hotel Coroados e da UNIFEI vieram só no chat. Salvar em `references/lugares/` (por exemplo
 `7-hotel-coroados.jpg`, `8-unifei-1.jpg` a `8-unifei-3.jpg`) para gerar as pranchas foto × pixel art.
 A Tia Paula no tapete ainda é a provisória antiga (será trocada pelo sprite novo, ver `../personagens/`).
+
+**Hora do dia (Pedro, 01/11/2026):** o voo é **no crepúsculo**, logo depois do pôr do sol da luta: sol já escondido, céu violeta em cima e laranja no horizonte, primeiras estrelas, serra azulada, cidade puxada para o violeta e **janelas acendendo** (amarelo quente, cerca de metade).
