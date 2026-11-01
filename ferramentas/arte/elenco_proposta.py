@@ -614,8 +614,8 @@ class Jafar(Humano):
         self.CONTORNO_ROSTO = self.PELE.contorno
 
     def juntas(self, p):
-        c = super().juntas(dict(p, hx=p.get('hx', 30)))
-        sobe = p['extra'].get('sobe', 10)
+        c = super().juntas(dict(p, hx=p['hx'] + 15))   # centraliza no quadro de 64 (a cauda vai para trás)
+        sobe = p['extra'].get('sobe', 2)
         for k in list(c):
             if isinstance(c[k], tuple):
                 c[k] = (c[k][0], c[k][1] - sobe)
@@ -719,7 +719,7 @@ class Genio(Humano):
         self.CONTORNO_ROSTO = self.PELE.contorno
 
     def juntas(self, p):
-        c = super().juntas(dict(p, hx=p.get('hx', 40)))
+        c = super().juntas(dict(p, hx=p['hx'] + 22))   # centraliza no quadro de 88
         for k in list(c):
             if isinstance(c[k], tuple):
                 c[k] = (c[k][0], c[k][1] - 12)
@@ -848,11 +848,12 @@ class Abu:
             b.capsula((hx - 2, hy - 3), (hx - 4, hy + 5), 1.4, 1.2, P, 1)                    # braço de trás
             b.capsula((hx + 2.5, hy - 3), (hx + 5, hy + 4), 1.4, 1.2, P)                     # braço da frente
             cab = (hx + 1, hy - 9)
-        elif pose_ == 'correndo':
+        elif pose_ in ('correndo', 'correndo2'):
             hx, hy = 15, 29
-            corrente(b, (hx - 6, hy), 16, 1.2, -110, 1.5, P, 1, n=5, afinar=0.08, amplitude=20)
-            b.capsula((hx - 4, hy + 2), (hx - 9, hy + 8), 2.0, 1.8, P, 1)
-            b.capsula((hx + 3, hy + 2), (hx + 8, hy + 8), 2.0, 1.8, P)
+            k = 1 if pose_ == 'correndo' else -1     # 2º quadro: pernas recolhidas (galope)
+            corrente(b, (hx - 6, hy), 16, 1.2, -110 + 15 * (1 - k), 1.5 + k, P, 1, n=5, afinar=0.08, amplitude=20)
+            b.capsula((hx - 4, hy + 2), (hx - 4 - 5 * k, hy + 8), 2.0, 1.8, P, 1)
+            b.capsula((hx + 3, hy + 2), (hx + 3 + 5 * k, hy + 8), 2.0, 1.8, P)
             b.capsula((hx - 6, hy - 1), (hx + 4, hy - 3), 4.0, 4.2, P, achatar=0.9)            # corpo deitado
             b.capsula((hx + 3, hy - 3), (hx + 9, hy + 4), 1.4, 1.2, P)
             b.capsula((hx + 1, hy - 3), (hx - 3, hy + 5), 1.4, 1.2, P, 1)

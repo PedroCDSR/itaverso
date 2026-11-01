@@ -118,10 +118,14 @@ export class Jogador extends Phaser.Physics.Arcade.Sprite {
 
   escolherAnimacao(noChao, agora) {
     this.setFlipX(!this.olhandoDireita);
+    // pousou agora (estava no ar): o corpo amassa por um instante (quadro "aterrissando", art/jogador.js)
+    if (noChao && this.estavaNoAr) this.aterrissandoAte = agora + J.aterrissagemMs;
+    this.estavaNoAr = !noChao;
     if (agora < this.arremessandoAte) return; // deixa a animação de arremesso terminar
     const v = this.body.velocity;
     let anim;
     if (!noChao) anim = v.y < 0 ? 'pulando' : 'caindo';
+    else if (agora < (this.aterrissandoAte ?? 0)) anim = 'aterrissando';
     else anim = Math.abs(v.x) > 12 ? 'correndo' : 'parado';
     this.play(anim, true);
   }

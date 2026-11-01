@@ -147,7 +147,8 @@ def paula(pose_nome):
 CEU_POR_DO_SOL = ['#6C64CC', '#7E72D6', '#9480DA', '#AE8AD6', '#C892CC', '#E09CBC', '#F2A8A6', '#FBB88C', '#FFC878']
 
 
-def arena():
+def arena(completa=True):
+    """completa=False: só o fundo (céu, sol, serra e terraço), sem plataformas e chão (o jogo desenha esses com tiles)."""
     a = np.zeros((A_T, L_T, 4), np.uint8)
     ceu = CEU_POR_DO_SOL
     for y in range(A_T):
@@ -184,6 +185,8 @@ def arena():
     t.reboco(0, 150, L_T - 1, 239, cr, n=12)
     t.contorno()
     img.alpha_composite(GL.tingir(t.imagem(), '#E8906A', 0.12))   # luz quente do sol baixo
+    if not completa:
+        return img
     # plataformas de madeira (mapa: colunas 4-8 e 20-24 na linha 11)
     p = Tela(L_T, A_T, semente=5)
     for c0 in (4, 20):

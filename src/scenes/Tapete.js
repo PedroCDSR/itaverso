@@ -8,7 +8,7 @@ import { abrirPausa } from '../fluxo.js';
 import { tocarEfeito } from '../audio/efeitos.js';
 import { tocarMusica, tocarVinheta, pararMusica } from '../audio/musica.js';
 import { TAPETE as MAPA } from '../levels/tapete.js';
-import { ONDA_ALADDIN } from '../art/tapete.js';
+import { ONDA_ALADDIN, ONDA_PAULA } from '../art/tapete.js';
 
 // Fase 4 (CLAUDE.md, seção 11.6): Aladdin e Tia Paula voam de tapete sobre Itajubá ao entardecer.
 // A câmera anda sozinha para a direita; o tapete fica sempre no mesmo x da tela e só sobe e desce.
@@ -40,7 +40,6 @@ export class Tapete extends Phaser.Scene {
     this.fimRolagem = LARGURA_MAPA; // câmera para aqui: o teatro inteiro na tela
     this.teatroX = LARGURA_MAPA + LARGURA - TEATRO.largura - 16;
 
-    this.criarTexturasCenario();
     this.criarFundo();
     this.criarObjetos();
     this.criarTeatro();
@@ -50,10 +49,13 @@ export class Tapete extends Phaser.Scene {
     // "sentado" do MESMO sprite do jogador (fonte única). Ele balança junto com a onda do tapete.
     this.tapeteVoo = this.add.sprite(0, 0, 'voo', 0).play('voo');
     this.aladdinSentado = this.add.sprite(CFG.aladdin.x, CFG.aladdin.y, 'jogador').setOrigin(0.5, 1).play('sentado');
+    // Tia Paula sentada atrás dele: quadro "sentada" do sprite único dela (public/assets/sprites/tiaPaula.png)
+    this.paulaSentada = this.add.sprite(-14, 20, 'tiaPaula', 4).setOrigin(0.5, 1);
     this.tapeteVoo.on('animationupdate', (anim, quadro) => {
       this.aladdinSentado.y = CFG.aladdin.y + ONDA_ALADDIN[quadro.index - 1];
+      this.paulaSentada.y = 20 + ONDA_PAULA[quadro.index - 1];
     });
-    this.tapete = this.add.container(CFG.xNaTela, 120, [this.tapeteVoo, this.aladdinSentado]).setDepth(50);
+    this.tapete = this.add.container(CFG.xNaTela, 120, [this.tapeteVoo, this.paulaSentada, this.aladdinSentado]).setDepth(50);
     this.yTapete = 120;
 
     this.cameras.main.setBounds(0, 0, this.fimRolagem + LARGURA, ALTURA);
@@ -67,75 +69,18 @@ export class Tapete extends Phaser.Scene {
 
   // ---------- cenário ----------
 
-  // Cidade ao fundo e telhados perto: desenhados em canvas uma vez, depois só repetidos (tileSprite).
-  criarTexturasCenario() {
-    const sorteio = semente(7);
-    if (!this.textures.exists('cidadeLonge')) {
-      const w = LARGURA * 2;
-      const tex = this.textures.createCanvas('cidadeLonge', w, 90);
-      const ctx = tex.getContext();
-      let x = 0;
-      while (x < w) {
-        const larg = 22 + Math.floor(sorteio() * 30);
-        const alt = 24 + Math.floor(sorteio() * 34);
-        ctx.fillStyle = '#A9779E';
-        ctx.fillRect(x, 90 - alt, larg, alt);
-        // janelas acesas (fim de tarde)
-        ctx.fillStyle = '#F9E3A8';
-        for (let jy = 90 - alt + 6; jy < 84; jy += 9) {
-          for (let jx = x + 4; jx < x + larg - 4; jx += 7) if (sorteio() < 0.35) ctx.fillRect(jx, jy, 2, 3);
-        }
-        x += larg + Math.floor(sorteio() * 6);
-      }
-      // torre de igreja, para lembrar o centro de Itajubá (genérica: sem foto de referência ainda)
-      ctx.fillStyle = '#A9779E';
-      ctx.fillRect(300, 18, 18, 72);
-      ctx.beginPath();
-      ctx.moveTo(296, 20);
-      ctx.lineTo(309, 2);
-      ctx.lineTo(322, 20);
-      ctx.fill();
-      tex.refresh();
-    }
-    if (!this.textures.exists('telhados')) {
-      const w = LARGURA;
-      const h = ALTURA - CHAO_Y + 12;
-      const tex = this.textures.createCanvas('telhados', w, h);
-      const ctx = tex.getContext();
-      const paredes = ['#E7B98A', '#F2D0A4', '#D99A74', '#EFC3B5'];
-      let x = 0;
-      while (x < w) {
-        const larg = 40 + Math.floor(sorteio() * 40);
-        const topo = 10 + Math.floor(sorteio() * 10);
-        ctx.fillStyle = paredes[Math.floor(sorteio() * paredes.length)];
-        ctx.fillRect(x, topo, larg, h - topo);
-        // telhado de telha (terracota) com a borda escura
-        ctx.fillStyle = '#B5563A';
-        ctx.fillRect(x - 2, topo - 6, larg + 4, 7);
-        ctx.fillStyle = '#7C3524';
-        ctx.fillRect(x - 2, topo, larg + 4, 1);
-        for (let tx = x; tx < x + larg; tx += 5) ctx.fillRect(tx, topo - 6, 1, 6);
-        // janelas
-        ctx.fillStyle = '#6D6BD9';
-        for (let jx = x + 8; jx < x + larg - 10; jx += 16) ctx.fillRect(jx, topo + 10, 6, 8);
-        x += larg;
-      }
-      tex.refresh();
-    }
-  }
-
   criarFundo() {
-    this.add.image(0, 0, 'ceu').setOrigin(0).setScrollFactor(0);
-    // sol que vai se pondo durante a fase (entardecer)
-    this.sol = this.add.circle(LARGURA - 110, 70, 22, 0xfff1a8).setScrollFactor(0);
-    this.brilhoSol = this.add.circle(LARGURA - 110, 70, 34, 0xfff1a8, 0.25).setScrollFactor(0);
-    this.morros = this.add.tileSprite(0, 0, LARGURA, ALTURA, 'morros').setOrigin(0).setScrollFactor(0);
-    this.cidade = this.add.tileSprite(0, CHAO_Y - 70, LARGURA, 90, 'cidadeLonge').setOrigin(0).setScrollFactor(0);
-    this.telhados = this.add
-      .tileSprite(0, CHAO_Y - 12, LARGURA, ALTURA - CHAO_Y + 12, 'telhados')
-      .setOrigin(0)
-      .setScrollFactor(0)
-      .setDepth(40);
+    // Crepúsculo (decisão do Pedro): o sol já se pôs depois do resgate; estrelas, horizonte laranja e janelas
+    // acendendo. Camadas em PNG (ferramentas/arte/gerar_cenarios.py): céu parado, Serra da Mantiqueira, cidade
+    // com prédios, Hotel Coroados no alto do morro, UNIFEI e telhados de perto.
+    this.add.image(0, 0, 'ceu-crepusculo').setOrigin(0).setScrollFactor(0);
+    this.morros = this.add.tileSprite(0, 0, LARGURA, ALTURA, 'serra-crepusculo').setOrigin(0).setScrollFactor(0);
+    // Hotel Coroados: aparece por volta dos 12 s de voo (camada do meio, parallax 0,35)
+    this.add.image(640, ALTURA + 30, 'coroados').setOrigin(0, 1).setScrollFactor(0.35);
+    this.cidade = this.add.tileSprite(0, 0, LARGURA, ALTURA, 'cidade-crepusculo').setOrigin(0).setScrollFactor(0);
+    // UNIFEI: por volta dos 25 s (camada de perto, parallax 0,6, atrás dos telhados)
+    this.add.image(1700, ALTURA + 4, 'unifei').setOrigin(0, 1).setScrollFactor(0.6).setDepth(39);
+    this.telhados = this.add.tileSprite(0, 0, LARGURA, ALTURA, 'telhados-crepusculo').setOrigin(0).setScrollFactor(0).setDepth(40);
   }
 
   // Lê o mapa: sapatilhas, pássaros, pipas e postes com fio.
@@ -159,7 +104,9 @@ export class Tapete extends Phaser.Scene {
           this.tweens.add({ targets: s, y: y - 3, duration: 600, yoyo: true, repeat: -1, ease: 'Sine.inOut', delay: (col * 70) % 600 });
           this.coletaveis.push(s);
         } else if (c === 'B') {
-          const p = this.add.sprite(x, y, 'passaro').setDepth(35).play('passaro');
+          // tucanos e maritacas (Pedro): alterna pelo número da coluna
+          const ave = col % 2 ? 'maritaca' : 'tucano';
+          const p = this.add.sprite(x, y, ave).setDepth(35).play(ave);
           p.baseY = y;
           p.fase = col;
           this.passaros.push(p);
@@ -341,12 +288,10 @@ export class Tapete extends Phaser.Scene {
 
     this.animarObjetos(dt, cam);
 
-    // parallax e o sol baixando aos poucos
-    const progresso = cam.scrollX / this.fimRolagem;
+    // parallax
     this.morros.tilePositionX = cam.scrollX * 0.15;
     this.cidade.tilePositionX = cam.scrollX * 0.35;
     this.telhados.tilePositionX = cam.scrollX;
-    this.sol.y = this.brilhoSol.y = 70 + progresso * 90;
   }
 
   moverTapete(dt) {
@@ -407,7 +352,7 @@ export class Tapete extends Phaser.Scene {
 
     if (agora < this.invencivelAte) return;
     for (const p of this.passaros) {
-      if (!p.fugindo && R.Overlaps(caixa, new R(p.x - 6, p.y - 4, 12, 8))) return this.bater(agora, p);
+      if (!p.fugindo && R.Overlaps(caixa, new R(p.x - 8, p.y - 5, 16, 10))) return this.bater(agora, p);
     }
     for (const p of this.pipas) {
       if (R.Overlaps(caixa, new R(p.x - 6, p.y - 12, 12, 16))) return this.bater(agora);

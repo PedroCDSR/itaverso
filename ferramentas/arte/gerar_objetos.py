@@ -1,6 +1,6 @@
 """Gera a arte provisória (original) dos objetos da Fase 1 como matrizes de texto.
 
-Capivara, maçã, sapatilha, coração, fonte da praça e bandeira de checkpoint.
+Capivara, maçã, sapatilha, coração e bandeira de checkpoint (a fonte da praça agora é PNG: gerar_cenarios.py).
 Saída: src/art/objetos.js (matrizes) e uma prévia PNG ampliada para conferir.
 Uso: python3 ferramentas/arte/gerar_objetos.py <repo> <pasta_previa>
 """
@@ -190,40 +190,6 @@ def coracao(cheio=True):
     return q.contorno().texto()
 
 
-def fonte(quadro=0):
-    # fonte de praça em pedra: bacia larga, coluna, prato de cima e jatos d'água
-    q = Quadro(48, 44)
-    # bacia de baixo
-    q.ret(1, 32, 46, 43, 's')
-    q.ret(1, 40, 46, 43, 'S')
-    q.ret(1, 31, 46, 31, 'T')
-    for x in range(4, 46, 8):
-        q.ret(x, 34, x, 39, 'S')  # blocos de pedra
-    # água da bacia
-    q.ret(3, 29, 44, 30, 'u')
-    for x in range(3 + quadro * 2, 44, 5):
-        q.px(x, 29, 'w')
-    # coluna
-    q.ret(21, 16, 26, 28, 's')
-    q.ret(25, 16, 26, 28, 'S')
-    # prato de cima
-    q.elipse(23.5, 15, 10, 2.2, 's')
-    q.ret(14, 15, 33, 16, 'S')
-    # jatos
-    q.ret(23, 4, 24, 13, 'u')
-    q.ret(22, 3, 25, 4, 'u')
-    for lado in (-1, 1):
-        for i in range(10):
-            x = 23.5 + lado * (4 + i * 1.6)
-            y = 6 + (i * i) * 0.24 + quadro * 0.6 * (i % 2)
-            q.px(x, y, 'u' if i % 3 else 'U')
-            q.px(x, y + 1, 'U')
-        # gotinhas que caem do prato
-        for i in range(4):
-            q.px(23.5 + lado * (11 + quadro), 18 + i * 3 + quadro, 'U')
-    return q.contorno().texto()
-
-
 def bandeira(ativa=False):
     q = Quadro(16, 40)
     q.ret(3, 2, 4, 39, 'm')
@@ -251,7 +217,6 @@ SPRITES = {
     'maca': (10, 10, [maca()]),
     'sapatilha': (16, 12, [sapatilha(0), sapatilha(1)]),
     'coracao': (11, 10, [coracao(True), coracao(False)]),
-    'fonte': (48, 44, [fonte(0), fonte(1)]),
     'bandeira': (16, 40, [bandeira(False), bandeira(True)]),
 }
 

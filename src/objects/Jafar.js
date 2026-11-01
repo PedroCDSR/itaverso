@@ -1,7 +1,7 @@
 import * as Phaser from 'phaser';
 import { CHEFE as C } from '../config.js';
 
-// Jafar, o chefe da Fase 3 (design original e provisório: ver src/art/chefe.js).
+// Jafar, o chefe da Fase 3 (design original e provisório: public/assets/sprites/jafar.png, gerar_elenco.py).
 //
 // Ciclo (constantes em config.js, CHEFE):
 //   flutuando (vai de um lado para o outro, lá em cima, fora do alcance)
@@ -15,7 +15,8 @@ export class Jafar extends Phaser.Physics.Arcade.Sprite {
     scene.add.existing(this);
     scene.physics.add.existing(this);
     this.body.setAllowGravity(false);
-    this.body.setSize(26, 44).setOffset(7, 6);
+    // quadro de 64x84 (Etapa 8A): a caixa cobre cabeça e tronco; a cauda de fumaça não conta
+    this.body.setSize(22, 46).setOffset(27, 12);
     this.vida = vida;
     this.direcao = -1;
     this.estado = 'parado'; // até a luta começar
@@ -43,8 +44,8 @@ export class Jafar extends Phaser.Physics.Arcade.Sprite {
   atualizar(agora, delta, alvoX) {
     if (this.estado === 'parado' || this.estado === 'derrotado') return;
     const dt = delta / 1000;
-    // a arte olha para a esquerda: espelha quando o jogador está à direita
-    this.setFlipX(alvoX > this.x);
+    // a arte olha para a direita (como todo o elenco): espelha quando o jogador está à esquerda
+    this.setFlipX(alvoX < this.x);
 
     switch (this.estado) {
       case 'flutuando': {
