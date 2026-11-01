@@ -14,9 +14,24 @@ export const TEXTOS = {
   },
   teste: {
     titulo: 'ALADDIN',
-    subtitulo: 'Etapa 2 · jogador e mapa',
     tocarJogar: 'Toque em JOGAR para começar',
     dicaTeclado: 'Setas ou A/D: andar · Espaço ou W: pular · X ou J: maçã · Esc: pausa',
+  },
+  itajuba: {
+    nomeFase: 'Fase 1 · Itajubá',
+    objetivo: 'Chegue ao Espaço Paula De Marco!',
+    placaEspaco: 'ESPAÇO PAULA DE MARCO',
+    zzz: 'zzz',
+    nham: 'nham!',
+    checkpoint: 'Ponto salvo!',
+    semMaca: 'Sem maçãs!',
+  },
+  // Tela provisória até a Fase 2 existir (Etapa 4)
+  emBreve: {
+    titulo: 'Você chegou ao Espaço!',
+    sapatilhas: (n) => `Sapatilhas: ${n}`,
+    proxima: 'A Fase 2 chega na próxima etapa.',
+    jogarDeNovo: 'JOGAR DE NOVO',
   },
   tapete: {
     titulo: 'VOANDO PARA O TEATRO!',

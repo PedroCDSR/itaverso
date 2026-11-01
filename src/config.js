@@ -45,10 +45,14 @@ export const JOGADOR = {
   coyoteMs: 100, // ainda dá para pular logo depois de sair da beirada
   bufferPuloMs: 100, // apertar pular pouco antes de tocar o chão também vale
   quiqueInimigo: 260,
-  quiqueToldo: 520,
+  quiqueToldo: 520, // quique no toldo segurando PULAR (≈ 150 px de altura)
+  quiqueToldoSemBotao: 420, // quique no toldo sem segurar (≈ 98 px)
+  recuoDano: { x: 150, y: 200 }, // empurrão ao levar dano
+  atordoadoMs: 280, // tempo sem controle logo depois do dano
   coracoes: 3,
   invencivelMs: 1000,
   macasIniciais: 5,
+  macasMaximo: 9,
   // corpo de colisão dentro do quadro 32x48 (menor que o desenho, para não "enroscar" nas beiradas)
   corpo: { largura: 14, altura: 36, x: 9, y: 11 },
 };
@@ -60,6 +64,26 @@ export const CAMERA = {
   suavidade: 0.15,
   // a câmera fica um pouco à frente do jogador, mostrando mais do caminho
   folgaFrente: 40,
+};
+
+// Capivaras (inimigos da Fase 1): andam devagar de um lado para o outro e viram na beirada ou na parede.
+export const CAPIVARA = {
+  velocidade: 28,
+  // largura e altura da caixa de colisão (o desenho tem 32x24)
+  corpo: { largura: 24, altura: 16, x: 4, y: 7 },
+  // segundos comendo a maçã antes de ir embora feliz
+  comendoSeg: 2.5,
+  velocidadeIndoEmbora: 45,
+};
+
+// Maçã arremessada: arco curto e baixo, que quica e rola no chão (assim acerta capivaras perto e longe).
+export const MACA = {
+  velocidadeX: 240,
+  velocidadeY: -100,
+  alturaSaida: 22, // altura da mão, acima do pé
+  quique: 0.45,
+  quiquesMaximo: 3, // some depois disso
+  duracaoMs: 1600,
 };
 
 export const CHEFE = {
