@@ -77,3 +77,9 @@ Mudanças de design em relação ao jogo de hoje (todas provisórias até as fot
 Se aprovar, a 8A troca os sprites no jogo com as animações completas da tabela acima.
 
 **Pele (informação do Pedro, 01/11/2026):** Tia Paula, Tia Claudia e o Sultão têm **pele branca**.
+
+**Rosto do Gênio (pergunta do Pedro, 01/11/2026: "dá para manter o rosto semelhante ao da Disney?"):** o rosto é o
+que mais identifica o Gênio do filme (queixão com covinha, sorriso e sobrancelhas daquele desenho, pele azul, rabo de
+cavalo no topo); copiar passa da regra 3. Ficou o **tipo** "gênio engraçado", comum no gênero e desenhado por nós:
+olhos grandes com brilho, sobrancelhas grossas e altas, nariz redondo saindo do perfil, sorriso enorme com dentes,
+cavanhaque, pele lilás, turbante magenta e brinco.

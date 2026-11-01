@@ -765,18 +765,56 @@ class Genio(Humano):
         cx, cy = c['cab']
         k = 1.5
         b.elipse((cx + 0.8, cy + 0.6), 4.4 * k, 4.9 * k, self.PELE, separar=False, achatar=0.65)
-        b.elipse((cx + 2.8, cy + 3.6), 3.0 * k, 2.6 * k, self.PELE, separar=False, achatar=0.6)
+        b.elipse((cx + 3.2, cy + 4.6), 3.6 * k, 3.0 * k, self.PELE, separar=False, achatar=0.6)
         b.elipse((cx - 2.4, cy + 1.2), 1.5, 2.1, self.PELE, 1, separar=False, achatar=0.8)
-        b.elipse((cx + 0.6, cy - 5.6), 8.4, 5.6, self.TURB, separar=False)             # turbante
-        b.capsula((cx - 7, cy - 3.2), (cx + 7.4, cy - 4.4), 1.4, 1.4, self.TURB, 1, separar=False)
-        b.elipse((cx + 3.4, cy - 6.0), 1.8, 2.0, self.JOIA, separar=False)
+        b.elipse((cx + 0.2, cy - 7.4), 8.2, 5.0, self.TURB, separar=False)             # turbante (testa à mostra)
+        b.capsula((cx - 7, cy - 5.0), (cx + 6.8, cy - 6.0), 1.4, 1.4, self.TURB, 1, separar=False)
+        b.elipse((cx + 3.2, cy - 7.6), 1.8, 2.0, self.JOIA, separar=False)
         b.elipse((cx - 2.8, cy + 4.4), 1.4, 1.4, self.FAIXA, separar=False)            # brinco de argola
-        b.capsula((cx + 4.0, cy + 7.6), (cx + 5.0, cy + 11), 1.6, 0.6, self.BARBA, separar=False)   # cavanhaque
+        b.capsula((cx + 4.0, cy + 9.6), (cx + 4.8, cy + 13), 1.6, 0.6, self.BARBA, separar=False)   # cavanhaque
 
     def rosto(self, b, c):
+        """Rosto de "gênio engraçado" (tipo comum do gênero), desenhado por nós: olhos grandes com brilho,
+        sobrancelhas grossas e altas, nariz redondo, sorriso enorme com dentes. Nada do rosto do Gênio da Disney
+        (queixo com covinha, rabo de cavalo no topo, pele azul)."""
         cx, cy = c['cab']
-        # escala do rosto maior: reposiciona e reaproveita
-        super().rosto(b, c | {'cab': (cx + 1.2, cy + 1.4)})
+        tipo = self.p['rosto']
+        br = self.BARBA.chars
+        # olho de perto (3 de altura, branco + pupila 2x2 + brilho) e olho de longe
+        ox, oy = cx + 1.8, cy - 0.4
+        for dy in range(3):
+            b.px(ox, oy + dy, 'w'); b.px(ox + 1, oy + dy, 'w'); b.px(ox + 2, oy + dy, 'e' if dy else 'w')
+        b.px(ox + 1, oy + 1, 'e'); b.px(ox + 1, oy + 2, 'e'); b.px(ox + 2, oy + 2, 'e')
+        b.px(ox + 2, oy, 'w')                                   # brilho
+        fx = cx + 5.6
+        for dy in range(3):
+            b.px(fx, oy + dy, 'e' if dy else 'w')
+        b.px(fx - 1, oy + 1, 'w'); b.px(fx - 1, oy + 2, 'w')
+        # sobrancelhas grossas, altas e arqueadas (2 px de espessura)
+        sobe = 1.0 if tipo in ('fala', 'feliz') else 0.0
+        for x, y in ((cx + 0.6, cy - 2.2), (cx + 1.6, cy - 3.0), (cx + 2.6, cy - 3.4), (cx + 3.6, cy - 3.0)):
+            b.px(x, y - sobe, br[1]); b.px(x, y + 1 - sobe, br[2])
+        for x, y in ((cx + 5.2, cy - 3.2), (cx + 6.2, cy - 2.8)):
+            b.px(x, y - sobe, br[1]); b.px(x, y + 1 - sobe, br[2])
+        # nariz redondo e grande
+        b.elipse((cx + 8.0, cy + 2.6), 2.2, 2.0, self.PELE, separar=False)   # nariz saindo do perfil
+        b.tom_em(cx + 7.8, cy + 1.8, self.PELE, 0)
+        b.tom_em(cx + 7.4, cy + 4.0, self.PELE, 3)
+        # sorriso enorme: boca aberta com dentes em cima e língua
+        if tipo in ('feliz', 'fala'):
+            for x in range(int(cx + 1), int(cx + 7)):
+                b.px(x, cy + 5.4, 'q')                          # lábio de cima
+                b.px(x, cy + 6.4, 'w')                          # dentes
+                b.px(x, cy + 7.4, 'q' if x in (int(cx + 1), int(cx + 6)) else 'n')
+            for x in range(int(cx + 2), int(cx + 6)):
+                b.px(x, cy + 8.4, 'q')                          # lábio de baixo
+            b.px(cx + 0.4, cy + 4.6, 'q'); b.px(cx + 7.2, cy + 4.6, 'q')   # cantos subindo
+        else:
+            for x in range(int(cx + 1), int(cx + 7)):
+                b.px(x, cy + 5.6 + (0.6 if x in (int(cx + 1), int(cx + 6)) else 0) * -1, 'q')
+        # vincos do sorriso nas bochechas
+        b.tom_em(cx + 0.2, cy + 3.8, self.PELE, 3)
+        b.tom_em(cx - 0.2, cy + 4.8, self.PELE, 3)
 
 
 # ===============================================================================================================
@@ -923,9 +961,9 @@ def poses():
            'magenta, medalhão de lua, varinha de estrela, cauda de fumaça'),
         'genio': ('Gênio', [
             ('flutuando', ge.img(pose(ombro_f=-20, cotovelo_f=100, ombro_t=-10, cotovelo_t=90, rosto='feliz'))),
-            ('tchan!', ge.img(pose(ombro_f=150, cotovelo_f=10, ombro_t=160, cotovelo_t=0, braco_t_atras=False,
+            ('tchan!', ge.img(pose(ombro_f=115, cotovelo_f=-35, ombro_t=165, cotovelo_t=-10, braco_t_atras=True,
                                    rosto='fala', fase=1.6))),
-        ], 'pele lilás, turbante magenta com joia verde, cavanhaque, brinco de argola, colete rosa aberto, faixa '
+        ], 'rosto de gênio engraçado (olhos grandes, sobrancelhas altas, nariz redondo, sorriso enorme); pele lilás, turbante magenta com joia verde, cavanhaque, brinco de argola, colete rosa aberto, faixa '
            'e braceletes dourados, cauda de fumaça amarela'),
         'abu': ('Abu', [('parado', ab.img('parado')), ('correndo', ab.img('correndo')), ('aflito', ab.img('aflito'))],
                 'macaco-prego (o macaquinho brasileiro), chapeuzinho azul (boina com bolinha), rosto e barriga claros, '
