@@ -45,10 +45,14 @@ export const JOGADOR = {
   coyoteMs: 100, // ainda dá para pular logo depois de sair da beirada
   bufferPuloMs: 100, // apertar pular pouco antes de tocar o chão também vale
   quiqueInimigo: 260,
-  quiqueToldo: 520,
+  quiqueToldo: 520, // quique no toldo segurando PULAR (≈ 150 px de altura)
+  quiqueToldoSemBotao: 420, // quique no toldo sem segurar (≈ 98 px)
+  recuoDano: { x: 150, y: 200 }, // empurrão ao levar dano
+  atordoadoMs: 280, // tempo sem controle logo depois do dano
   coracoes: 3,
   invencivelMs: 1000,
   macasIniciais: 5,
+  macasMaximo: 9,
   // corpo de colisão dentro do quadro 32x48 (menor que o desenho, para não "enroscar" nas beiradas)
   corpo: { largura: 14, altura: 36, x: 9, y: 11 },
 };
@@ -62,8 +66,49 @@ export const CAMERA = {
   folgaFrente: 40,
 };
 
+// Capivaras (inimigos da Fase 1): andam devagar de um lado para o outro e viram na beirada ou na parede.
+export const CAPIVARA = {
+  velocidade: 28,
+  // largura e altura da caixa de colisão (o desenho tem 32x24)
+  corpo: { largura: 24, altura: 16, x: 4, y: 7 },
+  // segundos comendo a maçã antes de ir embora feliz
+  comendoSeg: 2.5,
+  velocidadeIndoEmbora: 45,
+};
+
+// Maçã arremessada: arco curto e baixo, que quica e rola no chão (assim acerta capivaras perto e longe).
+export const MACA = {
+  velocidadeX: 240,
+  velocidadeY: -100,
+  alturaSaida: 22, // altura da mão, acima do pé
+  quique: 0.45,
+  quiquesMaximo: 3, // some depois disso
+  duracaoMs: 1600,
+};
+
 export const CHEFE = {
-  vida: 5,
+  // Fase 3, Resgate. Ciclo do Jafar: flutua -> avisa (brilha) -> lança o leque -> desce cansado e piscando
+  // (vulnerável) -> sobe de novo. Só leva dano de maçã enquanto está cansado.
+  vida: 5, // acertos de maçã para vencer
+  // A vida do chefe NÃO volta ao cheio quando o jogador perde os corações: assim ninguém fica preso (decisão da Etapa 5).
+  manterVidaAoReiniciar: true,
+  alturaVoo: 78, // y do centro do Jafar quando flutua (fora do alcance)
+  alturaCansado: 206, // y do centro quando desce cansado (na altura da maçã)
+  limiteEsquerda: 96, // faixa em x onde ele flutua
+  limiteDireita: 360,
+  velocidade: 70, // px/s de um lado para o outro
+  flutuarMs: 2200, // tempo flutuando antes de cada ataque
+  avisoMs: 600, // brilho antes de lançar (dá tempo de se preparar)
+  descerMs: 700, // descida e subida
+  vulneravelMs: 3600, // tempo cansado no chão
+  acertosPorDescida: 2, // depois de tantos acertos ele sobe na hora (evita vencer num sopro, mas sem demorar)
+  invencivelAcertoMs: 350, // depois de um acerto, ignora maçãs por um instante
+  projeteis: 3, // tiros por leque
+  aberturaLequeGraus: 22, // ângulo entre um tiro e o outro
+  velocidadeProjetil: 115,
+  // maçãs no chão da arena: quando alguém pega, outra aparece no mesmo lugar depois de um tempo
+  macaReaparecerMs: 2000,
+  macasMinimasAoReiniciar: 3,
 };
 
 export const TAPETE = {

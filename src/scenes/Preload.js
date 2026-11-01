@@ -1,7 +1,9 @@
 import * as Phaser from 'phaser';
 import { LARGURA, ALTURA, TILE } from '../config.js';
-import { SPRITES_PNG, ArteJogador, ArteTiles } from '../art/index.js';
+import { SPRITES_PNG, ArteJogador, ArteTiles, ArteObjetos } from '../art/index.js';
 import { texturaDeQuadros } from '../art/matriz.js';
+import * as ArteChefe from '../art/chefe.js';
+import { cenaInicial } from './atalho.js';
 
 // Prepara texturas e animações antes do jogo começar.
 export class Preload extends Phaser.Scene {
@@ -16,6 +18,8 @@ export class Preload extends Phaser.Scene {
   }
 
   create() {
+    this.criarArteChefe();
+
     // Jogador: matriz -> textura (só se não veio PNG)
     const J = ArteJogador;
     texturaDeQuadros(this, 'jogador', J.ORDEM.map((n) => J.QUADROS[n]), J.PALETA, J.LARGURA, J.ALTURA);
@@ -24,9 +28,14 @@ export class Preload extends Phaser.Scene {
     const T = ArteTiles;
     texturaDeQuadros(this, 'tiles', T.ORDEM.map((n) => T.TILES[n] || null), T.PALETA, TILE, TILE);
 
+    // Objetos da Fase 1 (capivara, maçã, sapatilha, coração, fonte, bandeira)
+    for (const [nome, sp] of Object.entries(ArteObjetos.SPRITES)) {
+      texturaDeQuadros(this, nome, sp.quadros, ArteObjetos.PALETA, sp.largura, sp.altura);
+    }
+
     this.criarAnimacoes();
     this.criarCeu();
-    this.scene.start('Teste');
+    this.scene.start(cenaInicial('Teste'));
   }
 
   criarAnimacoes() {
@@ -39,6 +48,14 @@ export class Preload extends Phaser.Scene {
     anim('caindo', quadros('caindo'), 1);
     anim('arremessando', quadros('arremessando1', 'arremessando2'), 14, 0);
     anim('dano', quadros('dano'), 1);
+
+    const outra = (key, textura, frames, frameRate, repeat = -1) =>
+      this.anims.create({ key, frames: frames.map((frame) => ({ key: textura, frame })), frameRate, repeat });
+    outra('capivara-andar', 'capivara', [0, 1], 4);
+    outra('capivara-comer', 'capivara', [2, 3], 5);
+    outra('capivara-dormir', 'capivara', [4, 5], 1.5);
+    outra('sapatilha-brilho', 'sapatilha', [0, 0, 0, 1], 4);
+    outra('fonte-agua', 'fonte', [0, 1], 4);
   }
 
   // Céu de fim de tarde e morros ao fundo (versão simples; o parallax completo vem na Etapa 8).
@@ -76,5 +93,20 @@ export class Preload extends Phaser.Scene {
       camada('#8F6FB3', 180, 14, [[3, 1, 2], [7, 0.3, 0.5]]);
       tex.refresh();
     }
+  }
+
+  // Fase 3, Resgate: Jafar, projétil, gaiola e Tia Paula (art/chefe.js) e as animações deles.
+  criarArteChefe() {
+    for (const [nome, sp] of Object.entries(ArteChefe.SPRITES)) {
+      texturaDeQuadros(this, nome, sp.quadros, ArteChefe.PALETA, sp.largura, sp.altura);
+    }
+    const anim = (key, textura, frames, frameRate, repeat = -1) =>
+      this.anims.create({ key, frames: frames.map((frame) => ({ key: textura, frame })), frameRate, repeat });
+    anim('jafar-flutuar', 'jafar', [0, 1], 3);
+    anim('jafar-lancar', 'jafar', [2], 1);
+    anim('jafar-tonto', 'jafar', [3], 1);
+    anim('projetil-girar', 'projetil', [0, 1], 10);
+    anim('paula-presa', 'tiaPaula', [0, 1], 3);
+    anim('paula-feliz', 'tiaPaula', [2, 3], 3);
   }
 }

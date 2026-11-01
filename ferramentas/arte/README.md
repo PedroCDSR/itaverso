@@ -14,4 +14,11 @@ python3 ferramentas/arte/gerar_jogador.py . /tmp
 python3 ferramentas/arte/gerar_tiles.py . /tmp
 ```
 
+```bash
+python3 ferramentas/arte/gerar_chefe.py . /tmp
+```
+
+`gerar_chefe.py` faz a arte da Fase 3: Jafar, projétil, gaiola e Tia Paula (aparência A DEFINIR, desenho neutro
+num sprite separado, `tiaPaula`, para trocar fácil).
+
 Rodar um gerador **sobrescreve** a matriz correspondente em `src/art/`: edições feitas à mão nela se perdem.
