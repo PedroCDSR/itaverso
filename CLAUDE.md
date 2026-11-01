@@ -265,11 +265,13 @@ Cada etapa termina com PR contra `dev` e o checklist da seção 3.
 | 1 | 01/11/2026 | [PR 2](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/2) | Aviso de girar, controles de toque + teclado, pausa ao perder o foco (volta com toque), som liberado no 1º toque, botão de som, tela cheia + trava deitado no Android. Cena de teste com um bloco que anda, pula e joga maçã. |
 | 2 | 01/11/2026 | [PR 3](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/3) | Leitor de mapas em texto, Aladdin original provisório (13 quadros em matriz), tiles 16×16, física com pulo variável, coyote e buffer, câmera com zona morta e folga à frente, céu de entardecer e morros. Pulo alto 69 px, pulo curto 34 px. |
 | 3 | 01/11/2026 | [PR 7](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/7) | Fase 1 com 320 colunas: rua, feira com 6 barracas de toldo, praça com fonte, checkpoint, buracos e plataformas, porta do Espaço. 12 capivaras (pisão = dorme; maçã = come e vai embora; de lado = 1 coração), 38 sapatilhas, 9 maçãs, 3 corações. HUD com corações, maçãs, sapatilhas, pausa e som. Casario de Itajubá no fundo (3 camadas). `dist/` com 1,5 MB. |
+| 6 | 01/11/2026 | [PR 8](https://github.com/PedroCDSR/jogo-aladdin-paula-de-marco/pull/8) | Fase 4 (Tapete): rolagem automática de 40 s + pouso de ~4 s no Teatro do Colégio G9, segurar sobe / soltar desce (toque em qualquer lugar, espaço, W ou seta para cima), pássaros (sabiás), pipas, postes e fios, sapatilhas no céu, batida = pisca e perde 2 sapatilhas. Tela Final provisória. Teste direto: `?fase=tapete`. Feita antes das Etapas 4 e 5 (modo autônomo). `dist/` = 1,51 MB (já com a Etapa 3). |
 
-**Próximo passo (01/11/2026):** a Etapa 3 (PR 7) foi testada no Chromium e mergeada no `dev` pelo Claude, pela regra
-nova da seção 3. Próxima: **Etapa 4, Fase 2 (Espaço Paula De Marco)**: sistema de diálogo, NPCs, Tia Claudia com os
-ingressos, contador de ingressos no HUD e a transição para o chefe. A tela provisória `EmBreve` sai nessa etapa. O Pedro
-só testa no fim, antes do lançamento.
+**Próximo passo (01/11/2026):** a Etapa 6 (PR 8, Tapete) foi feita em paralelo e mergeada no `dev` junto com a Etapa 3.
+Próxima: **Etapa 4, Fase 2 (Espaço Paula De Marco)**: sistema de diálogo, NPCs, Tia Claudia com os ingressos, contador de
+ingressos no HUD e a transição para o chefe. A tela provisória `EmBreve` sai nessa etapa. Depois, Etapa 5 (Chefe), que
+deve terminar com `this.scene.start('Tapete')` (o HUD da Fase 1 deve ser parado antes: o Tapete tem contador próprio).
+Para testar o tapete direto: `?fase=tapete`. O Pedro só testa no fim, antes do lançamento.
 
 **Decisões técnicas da Etapa 1:**
 - O toque é escutado na **div inteira** (`input.touch.target`), não só no canvas: no celular deitado sobram faixas laterais, e é ali que ficam os polegares.
@@ -300,6 +302,18 @@ só testa no fim, antes do lançamento.
 - Coração só é recolhido se faltar vida; maçã só se houver espaço (máximo 9).
 - A tela "JOGAR" provisória continua até a Etapa 7. Ao chegar na porta, `scenes/EmBreve.js` mostra as sapatilhas e "JOGAR DE NOVO" (sai na Etapa 4).
 - Teste automatizado no Chromium (Playwright) conferiu: pisão, maçã, quique no toldo, checkpoint, buraco, 3 danos, coleta, chegada na porta e jogar de novo, sem erros no console.
+
+**Decisões técnicas da Etapa 6:**
+- O voo do tapete é feito à mão (sem Arcade Physics): aceleração para cima ao segurar, para baixo ao soltar, velocidade máxima nos dois sentidos e aceleração 1,8× ao inverter, para a resposta parecer imediata sem tranco. Sobe até 165 px/s, desce até 140 px/s (`TAPETE` em `config.js`).
+- A câmera anda sozinha (96 px/s); o tapete fica sempre no x 120 da tela. A duração sai do tamanho do mapa: 8 trechos de 30 colunas = 3840 px = 40 s.
+- Mapa do céu em `src/levels/tapete.js`, com legenda própria: `s` sapatilha, `B` pássaro, `Q` pipa, `f` topo de poste (dois `f` na mesma linha ganham um fio). Os trechos têm 30 colunas e são emendados.
+- No limite de baixo o tapete só desliza sobre os telhados, sem dano. Batida: 1,2 s piscando, perde até 2 sapatilhas (caem do tapete), o pássaro foge; postes, fios e pipas continuam no lugar.
+- Arte original em `ferramentas/arte/gerar_tapete.py` → `src/art/tapete.js`: tapete ondulando (3 quadros) com a estampa dos quadrados concêntricos do logo (rosa, amarelo, verde, roxo sobre lilás), Aladdin provisório sentado, **Tia Paula provisória** (coque castanho, vestido roxo; aparência A DEFINIR), sabiá-laranjeira, pipa nas cores da escola, sapatilha de ponta.
+- Fachada do teatro, cidade ao fundo (com uma torre de igreja genérica) e telhados são desenhados em código e **genéricos**: refazer quando chegarem as fotos do Teatro do Colégio G9.
+- O sol desce durante a fase (entardecer). Parallax: morros 0,15, cidade 0,35, telhados 1.
+- `?fase=tapete` ou `?fase=final` no link abre a fase direto (útil na prévia do Netlify). Sem o parâmetro abre a Fase 1 (Itajubá).
+- `scenes/Final.js` é **provisória**: cortinas, cartão do evento, QUERO INGRESSOS (WhatsApp) e JOGAR DE NOVO. A Etapa 7 faz a versão completa.
+- O contador de sapatilhas do tapete usa o `registry` (`sapatilhas`), o mesmo nome do HUD do PR 7.
 
 **Riscos anotados:**
 - A Fase 1 tem ~4.900 px: correndo direto dá ~35 s; com capivaras, toldos e coleta, a estimativa é de 60 a 80 s. Medir no celular e ajustar no polimento (Etapa 10).
