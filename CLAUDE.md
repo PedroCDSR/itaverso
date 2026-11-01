@@ -468,6 +468,11 @@ O Pedro só testa no fim, antes do lançamento, e revisa as falas em `src/data/t
 - `?fase=` no link agora aceita `titulo`, `intro`, `itajuba`, `tapete` e `final`; sem o parâmetro, o jogo começa no Título.
 - Teste automatizado (Playwright): jogada completa do Título ao Final, passando por Sobre, Intro, Itajubá (pausa, som, sobre, continuar), Espaço, Chefe, Tapete inteiro (com pausa) e Final (compartilhar, ingressos, Instagram, jogar de novo, pular para o final), sem erros no console.
 
+**Ajustes pedidos pelo Pedro depois de jogar (01/11/2026):**
+- Intro: botão **PRÓXIMO** (rosa) ao lado de PULAR; na última caixa vira **COMEÇAR**. Tocar em qualquer lugar continua avançando; `Dialogo.avancar()` ignora a 2ª chamada do mesmo toque (botão do canvas + toque na tela).
+- Tutorial no começo da Fase 1 (`ui/Tutorial.js`, textos em `TEXTOS.tutorial`): setas pulando em cima de ◀ ▶, PULAR e MAÇÃ (no computador, o texto mostra as teclas), um passo por vez, cada um some quando a pessoa faz a ação (ou depois de 9 s). Enquanto explica os botões, as capivaras da tela esperam paradas. Depois, quando a primeira capivara acordada se aproxima: "Pule em cima da capivara para ela dormir!" com a seta em cima dela. Só aparece na primeira partida (`tutorialVisto` no registry).
+- Jasmine: "Olha só a minha pirueta!".
+
 **Revisão das instruções de arte (01/11/2026):**
 - Motivo: a arte ficou longe das referências enviadas pelo Pedro. Auditoria no Git:
   - `802af5e` (31/10): o Pedro subiu 5 capturas do Aladdin do SNES e a folha de capivaras do 14collective em `references/figurinos/`.

@@ -8,7 +8,7 @@ import { fundoEntardecer } from '../ui/fundo.js';
 import { tocarMusica } from '../audio/musica.js';
 import { PRIMEIRA_FASE } from '../fluxo.js';
 
-// Intro (CLAUDE.md, seção 11.2): 3 caixas de texto. Tocar avança; PULAR vai direto para a fase.
+// Intro (CLAUDE.md, seção 11.2): 3 caixas de texto. PRÓXIMO (ou tocar em qualquer lugar) avança; PULAR vai direto para a fase.
 export class Intro extends Phaser.Scene {
   constructor() {
     super('Intro');
@@ -42,7 +42,14 @@ export class Intro extends Phaser.Scene {
     this.dialogo = new Dialogo(this);
     this.dialogo.mostrar(t.caixas.map((texto) => ({ texto }))).then(() => this.seguir());
 
-    new Botao(this, LARGURA - 82, ALTURA - 18, `${t.pular} >>`, () => this.seguir(), { largura: 100, altura: 24 });
+    // PRÓXIMO (principal, rosa) ao lado de PULAR: tocar em qualquer lugar também avança, mas o botão deixa claro
+    // o que fazer. Na última caixa ele vira COMEÇAR.
+    this.botaoProximo = new Botao(this, LARGURA - 202, ALTURA - 18, `${t.proximo} >`, () => this.dialogo.avancar(), {
+      largura: 116,
+      altura: 24,
+      cor: 'rosa',
+    });
+    new Botao(this, LARGURA - 72, ALTURA - 18, `${t.pular} >>`, () => this.seguir(), { largura: 116, altura: 24 });
     new BotaoSom(this, LARGURA - 20, ALTURA - 52);
 
     this.input.keyboard?.on('keydown-ESC', () => this.seguir());
@@ -57,5 +64,8 @@ export class Intro extends Phaser.Scene {
 
   update(_, delta) {
     this.morros.tilePositionX += delta * 0.006;
+    const ultima = this.dialogo.caixas && this.dialogo.indice >= this.dialogo.caixas.length - 1;
+    const rotulo = ultima ? `${TEXTOS.intro.comecar} >` : `${TEXTOS.intro.proximo} >`;
+    if (this.botaoProximo.texto.text !== rotulo) this.botaoProximo.texto.setText(rotulo);
   }
 }

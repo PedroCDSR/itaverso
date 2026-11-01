@@ -46,6 +46,8 @@ export const TEXTOS = {
       'Vai ter o espetáculo Aladdin no Teatro do Colégio G9!',
       'Mas os ingressos estão no Espaço Paula De Marco. Bora buscar!',
     ],
+    proximo: 'PRÓXIMO',
+    comecar: 'COMEÇAR',
     pular: 'PULAR',
     tocar: 'toque para continuar',
   },
@@ -95,6 +97,16 @@ export const TEXTOS = {
   teste: {
     dicaTeclado: 'Setas ou A/D: andar · Espaço ou W: pular · X ou J: maçã · Esc: pausa',
   },
+  // Tutorial do começo da Fase 1 (ui/Tutorial.js): frases curtas, para quem nunca jogou.
+  tutorial: {
+    andarToque: 'Segure aqui para andar!',
+    andarTeclado: 'Use as setas do teclado para andar!',
+    pularToque: 'Toque em PULAR para pular!',
+    pularTeclado: 'Aperte ESPAÇO para pular!',
+    macaToque: 'Toque em MAÇÃ para jogar uma maçã!',
+    macaTeclado: 'Aperte X para jogar uma maçã!',
+    capivara: 'Pule em cima da capivara para ela dormir!',
+  },
   itajuba: {
     nomeFase: 'Fase 1 · Itajubá',
     objetivo: 'Chegue ao Espaço Paula De Marco!',
@@ -113,7 +125,7 @@ export const TEXTOS = {
     ingressos: (n) => `+${n} ingressos!`,
     // ordem dos 'N' no mapa, da esquerda para a direita (levels/espaco.js)
     npcs: {
-      jasmine: { nome: 'Jasmine', falas: ['Oi, Aladdin! Estou ensaiando o meu balé.', 'Olha só o meu giro!'] },
+      jasmine: { nome: 'Jasmine', falas: ['Oi, Aladdin! Estou ensaiando o meu balé.', 'Olha só a minha pirueta!'] },
       genio: { nome: 'Gênio', falas: ['Três desejos? Hoje só um:', 'que você venha ver a gente no palco!'] },
       sultao: { nome: 'Sultão', falas: ['Ensaio é coisa séria...', 'mas dançar é muito divertido!'] },
     },

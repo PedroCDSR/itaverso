@@ -1,5 +1,6 @@
 import * as Phaser from 'phaser';
 import { LARGURA, ALTURA, TILE, CORES, CORES_CSS, FONTES, CAMERA, JOGADOR as J, MACA } from '../config.js';
+import { Tutorial } from '../ui/Tutorial.js';
 import { TEXTOS } from '../data/textos.js';
 import { Entrada } from '../ui/Entrada.js';
 import { tocarEfeito } from '../audio/efeitos.js';
@@ -241,6 +242,9 @@ export class Itajuba extends Phaser.Scene {
     this.jogando = true;
     this.scene.launch('HUD');
     this.faixa(TEXTOS.itajuba.objetivo);
+    // setas explicando os controles e a capivara (só na primeira vez)
+    this.tutorial = new Tutorial(this, { entrada: this.entrada, jogador: this.jogador, capivaras: this.capivaras });
+    this.tutorial.iniciar();
   }
 
   // Faixa de texto que aparece no meio da tela e some.
@@ -439,6 +443,7 @@ export class Itajuba extends Phaser.Scene {
     this.casas.tilePositionX = cam.scrollX * 0.4;
 
     this.capivaras.getChildren().forEach((c) => c.atualizar());
+    if (this.jogando && !this.terminou) this.tutorial?.update(delta);
 
     if (!this.jogando || this.terminou) {
       this.jogador.body.setVelocityX(0);
