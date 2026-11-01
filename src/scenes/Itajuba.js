@@ -347,7 +347,7 @@ export class Itajuba extends Phaser.Scene {
     reg.inc('macas', -1);
     const j = this.jogador;
     const dir = j.olhandoDireita ? 1 : -1;
-    const m = this.macasVoando.create(j.x + 12 * dir, j.y - MACA.alturaSaida, 'maca').setDepth(11);
+    const m = this.macasVoando.create(j.x + MACA.frenteSaida * dir, j.y - MACA.alturaSaida, 'maca').setDepth(11);
     m.body.setSize(8, 8);
     m.setBounce(MACA.quique);
     m.quiques = 0;

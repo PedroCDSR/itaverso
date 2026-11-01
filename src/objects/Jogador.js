@@ -24,6 +24,7 @@ export class Jogador extends Phaser.Physics.Arcade.Sprite {
     this.ultimoPedidoPulo = -Infinity; // momento em que apertou pular pela última vez
     this.subindoComBotao = false; // está no meio de um pulo com o botão apertado
     this.arremessandoAte = 0;
+    this.macaSaiEm = 0; // momento em que a maçã do arremesso atual sai da mão (0 = nenhuma)
     this.vida = J.coracoes;
     this.invencivelAte = 0; // até quando (ms) está piscando e não leva dano
     this.atordoadoAte = 0; // até quando (ms) está sem controle, logo depois do dano
@@ -43,6 +44,8 @@ export class Jogador extends Phaser.Physics.Arcade.Sprite {
     const dir = this.x < deOndeX ? -1 : 1;
     this.body.setVelocity(J.recuoDano.x * dir, -J.recuoDano.y);
     this.subindoComBotao = false;
+    this.macaSaiEm = 0; // o dano interrompe o arremesso
+    this.arremessandoAte = 0;
     this.play('dano', true);
     return this.vida;
   }
@@ -97,10 +100,15 @@ export class Jogador extends Phaser.Physics.Arcade.Sprite {
     corpo.setGravityY(corpo.velocity.y > 0 ? J.gravidadeQuedaExtra : 0);
 
     // --- maçã ---
+    // antecipação: a animação começa com o braço lá atrás e a maçã só sai no quadro seguinte
     let soltouMaca = false;
     if (entrada.macaApertou && temMaca && agora >= this.arremessandoAte) {
-      this.arremessandoAte = agora + 160;
+      this.arremessandoAte = agora + J.arremessoMs;
+      this.macaSaiEm = agora + J.antecipacaoMacaMs;
       this.play('arremessando', true);
+    }
+    if (this.macaSaiEm && agora >= this.macaSaiEm) {
+      this.macaSaiEm = 0;
       soltouMaca = true;
     }
 
