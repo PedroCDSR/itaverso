@@ -1,6 +1,8 @@
 import * as Phaser from 'phaser';
 import { LARGURA, CORES, CORES_CSS, FONTES } from '../config.js';
 import { TEXTOS } from '../data/textos.js';
+import { tocarEfeito } from '../audio/efeitos.js';
+import { tocarMusica } from '../audio/musica.js';
 
 // Tela provisória do fim da Fase 1, até a Fase 2 (Espaço) existir na Etapa 4.
 export class EmBreve extends Phaser.Scene {
@@ -10,6 +12,7 @@ export class EmBreve extends Phaser.Scene {
 
   create(dados) {
     const t = TEXTOS.emBreve;
+    tocarMusica('final');
     this.cameras.main.setBackgroundColor(CORES_CSS.lilas).fadeIn(300, 158, 158, 255);
     this.add
       .text(LARGURA / 2, 60, t.titulo, { fontFamily: FONTES.titulo, fontSize: '12px', color: CORES_CSS.branco })
@@ -31,7 +34,10 @@ export class EmBreve extends Phaser.Scene {
     this.add
       .text(LARGURA / 2, 201, t.jogarDeNovo, { fontFamily: FONTES.titulo, fontSize: '12px', color: CORES_CSS.roxo })
       .setOrigin(0.5);
-    const deNovo = () => this.scene.start('Itajuba', { direto: true });
+    const deNovo = () => {
+      tocarEfeito('botao');
+      this.scene.start('Itajuba', { direto: true });
+    };
     botao.setInteractive({ useHandCursor: true }).on('pointerup', deNovo);
     this.input.keyboard?.once('keydown-ENTER', deNovo);
   }

@@ -4,7 +4,8 @@ import { TEXTOS } from '../data/textos.js';
 import { Entrada } from '../ui/Entrada.js';
 import { BotaoSom } from '../ui/BotaoSom.js';
 import { tentarTelaCheia } from '../ui/telaCheia.js';
-import { bipe } from '../audio/som.js';
+import { tocarEfeito } from '../audio/efeitos.js';
+import { tocarMusica, tocarVinheta, pararMusica } from '../audio/musica.js';
 import { TAPETE as MAPA } from '../levels/tapete.js';
 
 // Fase 4 (CLAUDE.md, seção 11.6): Aladdin e Tia Paula voam de tapete sobre Itajubá ao entardecer.
@@ -27,6 +28,7 @@ export class Tapete extends Phaser.Scene {
   }
 
   create() {
+    tocarMusica('tapete'); // se o som ainda não foi liberado, começa no 1º toque
     this.estado = 'esperando'; // esperando → voando → chegando
     this.sapatilhas = this.registry.get('sapatilhas') ?? 0;
     this.registry.set('sapatilhas', this.sapatilhas);
@@ -288,7 +290,7 @@ export class Tapete extends Phaser.Scene {
     const comecar = () => {
       if (this.estado !== 'esperando') return;
       tentarTelaCheia(this);
-      bipe(520, 0.12);
+      tocarEfeito('botao');
       tela.destroy();
       this.estado = 'voando';
     };
@@ -414,7 +416,7 @@ export class Tapete extends Phaser.Scene {
     this.sapatilhas++;
     this.registry.set('sapatilhas', this.sapatilhas);
     this.textoSapatilhas.setText(String(this.sapatilhas));
-    bipe(990, 0.06);
+    tocarEfeito('sapatilha', { variar: 0.08 });
   }
 
   // Batida: pisca, perde algumas sapatilhas e segue voando.
@@ -435,7 +437,7 @@ export class Tapete extends Phaser.Scene {
       onComplete: () => this.tapete.setAlpha(1),
     });
     this.cameras.main.shake(120, 0.004);
-    bipe(200, 0.15);
+    tocarEfeito('dano');
 
     // sapatilhas perdidas caem do tapete
     for (let i = 0; i < perdidas; i++) {
@@ -481,7 +483,8 @@ export class Tapete extends Phaser.Scene {
   }
 
   mostrarChegada() {
-    bipe(784, 0.2);
+    pararMusica(0.3);
+    tocarVinheta('vitoria');
     const caixa = this.add.container(LARGURA / 2, 60).setScrollFactor(0).setDepth(2000);
     caixa.add(this.add.rectangle(0, 0, 300, 40, CORES.lilas, 0.95).setStrokeStyle(2, CORES.roxo));
     caixa.add(

@@ -130,3 +130,11 @@ export const CONTROLES = {
   // toques acima desta linha (y) não contam como botão, para não atrapalhar o HUD
   alturaMinima: 120,
 };
+
+// Som (Etapa 9). Volumes de 0 a 1.
+export const SOM = {
+  volumeGeral: 0.8,
+  volumeEfeitos: 0.7,
+  volumeMusica: 0.25, // a música fica baixinha, por baixo dos efeitos
+  volumeVinheta: 0.6,
+};

@@ -1,4 +1,6 @@
 import * as Phaser from 'phaser';
+import { tocarEfeito } from '../audio/efeitos.js';
+import { tocarMusica } from '../audio/musica.js';
 import { LARGURA, ALTURA, CORES, CORES_CSS, FONTES } from '../config.js';
 import { TEXTOS } from '../data/textos.js';
 import { EVENTO, linkWhatsapp } from '../data/evento.js';
@@ -13,6 +15,7 @@ export class Final extends Phaser.Scene {
 
   create(dados) {
     const F = TEXTOS.final;
+    tocarMusica('final');
     const sapatilhas = dados?.sapatilhas ?? this.registry.get('sapatilhas') ?? 0;
     this.add.rectangle(0, 0, LARGURA, ALTURA, CORES.lilas).setOrigin(0);
 
@@ -57,6 +60,9 @@ export class Final extends Phaser.Scene {
     this.add.text(x, y + 1, rotulo, { fontFamily: FONTES.titulo, fontSize: '9px', color: CORES_CSS.roxo }).setOrigin(0.5);
     fundo.setInteractive({ useHandCursor: true });
     // pointerup: abrir link novo só funciona dentro do gesto, e o dedo já saiu da tela
-    fundo.on('pointerup', acao);
+    fundo.on('pointerup', () => {
+      tocarEfeito('botao');
+      acao();
+    });
   }
 }
