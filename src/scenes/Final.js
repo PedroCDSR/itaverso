@@ -40,8 +40,8 @@ export class Final extends Phaser.Scene {
 
     this.botao(LARGURA / 2 - 95, 196, F.ingressos, CORES.rosa, () => window.open(linkWhatsapp(), '_blank'));
     this.botao(LARGURA / 2 + 95, 196, F.jogarDeNovo, CORES.amarelo, () => {
-      this.registry.set('sapatilhas', 0);
-      this.scene.start('Tapete');
+      // o jogo já vai do começo ao fim: jogar de novo volta à Fase 1 (que zera sapatilhas e ingressos)
+      this.scene.start('Itajuba', { direto: true });
     });
     this.add.text(LARGURA / 2, 240, F.provisorio, { ...texto, fontSize: '12px', color: CORES_CSS.branco }).setOrigin(0.5);
     new BotaoSom(this, LARGURA - 20, 20);
