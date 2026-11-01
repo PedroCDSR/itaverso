@@ -4,6 +4,13 @@ import { TEXTOS } from '../data/textos.js';
 import { criarSobreposicao } from './sobreposicao.js';
 import { pausar, retomar, estaPausado } from './pausaGlobal.js';
 
+let pausarExterno = () => {};
+
+// Botão de pausa do HUD: mostra a mesma tela "Pausado / Toque para continuar".
+export function pausarAgora() {
+  pausarExterno();
+}
+
 export function iniciarPausaFoco() {
   const el = criarSobreposicao('aviso-pausa', 'translucida');
   el.innerHTML = `<div></div><small></small>`;
@@ -15,6 +22,7 @@ export function iniciarPausaFoco() {
     el.classList.add('ativa');
     pausar('foco');
   };
+  pausarExterno = mostrar;
   const continuar = (ev) => {
     if (!estaPausado('foco')) return;
     ev.preventDefault();
