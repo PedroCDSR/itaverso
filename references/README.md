@@ -3,6 +3,8 @@
 Fotos e imagens que servem de **base para desenhar** a arte original do jogo. Nada desta pasta vai para o site
 (o build só usa `public/` e `src/`), então o tamanho dos arquivos aqui não pesa no Netlify.
 
+Antes de qualquer arte, siga o fluxo da seção 7.1 do `CLAUDE.md`: imagens, `reference-notes.md` de cada pasta e o índice `visual-reference-index.md`.
+
 | Pasta | O que colocar | Usado para |
 |---|---|---|
 | `figurinos/` | Fotos dos figurinos do espetáculo (Aladdin, Jasmine, Gênio, Abu, Jafar e demais), de frente e de costas | Desenhar os personagens (CLAUDE.md, seção 8) |
