@@ -11,6 +11,21 @@ export class Preload extends Phaser.Scene {
     super('Preload');
   }
 
+  // Fase 3, Resgate: Jafar, projétil, gaiola e Tia Paula (art/chefe.js) e as animações deles.
+  criarArteChefe() {
+    for (const [nome, sp] of Object.entries(ArteChefe.SPRITES)) {
+      texturaDeQuadros(this, nome, sp.quadros, ArteChefe.PALETA, sp.largura, sp.altura);
+    }
+    const anim = (key, textura, frames, frameRate, repeat = -1) =>
+      this.anims.create({ key, frames: frames.map((frame) => ({ key: textura, frame })), frameRate, repeat });
+    anim('jafar-flutuar', 'jafar', [0, 1], 3);
+    anim('jafar-lancar', 'jafar', [2], 1);
+    anim('jafar-tonto', 'jafar', [3], 1);
+    anim('projetil-girar', 'projetil', [0, 1], 10);
+    anim('paula-presa', 'tiaPaula', [0, 1], 3);
+    anim('paula-feliz', 'tiaPaula', [2, 3], 3);
+  }
+
   preload() {
     for (const [nome, q] of Object.entries(SPRITES_PNG)) {
       this.load.spritesheet(nome, `assets/sprites/${nome}.png`, { frameWidth: q.largura, frameHeight: q.altura });
@@ -93,20 +108,5 @@ export class Preload extends Phaser.Scene {
       camada('#8F6FB3', 180, 14, [[3, 1, 2], [7, 0.3, 0.5]]);
       tex.refresh();
     }
-  }
-
-  // Fase 3, Resgate: Jafar, projétil, gaiola e Tia Paula (art/chefe.js) e as animações deles.
-  criarArteChefe() {
-    for (const [nome, sp] of Object.entries(ArteChefe.SPRITES)) {
-      texturaDeQuadros(this, nome, sp.quadros, ArteChefe.PALETA, sp.largura, sp.altura);
-    }
-    const anim = (key, textura, frames, frameRate, repeat = -1) =>
-      this.anims.create({ key, frames: frames.map((frame) => ({ key: textura, frame })), frameRate, repeat });
-    anim('jafar-flutuar', 'jafar', [0, 1], 3);
-    anim('jafar-lancar', 'jafar', [2], 1);
-    anim('jafar-tonto', 'jafar', [3], 1);
-    anim('projetil-girar', 'projetil', [0, 1], 10);
-    anim('paula-presa', 'tiaPaula', [0, 1], 3);
-    anim('paula-feliz', 'tiaPaula', [2, 3], 3);
   }
 }
