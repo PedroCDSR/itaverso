@@ -39,7 +39,9 @@ export class Itajuba extends Phaser.Scene {
     // --- tiles ---
     const tm = this.make.tilemap({ data: mapa.tiles, tileWidth: TILE, tileHeight: TILE });
     const tileset = tm.addTilesetImage('tiles', 'tiles', TILE, TILE, 0, 0);
-    this.camada = tm.createLayer(0, tileset, 0, 0);
+    // Os tiles ficam NA FRENTE dos lugares (profundidade 1) e das barracas: sem isso, a igreja escondia
+    // plataformas e toldos de verdade, e o pé do clube aparecia em cima da rua.
+    this.camada = tm.createLayer(0, tileset, 0, 0).setDepth(1.5);
     this.camada.setCollision([TIPO_TILE.chaoTopo, TIPO_TILE.chao]);
     // plataformas e toldos: só colidem por cima (dá para subir por baixo)
     this.camada.forEachTile((t) => {
@@ -215,7 +217,7 @@ export class Itajuba extends Phaser.Scene {
 
   // Barracas da feira: postes e balcão com frutas embaixo de cada sequência de toldos.
   desenharBarracas(mapa) {
-    const g = this.add.graphics();
+    const g = this.add.graphics().setDepth(1.2); // na frente dos lugares, atrás dos tiles
     mapa.tiles.forEach((fila, lin) => {
       let inicio = -1;
       for (let col = 0; col <= fila.length; col++) {

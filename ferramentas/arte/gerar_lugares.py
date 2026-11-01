@@ -38,9 +38,11 @@ TELA_L, TELA_A = 480, 270
 def clube():
     L, A = 264, 178
     t = Tela(L, A, semente=11)
-    cr, br, mm = M['creme'], M['branco'], M['marmore']
+    # Decisão do Pedro (01/11/2026): o clube é todo branco. O rodapé e os pedestais, que na foto são de pedra
+    # escura, usam o mesmo branco das molduras (juntas claras, sem veios).
+    cr, br, mm = M['creme'], M['branco'], M['branco']
     base = A - 1
-    rod = A - 24          # topo do rodapé de pedra escura
+    rod = A - 24          # topo do rodapé
     # --- corpo principal ---
     t.parede(4, 40, L - 5, base, cr, 1)
     # sombra na metade direita de cada ala (leve volume) e alas laterais um pouco recuadas
@@ -130,22 +132,16 @@ def clube():
                     t.hlinha(xx, xx + 4, yy, br, 2)
                 t.ret(xx, 142, xx + 4, rod + 3, br, 2)
                 t.relevo(t.mascara_ret(xx, 142, xx + 4, rod + 3))
-    # --- rodapé de pedra escura (mármore com veios) ---
-    t.ret(4, rod, L - 5, base, mm, 2)
+    # --- rodapé branco (blocos com juntas claras) ---
+    t.ret(4, rod, L - 5, base, mm, 1)
     t.hlinha(4, L - 5, rod, mm, 0)
-    t.hlinha(4, L - 5, rod + 1, mm, 1)
+    t.hlinha(4, L - 5, rod + 1, mm, 0)
     for y in range(rod + 2, base + 1, 8):
-        t.hlinha(4, L - 5, y + 7, mm, 4)
+        t.hlinha(4, L - 5, y + 7, mm, 2)
         off = 0 if (y // 8) % 2 else 12
         for x in range(4 + off, L - 5, 24):
-            t.vlinha(x, y, min(base, y + 7), mm, 4)
-            t.vlinha(x + 1, y, min(base, y + 7), mm, 1)
-    for _ in range(26):  # veios diagonais do mármore
-        x = t.rnd.randint(6, L - 8)
-        y = t.rnd.randint(rod + 3, base - 2)
-        for k in range(t.rnd.randint(3, 7)):
-            if t.mat[y + k // 3 if y + k // 3 < A else y, x + k] == mm:
-                t.tom[min(A - 1, y + k // 3), min(L - 1, x + k)] = t.rnd.choice((1, 3))
+            t.vlinha(x, y, min(base, y + 7), mm, 2)
+            t.vlinha(x + 1, y, min(base, y + 7), mm, 0)
     # escada: degraus diante das portas
     for i, y in enumerate(range(rod + 6, base + 1, 3)):
         t.ret(cx0 + 4 - i * 2, y, cx1 - 4 + i * 2, y + 2, M['concreto'], 2)
@@ -157,16 +153,12 @@ def clube():
         cx -= 3
         x0, x1 = cx - 5, cx + 5
         # pedestal
-        t.ret(x0 - 3, rod - 14, x1 + 3, base, mm, 2)
+        t.ret(x0 - 3, rod - 14, x1 + 3, base, mm, 1)
         t.relevo(t.mascara_ret(x0 - 3, rod - 14, x1 + 3, base))
-        t.ret(x0 - 4, rod - 16, x1 + 4, rod - 14, mm, 1)
+        t.ret(x0 - 4, rod - 16, x1 + 4, rod - 14, mm, 0)
         t.hlinha(x0 - 4, x1 + 4, rod - 16, mm, 0)
-        t.vlinha(x1 + 3, rod - 13, base, mm, 4)
-        t.vlinha(x0 - 3, rod - 13, base, mm, 1)
-        for vy in range(rod - 10, base, 7):
-            t.px(x0, vy, mm, 0)
-            t.px(x0 + 1, vy + 1, mm, 1)
-            t.px(x1 - 1, vy + 3, mm, 3)
+        t.vlinha(x1 + 3, rod - 13, base, mm, 3)
+        t.vlinha(x0 - 3, rod - 13, base, mm, 0)
         # base da coluna (toro)
         t.ret(x0 - 1, rod - 20, x1 + 1, rod - 17, br, 1)
         t.hlinha(x0 - 1, x1 + 1, rod - 17, br, 3)
