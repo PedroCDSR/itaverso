@@ -24,15 +24,53 @@ export class Jogador extends Phaser.Physics.Arcade.Sprite {
     this.ultimoPedidoPulo = -Infinity; // momento em que apertou pular pela última vez
     this.subindoComBotao = false; // está no meio de um pulo com o botão apertado
     this.arremessandoAte = 0;
+    this.vida = J.coracoes;
+    this.invencivelAte = 0; // até quando (ms) está piscando e não leva dano
+    this.atordoadoAte = 0; // até quando (ms) está sem controle, logo depois do dano
     this.play('parado');
   }
 
-  // Chamar todo quadro. entrada = ui/Entrada.js. Devolve true no quadro em que soltou uma maçã.
-  atualizar(entrada, agora, delta) {
+  estaInvencivel(agora) {
+    return agora < this.invencivelAte;
+  }
+
+  // Leva 1 de dano vindo de "deOndeX" (empurra para o lado oposto). Devolve a vida que sobrou.
+  levarDano(deOndeX, agora) {
+    if (this.estaInvencivel(agora)) return this.vida;
+    this.vida = Math.max(0, this.vida - 1);
+    this.invencivelAte = agora + J.invencivelMs;
+    this.atordoadoAte = agora + J.atordoadoMs;
+    const dir = this.x < deOndeX ? -1 : 1;
+    this.body.setVelocity(J.recuoDano.x * dir, -J.recuoDano.y);
+    this.subindoComBotao = false;
+    this.play('dano', true);
+    return this.vida;
+  }
+
+  // Quique ao pisar num inimigo (segurando PULAR vai um pouco mais alto).
+  quicar(forca) {
+    this.body.setVelocityY(-forca);
+    this.subindoComBotao = false;
+    this.ultimoNoChao = -Infinity;
+  }
+
+  // Chamar todo quadro. entrada = ui/Entrada.js; temMaca = ainda há maçãs para arremessar.
+  // Devolve true no quadro em que soltou uma maçã.
+  atualizar(entrada, agora, delta, temMaca = true) {
     const corpo = this.body;
     const dt = delta / 1000;
     const noChao = corpo.blocked.down || corpo.touching.down;
     if (noChao) this.ultimoNoChao = agora;
+
+    // pisca enquanto está invencível
+    this.setAlpha(this.estaInvencivel(agora) && Math.floor(agora / 70) % 2 === 0 ? 0.35 : 1);
+
+    // logo depois do dano: sem controle, só o recuo e a gravidade
+    if (agora < this.atordoadoAte) {
+      corpo.setGravityY(corpo.velocity.y > 0 ? J.gravidadeQuedaExtra : 0);
+      this.setFlipX(!this.olhandoDireita);
+      return false;
+    }
 
     // --- andar ---
     const alvo = entrada.esquerda ? -J.velocidade : entrada.direita ? J.velocidade : 0;
@@ -60,7 +98,7 @@ export class Jogador extends Phaser.Physics.Arcade.Sprite {
 
     // --- maçã ---
     let soltouMaca = false;
-    if (entrada.macaApertou && agora >= this.arremessandoAte) {
+    if (entrada.macaApertou && temMaca && agora >= this.arremessandoAte) {
       this.arremessandoAte = agora + 160;
       this.play('arremessando', true);
       soltouMaca = true;
@@ -80,11 +118,14 @@ export class Jogador extends Phaser.Physics.Arcade.Sprite {
     this.play(anim, true);
   }
 
-  // Volta a um ponto (checkpoint), parado.
-  reposicionar(x, y) {
+  // Volta a um ponto (checkpoint), parado e com vida cheia.
+  reposicionar(x, y, agora = 0) {
     this.body.reset(x, y);
     this.subindoComBotao = false;
     this.ultimoPedidoPulo = -Infinity;
+    this.atordoadoAte = 0;
+    this.vida = J.coracoes;
+    this.invencivelAte = agora + J.invencivelMs; // um respiro ao voltar
   }
 }
 

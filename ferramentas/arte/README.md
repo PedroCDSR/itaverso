@@ -14,4 +14,14 @@ python3 ferramentas/arte/gerar_jogador.py . /tmp
 python3 ferramentas/arte/gerar_tiles.py . /tmp
 ```
 
+```bash
+python3 ferramentas/arte/gerar_objetos.py . /tmp
+```
+
+O mapa da Fase 1 tem o seu próprio gerador:
+
+```bash
+python3 ferramentas/mapas/gerar_itajuba.py > src/levels/itajuba.js
+```
+
 Rodar um gerador **sobrescreve** a matriz correspondente em `src/art/`: edições feitas à mão nela se perdem.
