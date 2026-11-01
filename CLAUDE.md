@@ -230,7 +230,7 @@ Cada etapa termina com PR contra `dev` e o checklist da seção 3.
 
 ## 13. Pendências do Pedro
 
-- [ ] Conectar o repositório no Netlify (*Base directory* vazio; o `netlify.toml` já define build e Node). Deixar *Production branch* = `main` e ligar *Branch deploys* para `dev` e *Deploy Previews* para PRs.
+- [x] Conectar o repositório no Netlify (01/11/2026): projeto `aladdin-paulademarco`, produção em https://aladdin-paulademarco.netlify.app (`main`), *Branch deploys* = `dev`, *Deploy Previews* ligados. O menu fica em Project configuration > Developer settings > Branches and deploy contexts.
 - [ ] Horário do espetáculo, valor e forma de compra do ingresso
 - [ ] Fotos dos figurinos em `references/figurinos/`
 - [ ] Foto ou descrição da Tia Paula e da Tia Claudia, e o OK das duas para aparecerem no jogo
