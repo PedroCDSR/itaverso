@@ -105,7 +105,7 @@ export class Tapete extends Phaser.Scene {
         const x = col * TILE + TILE / 2;
         const y = lin * TILE + TILE / 2;
         if (c === 's') {
-          const s = this.add.image(x, y, 'sapatilhaCeu').setDepth(30);
+          const s = this.add.image(x, y, 'sapatilha', 0).setDepth(30);
           this.tweens.add({ targets: s, y: y - 3, duration: 600, yoyo: true, repeat: -1, ease: 'Sine.inOut', delay: (col * 70) % 600 });
           this.coletaveis.push(s);
         } else if (c === 'B') {
@@ -205,7 +205,7 @@ export class Tapete extends Phaser.Scene {
   // ---------- HUD e início ----------
 
   criarHud() {
-    this.add.image(18, 18, 'sapatilhaCeu').setScrollFactor(0).setDepth(900).setScale(1.5);
+    this.add.image(18, 18, 'sapatilha', 0).setScrollFactor(0).setDepth(900);
     this.textoSapatilhas = this.add
       .text(32, 12, String(this.sapatilhas), { fontFamily: FONTES.titulo, fontSize: '12px', color: CORES_CSS.branco })
       .setScrollFactor(0)
@@ -407,7 +407,7 @@ export class Tapete extends Phaser.Scene {
 
     // sapatilhas perdidas caem do tapete
     for (let i = 0; i < perdidas; i++) {
-      const s = this.add.image(this.tapete.x, this.yTapete, 'sapatilhaCeu').setDepth(60);
+      const s = this.add.image(this.tapete.x, this.yTapete, 'sapatilha', 0).setDepth(60);
       this.tweens.add({
         targets: s,
         x: s.x - 20 - i * 16,

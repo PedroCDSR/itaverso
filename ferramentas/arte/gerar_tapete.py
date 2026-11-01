@@ -4,7 +4,6 @@
   ondulando (só o tapete; Aladdin e Tia Paula vêm dos sprites únicos deles).
 - (as aves agora são tucano e maritaca, em public/assets/sprites/, de gerar_elenco.py)
 - pipa (18x28, 2 quadros): pipa de papel nas cores da escola, com rabiola balançando.
-- sapatilha (14x12, 1 quadro): sapatilha de ponta rosa, coletável do céu.
 
 Saída: src/art/tapete.js e uma prévia PNG ampliada.
 Uso: python3 ferramentas/arte/gerar_tapete.py <repo> <pasta_previa>
@@ -166,29 +165,11 @@ def pipa(balanco):
     return q.texto()
 
 
-# ---------- sapatilha de ponta ----------
-
-def sapatilha():
-    """Sapatilha de ponta vista de lado, com as fitas cruzadas soltas."""
-    q = Quadro(14, 12)
-    q.elipse(7, 8, 5.6, 2.6, 'r')  # corpo
-    q.elipse(11, 8.5, 2.2, 2.0, 'r')  # ponta
-    q.ret(3, 6, 8, 6, 'R')  # abertura (forro)
-    q.ret(4, 7, 7, 7, 'R')
-    q.ret(5, 10, 11, 10, 'R')  # sola
-    q.linha(4, 6, 2, 1, 1, 'y')  # fitas
-    q.linha(7, 6, 9, 1, 1, 'y')
-    q.px(1, 2, 'y'); q.px(10, 2, 'y')
-    q.contorno()
-    return q.texto()
-
-
 FASES_VOO = (0, 2 * math.pi / 3, 4 * math.pi / 3)
 
 SPRITES = {
     'voo': (64, 48, [voo(f) for f in FASES_VOO]),
     'pipa': (18, 28, [pipa(0), pipa(math.pi)]),
-    'sapatilhaCeu': (14, 12, [sapatilha()]),
 }
 
 
@@ -196,7 +177,7 @@ def escrever_js(caminho):
     linhas = [
         '// Arte da Fase 4 (Tapete): design ORIGINAL, gerado por ferramentas/arte/gerar_tapete.py.',
         '// Tapete com a estampa dos quadrados arredondados concêntricos do logo (o Aladdin sentado vem de jogador.js);',
-        '// pipa nas cores da escola; sapatilha. Tia Paula e aves vêm de public/assets/sprites/ (gerar_elenco.py).',
+        '// pipa nas cores da escola (a sapatilha do céu é a mesma da Fase 1, em objetos.js). Tia Paula e aves vêm de public/assets/sprites/ (gerar_elenco.py).',
         "// Cada caractere é uma cor da PALETA ('.' = transparente). Pode editar à mão.",
         '',
         'export const PALETA = {',

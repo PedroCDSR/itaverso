@@ -21,18 +21,18 @@ export class HUD extends Phaser.Scene {
 
     // com mais de 3 corações (níveis fácil e médio), os outros contadores andam para a direita
     const dx = Math.max(0, reg.get('vidaMax') - 3) * 13;
-    this.larguraFundo = 148 + dx;
+    this.larguraFundo = 154 + dx;
     this.coracoes = [];
     for (let i = 0; i < reg.get('vidaMax'); i++) {
       this.coracoes.push(this.add.image(17 + i * 13, 17, 'coracao', 0));
     }
     this.add.image(64 + dx, 17, 'maca');
     this.txtMacas = sombra(this.add.text(72 + dx, 13, '', estilo));
-    this.add.sprite(110 + dx, 18, 'sapatilha', 0);
-    this.txtSapatilhas = sombra(this.add.text(120 + dx, 13, '', estilo));
+    this.add.sprite(111 + dx, 18, 'sapatilha', 0);
+    this.txtSapatilhas = sombra(this.add.text(124 + dx, 13, '', estilo));
     // ingressos: só a partir da Fase 2 (registry 'ingressos' diferente de null)
-    this.iconeIngresso = this.add.image(162 + dx, 17, 'ingresso');
-    this.txtIngressos = sombra(this.add.text(173 + dx, 13, '', estilo));
+    this.iconeIngresso = this.add.image(168 + dx, 17, 'ingresso');
+    this.txtIngressos = sombra(this.add.text(179 + dx, 13, '', estilo));
     // a Fase 2 usa esta posição para mandar os ingressos voando até aqui
     reg.set('posIngressoHud', { x: this.iconeIngresso.x, y: this.iconeIngresso.y });
     this.ingressosAntes = reg.get('ingressos');
