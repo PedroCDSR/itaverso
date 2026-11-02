@@ -1,4 +1,5 @@
-"""Gera os tiles 16x16 (chão de pedra quente, plataforma de madeira, toldo listrado) como matrizes de texto.
+"""Gera os tiles 16x16 (chão de paralelepípedo com meio-fio, plataforma de madeira, toldo listrado) como matrizes.
+O chão é a rua de paralelepípedo de Itajubá (prévia aprovada pelo Pedro em 01/11/2026).
 Uso: python3 ferramentas/arte/gerar_tiles.py <repo> <pasta_previa>
 """
 import sys, random
@@ -18,6 +19,12 @@ PALETA = {
     'R': '#D57FCF',  # toldo rosa sombra
     'v': '#F9FCBB',  # toldo amarelo claro (escola)
     'V': '#D9D59A',  # toldo amarelo sombra
+    # rua de paralelepípedo (granito cinza aquecido pelo entardecer) e meio-fio claro
+    'm': '#FBF2E0', 'n': '#EADBC0', 'o': '#AE9878', 'p': '#6E5E58',
+    'A': '#DCD2D6', 'B': '#B6AAB4', 'C': '#8E8292',   # pedra fria: luz, base, sombra
+    'D': '#E2CDBE', 'E': '#BCA294', 'F': '#937A74',   # pedra quente
+    'G': '#B8ACB6', 'H': '#968A98', 'I': '#766A7E',   # pedra escura
+    'J': '#5E5268',                                   # junta
 }
 
 
@@ -25,38 +32,53 @@ def vazio(c='.'):
     return [[c] * T for _ in range(T)]
 
 
-def tijolos(m, y0, linhas_por_fiada=4, semente=1):
-    """Fiadas de pedra com rejunte e manchas, deslocadas a cada fiada."""
+def paralelepipedos(m, y0, semente, deslocar=0):
+    """Pedras de 7x3 em fiadas desencontradas (juntas de 1 px), cada pedra com luz em cima e sombra embaixo e à
+    direita, cantos arredondados e um pontinho de desgaste. As fiadas têm 4 px (16 é múltiplo: emenda sem costura)."""
     rnd = random.Random(semente)
-    for y in range(y0, T):
-        fiada = (y - y0) // linhas_por_fiada
-        borda = (y - y0) % linhas_por_fiada == linhas_por_fiada - 1
-        desloc = 0 if fiada % 2 == 0 else 4
+    tons = [('A', 'B', 'C'), ('A', 'B', 'C'), ('D', 'E', 'F'), ('G', 'H', 'I')]
+    for y in range(T):
         for x in range(T):
-            if borda or (x + desloc) % 8 == 7:
-                m[y][x] = '5'
-            else:
-                m[y][x] = '3'
-                if (y - y0) % linhas_por_fiada == 0:
-                    m[y][x] = '2'  # luz no alto de cada pedra
-                if rnd.random() < 0.08:
-                    m[y][x] = '4'
+            m[y][x] = 'J'
+    for fiada in range((T - y0) // 4 + 1):
+        ya = y0 + fiada * 4
+        desloc = 4 if (fiada + deslocar) % 2 else 0
+        for xa in range(-8 + desloc, T, 8):
+            luz, base, sombra = rnd.choice(tons)
+            for y in range(ya, min(T, ya + 3)):
+                for x in range(xa, xa + 7):
+                    if not 0 <= x < T:
+                        continue
+                    if (x == xa and y == ya) or (x == xa + 6 and y == ya + 2):
+                        continue
+                    if y == ya and x < xa + 6:
+                        m[y][x] = luz
+                    elif x == xa + 6 or y == ya + 2:
+                        m[y][x] = sombra
+                    else:
+                        m[y][x] = base
+            if rnd.random() < 0.4:
+                xx = xa + rnd.randint(1, 5)
+                if 0 <= xx < T and ya + 1 < T:
+                    m[ya + 1][xx] = sombra
 
 
 def chao_topo():
     m = vazio()
-    tijolos(m, 4, semente=3)
+    paralelepipedos(m, 5, semente=3)
+    # meio-fio de granito claro no alto (o jogador pisa nele)
     for x in range(T):
         m[0][x] = 'k'
-        m[1][x] = '1'
-        m[2][x] = '1' if x % 5 else '2'
-        m[3][x] = '2'
+        m[1][x] = 'm'
+        m[2][x] = 'n'
+        m[3][x] = 'n' if x % 8 else 'o'
+        m[4][x] = 'p'
     return m
 
 
 def chao():
     m = vazio()
-    tijolos(m, 0, semente=7)
+    paralelepipedos(m, 1, semente=7, deslocar=1)   # linha 0 = junta (continua a fiada do tile de cima)
     return m
 
 

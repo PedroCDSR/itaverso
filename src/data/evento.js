@@ -3,16 +3,20 @@ export const EVENTO = {
   titulo: 'Aladdin',
   escola: 'Paula De Marco Espaço de Artes',
   data: 'Sexta-feira, 20 de novembro de 2026',
-  horario: 'A DEFINIR',
+  horario: '19h',
   local: 'Teatro do Colégio G9, Itajubá/MG',
-  ingresso: 'A DEFINIR (valor e forma de compra)',
+  ingresso: 'R$ 75,00 · compra pelo WhatsApp com a Tia Claudia',
   whatsapp: '553584713436',
   mensagemWhatsapp:
     'Oi! Vim pelo jogo do Aladdin e quero saber dos ingressos para o espetáculo do dia 20/11.',
   instagram: 'https://www.instagram.com/espacodeartespaulademarco/',
 };
 
-// Link do botão QUERO INGRESSOS: abre o WhatsApp da escola com a mensagem pronta.
+// Link do botão QUERO INGRESSOS: abre o WhatsApp (a compra é com a Tia Claudia) com a mensagem pronta.
 export function linkWhatsapp() {
   return `https://wa.me/${EVENTO.whatsapp}?text=${encodeURIComponent(EVENTO.mensagemWhatsapp)}`;
 }
+
+// Endereço público do jogo (vai no COMPARTILHAR e nas meta tags do index.html).
+// No celular, o link compartilhado é o da página aberta (assim as prévias do Netlify também funcionam).
+export const URL_JOGO = 'https://aladdin-paulademarco.netlify.app/';

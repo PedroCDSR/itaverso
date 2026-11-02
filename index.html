@@ -15,6 +15,30 @@
       name="description"
       content="Jogue o Aladdin do Paula De Marco Espaço de Artes e descubra o espetáculo de 20/11 no Teatro do Colégio G9, em Itajubá."
     />
+
+    <!-- Prévia do link (WhatsApp, Instagram, Facebook). A imagem precisa de endereço completo. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:site_name" content="Paula De Marco Espaço de Artes" />
+    <meta property="og:title" content="Aladdin · o jogo do espetáculo" />
+    <meta
+      property="og:description"
+      content="Corra por Itajubá, resgate a Tia Paula e garanta seu ingresso! Espetáculo dia 20/11 no Teatro do Colégio G9."
+    />
+    <meta property="og:url" content="https://aladdin-paulademarco.netlify.app/" />
+    <meta property="og:image" content="https://aladdin-paulademarco.netlify.app/og-image.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Aladdin, o jogo do espetáculo do Paula De Marco Espaço de Artes" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Ícones e "Adicionar à tela inicial" (abre em tela cheia, deitado) -->
+    <link rel="icon" type="image/png" sizes="32x32" href="./favicon.png" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <meta name="apple-mobile-web-app-title" content="Aladdin" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <link rel="preload" href="/assets/fonts/PressStart2P.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/assets/fonts/PatrickHand.woff2" as="font" type="font/woff2" crossorigin />
     <style>
@@ -48,7 +72,7 @@
       #jogo {
         width: 100%;
         height: 100%;
-        /* em tela cheia o navegador pinta o fundo de preto; aqui fica lilás */
+        /* em tela cheia (botão da pausa) o navegador pinta o fundo de preto; aqui fica lilás */
         background: #9e9eff;
       }
       #jogo canvas {
