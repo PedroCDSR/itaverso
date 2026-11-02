@@ -130,7 +130,7 @@ export class Itajuba extends Phaser.Scene {
         break;
       }
       case 'fonte': {
-        // Fonte da praça com o busto do Teodomiro Santiago (public/assets/cenario/fonte.png, 172x108).
+        // Fonte da praça com o busto do Theodomiro Santiago e a placa com o nome (public/assets/cenario/fonte.png, 172x116).
         // 'F' marca a coluna do meio-esquerda; a fonte fica centrada um pouco à direita dela.
         const x0 = o.col * TILE - 72;
         this.add.image(x0, o.y, 'fonte').setOrigin(0, 1).setDepth(2);

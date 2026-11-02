@@ -198,33 +198,109 @@ def boneco_para_img(b):
     return matriz_para_img(linhas, pal)
 
 
+# Busto do Theodomiro Santiago (foto do Pedro, 02/11/2026): bronze escurecido (pátina cinza-esverdeada), cabelo
+# ondulado penteado para trás com volume, testa alta, sobrancelhas marcadas, olhos fundos, nariz reto, boca fechada,
+# queixo firme; terno com lapelas largas, colete com botões, gravata e lenço no bolso. Desenhado à mão (o rosto,
+# pixel a pixel) porque no tamanho do jogo os volumes do modelo.py viravam uma mancha. Luz do alto à esquerda.
+PATINA = {'0': '#A2AA9F', '1': '#7A8277', '2': '#5A6157', '3': '#40463E', '4': '#2A2F28', 'k': '#151814'}
+
+CABECA_BUSTO = [
+    '....kkkkkk......',
+    '..kk211212kk....',
+    '.k' + '2112112223' + 'k...',
+    'k' + '211211222333' + 'k..',
+    'k' + '212122223334' + 'k..',
+    'k' + '3221223333444' + 'k.',
+    'k' + '4322222223344' + 'k.',
+    '.k' + '322111122334' + 'k.',
+    '.k' + '321100112334' + 'k.',
+    'kk' + '344433344443' + 'kk',
+    'k3' + '344421244434' + '4k',
+    'k3' + '232212123333' + '4k',
+    'k3' + '222110133334' + '4k',
+    '.k' + '222114443334' + 'k.',
+    '.k' + '322222223334' + 'k.',
+    '.k' + '323444443334' + 'k.',
+    '..k' + '3222222334' + 'k..',
+    '..k' + '3321112344' + 'k..',
+    '...k' + '43322334' + 'k...',
+    '....kk' + '4444' + 'kk....',
+]
+
+def _corpo_busto(W=34, H=42, topo=19):
+    g = [['.'] * W for _ in range(H)]
+    cx = W // 2
+    for y in range(topo, H):
+        if y < topo + 3:
+            hw = 3                              # pescoço
+        elif y < topo + 6:
+            hw = 6 + (y - topo - 3)                   # colarinho e começo dos ombros
+        else:
+            hw = min(16, 9 + (y - topo - 6) * 2)
+        for x in range(cx - hw, cx + hw + 1):
+            d = (x - cx) / max(hw, 1)
+            tom = '1' if d < -0.45 else '2' if d < 0.35 else '3'
+            if y < topo + 3:
+                tom = '3' if d > -0.2 else '2'
+            g[y][x] = tom
+    # colarinho branco-claro e gravata
+    for y in range(23, 26):
+        for dx in (1, 2):
+            g[y][cx - dx] = '1'; g[y][cx + dx] = '2'
+    for y in range(24, 33):
+        g[y][cx] = '2'
+        if y > 23:
+            g[y][cx - 1] = '2' if y < 29 else g[y][cx - 1]
+    g[24][cx] = '3'; g[25][cx] = '1'   # nó
+    # lapelas: linhas do colarinho para fora e para baixo
+    for y in range(25, H):
+        d = (y - 25) // 2 + 3
+        for s, luz in ((-1, '0'), (1, '3')):
+            x = cx + s * d
+            if 0 <= x < W and g[y][x] != '.':
+                g[y][x] = '4'
+                x2 = x - s
+                if g[y][x2] != '.':
+                    g[y][x2] = luz if s < 0 else '2'
+    # colete entre as lapelas, com botões
+    for y in range(31, H):
+        d = (y - 25) // 2 + 2
+        for x in range(cx - d, cx + d + 1):
+            if g[y][x] in '123':
+                g[y][x] = '3' if x > cx else '2'
+    for y in (33, 36, 39):
+        g[y][cx] = '0'
+        g[y][cx + 1] = '4'
+    # lenço no bolso (lado direito de quem olha)
+    for x in range(cx + 9, cx + 13):
+        g[32][x] = '1'
+    g[31][cx + 10] = '0'; g[31][cx + 11] = '1'
+    for x in range(cx + 8, cx + 14):
+        g[33][x] = '4'
+    # base reta do busto
+    for x in range(W):
+        if g[H - 1][x] != '.':
+            g[H - 1][x] = '4'
+    return g
+
 def busto():
-    """Busto (bronze) do Teodomiro Santiago: homem de paletó, cabeça e ombros. Sem traços inventados de rosto
-    (a foto não mostra o rosto de perto): só cabelo curto, orelhas, sombra dos olhos, nariz e bigode."""
-    b = modelo.Boneco(30, 30)
-    b.elipse((15, 26), 12.5, 5.5, BRONZE, achatar=0.7)                 # ombros
-    b.capsula((15, 20), (15, 27), 7, 9, mat=BRONZE, achatar=0.8)       # peito (paletó)
-    b.capsula((15, 13), (15, 19), 2.6, mat=BRONZE, escurecer=1)        # pescoço
-    b.elipse((10.6, 9.5), 1.2, 1.8, BRONZE, escurecer=1)               # orelhas
-    b.elipse((19.4, 9.5), 1.2, 1.8, BRONZE, escurecer=1)
-    b.elipse((15, 9), 4.4, 5.4, BRONZE)                                # cabeça
-    for x in range(11, 20):                                            # cabelo curto: calota de cima
-        for y in range(3, 6):
-            if b.material_em(x, y):
-                b.tom_em(x, y, BRONZE, 2 if y == 5 else 3)
-    b.tom_em(13, 9, BRONZE, 3); b.tom_em(17, 9, BRONZE, 3)            # sombra dos olhos
-    b.tom_em(15, 10, BRONZE, 1); b.tom_em(16, 11, BRONZE, 2)          # nariz
-    for x in (13, 14, 15, 16, 17):                                     # bigode
-        b.tom_em(x, 12, BRONZE, 3)
-    b.tom_em(13, 7, BRONZE, 0); b.tom_em(14, 7, BRONZE, 0)            # brilho da testa
-    for y in range(20, 30):                                            # lapelas
-        d = (30 - y) // 3
-        b.tom_em(15 - d - 1, y, BRONZE, 3)
-        b.tom_em(15 + d + 1, y, BRONZE, 3)
-    for y in range(20, 24):
-        b.tom_em(15, y, BRONZE, 2)                                     # gravata
-    b.tom_em(14, 20, BRONZE, 0); b.tom_em(16, 20, BRONZE, 0)          # colarinho
-    return boneco_para_img(b)
+    g = _corpo_busto()
+    W = len(g[0])
+    x0 = W // 2 - 8
+    for y, l in enumerate(CABECA_BUSTO):
+        for x, c in enumerate(l):
+            if c != '.':
+                g[y][x0 + x] = c
+    # contorno onde o corpo encosta no vazio
+    H = len(g)
+    out = [r[:] for r in g]
+    for y in range(H):
+        for x in range(W):
+            if g[y][x] == '.':
+                viz = [(x + a, y + b) for a, b in ((1, 0), (-1, 0), (0, 1), (0, -1))]
+                if any(0 <= vx < W and 0 <= vy < H and g[vy][vx] not in '.k' for vx, vy in viz):
+                    out[y][x] = 'k'
+    return matriz_para_img([''.join(r) for r in out], PATINA)
 
 
 def soldado():
@@ -279,11 +355,11 @@ def soldado():
 
 
 # ===============================================================================================================
-# 2. Fonte da praça com o busto do Teodomiro Santiago
+# 2. Fonte da praça com o busto do Theodomiro Santiago
 # ===============================================================================================================
 
 def fonte():
-    L, A = 172, 108
+    L, A = 172, 116
     t = Tela(L, A, semente=22)
     gr, ag = M['granito'], M['agua']
     cx = L / 2
@@ -353,32 +429,37 @@ def fonte():
     for y0, x0, x1, y1, alt in sorted(jatos):
         if y0 < cy:
             jato(x0, y0 - 1, x1, y1, alt, False)
-    # pedestal de pedra clara com placa de bronze
-    px0, px1 = int(cx - 9), int(cx + 8)
+    # pedestal largo de pedra clara (como na foto) com a placa de bronze do nome
+    px0, px1 = int(cx - 24), int(cx + 23)
     t.ret(px0 - 3, cy - 8, px1 + 3, cy + 1, gr, 2)                 # base
     t.relevo(t.mascara_ret(px0 - 3, cy - 8, px1 + 3, cy + 1))
     t.hlinha(px0 - 3, px1 + 3, cy - 8, gr, 0)
-    t.ret(px0, cy - 50, px1, cy - 9, gr, 1)                         # fuste
+    t.ret(px0, cy - 50, px1, cy - 9, gr, 1)                         # bloco
     t.vlinha(px0, cy - 50, cy - 9, gr, 0)
-    t.ret(px1 - 4, cy - 50, px1, cy - 9, gr, 2)
+    t.ret(px1 - 6, cy - 50, px1, cy - 9, gr, 2)
     t.vlinha(px1, cy - 50, cy - 9, gr, 3)
-    t.ret(px0 - 3, cy - 56, px1 + 3, cy - 51, gr, 1)               # capitel
+    t.ret(px0 - 3, cy - 56, px1 + 3, cy - 51, gr, 1)               # tampo
     t.hlinha(px0 - 3, px1 + 3, cy - 56, gr, 0)
     t.hlinha(px0 - 3, px1 + 3, cy - 52, gr, 3)
     t.hlinha(px0 - 2, px1 + 2, cy - 51, gr, 4)
-    t.ret(px0 + 3, cy - 36, px1 - 3, cy - 24, M['bronze'], 3)       # placa
-    t.relevo(t.mascara_ret(px0 + 3, cy - 36, px1 - 3, cy - 24))
-    for y in range(int(cy - 33), int(cy - 26), 2):
-        t.hlinha(px0 + 5, px1 - 5, y, M['bronze'], 1)
-    t.manchas(px0, int(cy - 50), px1, int(cy - 10), gr, 8, tam=(1, 3))
-    t.escorrido(px0 + 4, int(cy - 23), 12, gr)
+    # placa com o nome em 2 linhas (letras claras em relevo sobre o bronze escuro)
+    br = M['bronze']
+    yp = int(cy - 44)
+    t.ret(px0 + 1, yp, px1 - 1, yp + 15, br, 3)
+    t.relevo(t.mascara_ret(px0 + 1, yp, px1 - 1, yp + 15))
+    for i, nome in enumerate(('THEODOMIRO', 'SANTIAGO')):
+        x = int(cx - largura_texto(nome) / 2)
+        t.texto(x, yp + 2 + i * 7, nome, br, 0, sombra=(br, 5))
+    t.manchas(px0, int(cy - 26), px1, int(cy - 10), gr, 8, tam=(1, 3))
+    t.escorrido(px0 + 6, int(cy - 27), 12, gr)
+    t.escorrido(px1 - 9, int(cy - 27), 10, gr)
     for y0, x0, x1, y1, alt in sorted(jatos):
         if y0 >= cy:
             jato(x0, y0 - 1, x1, y1, alt - 6, True)
     t.contorno(ignorar=(ag,))
     img = t.imagem()
     bb = busto()
-    img.alpha_composite(bb, (int(cx - 15) - 1, int(cy - 56 - 29)))
+    img.alpha_composite(bb, (int(cx - bb.width / 2), int(cy - 56 - bb.height + 1)))
     return img
 
 
