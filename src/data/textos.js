@@ -6,7 +6,7 @@ export const TEXTOS = {
     nomeFase: 'Fase 3 · Resgate',
     nomeJafar: 'Jafar',
     nomePaula: 'Tia Paula',
-    jafarEntrada: 'Ha! Sem a Tia Paula, nada de espetáculo!',
+    jafarEntrada: 'Rá! Sem a Tia Paula, nada de espetáculo!',
     paulaSocorro: 'Socorro!',
     paulaAntes: ['Aladdin! Quando o Jafar cansar e descer, acerte maçãs nele!'],
     objetivo: 'Acerte maçãs no Jafar quando ele cansar!',

@@ -1,6 +1,7 @@
 // Robô que joga o jogo inteiro (Playwright + Chromium), para conferir que as fases continuam possíveis e medir o tempo.
 // Uso: com o `npm run dev` rodando, `node ferramentas/teste/jogar.mjs [url] [pasta-capturas]`.
-// Variáveis: LIMITE_S (tempo máximo, padrão 420), ESTILO=lento (reage mais devagar e não usa maçã na Fase 1).
+// Variáveis: LIMITE_S (tempo máximo, padrão 420), ESTILO=lento (reage mais devagar e não usa maçã na Fase 1),
+// TELA=844x390 (tamanho da janela; 844x390 = iPhone deitado, 915x412 = Android deitado).
 //
 // Diferente do robo.mjs da Etapa 10, este pilota a INSTÂNCIA de Entrada da cena ativa (troca o método atualizar
 // do objeto), o que funciona mesmo depois de recarregamentos do Vite. A cada quadro ele lê o mapa e decide:
@@ -17,7 +18,8 @@ const LENTO = process.env.ESTILO === 'lento';
 fs.mkdirSync(PASTA, { recursive: true });
 
 const navegador = await chromium.launch();
-const pagina = await navegador.newPage({ viewport: { width: 844, height: 390 } });
+const [LARG, ALT] = (process.env.TELA || '844x390').split('x').map(Number);
+const pagina = await navegador.newPage({ viewport: { width: LARG, height: ALT } });
 const erros = [];
 pagina.on('console', (m) => m.type() === 'error' && erros.push(m.text()));
 pagina.on('pageerror', (e) => erros.push(String(e)));
