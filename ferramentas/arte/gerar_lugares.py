@@ -1103,6 +1103,116 @@ def ler_matriz_js(caminho, nome_quadro):
     return linhas, pal
 
 
+# ===============================================================================================================
+# Teatro do Colégio G9 (fim do voo do tapete; foto e logo enviados pelo Pedro em 02/11/2026, uso autorizado)
+# ===============================================================================================================
+# Prédio moderno de concreto cinza-claro, laje reta com rufo escuro; à esquerda uma faixa de janelas e os aparelhos
+# de ar-condicionado; no meio o logo grande do G9 (anel preto com brilho metálico e o "9" laranja); à direita a
+# entrada em caixa de vidro, um pouco saliente; na frente a marquise metálica escura e palmeiras de folha amarelada.
+
+def logo_g9(t, cx, cy, esc=1.0):
+    """Logo do G9 redesenhado em pixel: crescente preto (o "G") inclinado, com uma aba reta à direita, e o "9"
+    laranja (anel e perna descendo para a esquerda). Desenhado por pontos, na escala esc (1 = 48x42)."""
+    pr, la = M['preto'], M['laranja']
+    rot = math.radians(-18)
+    co, si = math.cos(rot), math.sin(rot)
+    for y in range(int(cy - 24 * esc), int(cy + 24 * esc) + 1):
+        for x in range(int(cx - 28 * esc), int(cx + 28 * esc) + 1):
+            dx, dy = (x + 0.5 - cx) / esc, (y + 0.5 - cy) / esc
+            u, v = dx * co + dy * si, -dx * si + dy * co
+            fora = (u / 23) ** 2 + (v / 18) ** 2 <= 1
+            dentro = ((u - 5) / 16.5) ** 2 + ((v + 1) / 12) ** 2 <= 1
+            ang = math.degrees(math.atan2(dy, dx))
+            aberto = 12 < ang < 62                     # o "G" abre embaixo à direita
+            aba = 6 <= dx <= 25 and -2.5 <= dy <= 1.5   # aba reta do "G"
+            if (fora and not dentro and not aberto) or aba:
+                luz = -u / 23 * 0.5 - v / 18 * 0.9     # brilho metálico em cima
+                t.px(x, y, pr, 0 if luz > 0.75 else 1 if luz > 0.35 else 3 if luz < -0.4 else 2)
+    for y in range(int(cy - 20 * esc), int(cy + 26 * esc) + 1):
+        for x in range(int(cx - 28 * esc), int(cx + 20 * esc) + 1):
+            dx, dy = (x + 0.5 - cx) / esc, (y + 0.5 - cy) / esc
+            r = math.hypot(dx - 3, dy + 4)
+            anel = 5.5 <= r <= 12.0
+            # perna do 9: sai da direita do anel e desce em curva até embaixo à esquerda (passa da borda preta)
+            s_ = (dy + 4) / 28
+            perna = 0 <= s_ <= 1 and abs(dx - (13.5 - 38 * s_ ** 1.4)) <= 3.8 - 1.2 * s_
+            if anel or perna:
+                luz = -(dx - 2) / 10 * 0.6 - (dy + 3) / 10 * 0.8
+                t.px(x, y, la, 1 if luz > 0.5 else 2 if luz > -0.3 else 3)
+
+
+def teatro_g9():
+    L, A = 200, 170
+    t = Tela(L, A, semente=909)
+    cz, vd, gr = M['concreto'], M['vidro_escuro'], M['grafite']
+    base = A - 1
+    topo = 22
+    # corpo principal e laje com rufo escuro
+    t.parede(0, topo, L - 1, base, cz, 1)
+    t.ret(0, topo - 3, L - 1, topo, gr, 2)
+    t.hlinha(0, L - 1, topo - 3, gr, 0)
+    t.escurecer_ret(0, topo + 1, L - 1, topo + 2, 1, so_mat=cz)
+    # juntas das placas de concreto
+    for y in range(topo + 16, base - 30, 16):
+        t.hlinha(1, L - 2, y, cz, 2)
+    # bloco da esquerda um pouco mais baixo, com faixa de janelas
+    t.ret(0, topo + 10, 56, base, cz, 2)
+    t.hlinha(0, 56, topo + 10, cz, 0)
+    for x0 in range(2, 52, 12):
+        t.ret(x0, 70, x0 + 10, 92, M['branco'], 1)
+        t.ret(x0 + 1, 71, x0 + 9, 91, vd, 2)
+        t.hlinha(x0 + 1, x0 + 9, 71, vd, 0)
+        t.vlinha(x0 + 5, 71, 91, M['branco'], 2)
+        t.hlinha(x0 + 1, x0 + 9, 80, M['branco'], 2)
+    # aparelhos de ar-condicionado embaixo das janelas
+    for x0 in (4, 22):
+        t.ret(x0, 118, x0 + 14, 128, M['branco'], 1)
+        t.relevo(t.mascara_ret(x0, 118, x0 + 14, 128))
+        t.elipse(x0 + 5, 123, 3.2, 3.2, gr, 3)
+        t.elipse(x0 + 5, 123, 1.4, 1.4, gr, 1)
+    t.ret(0, 131, 56, 132, M['vermelho'], 2)                         # cano vermelho
+    # caixa de vidro da entrada (direita), saliente
+    ex0, ex1 = 148, 190
+    t.ret(ex0 - 4, 62, ex1 + 4, 68, cz, 0)
+    t.hlinha(ex0 - 4, ex1 + 4, 68, cz, 3)
+    t.ret(ex0, 69, ex1, base, cz, 2)
+    va = M['vidro_azul']   # não entra no "acender janelas" do crepúsculo: o vidro fica inteiro, refletindo o céu
+    t.ret(ex0 + 3, 72, ex1 - 3, base - 4, va, 3)
+    t.hlinha(ex0 + 3, ex1 - 3, 72, va, 1)
+    for x in range(ex0 + 3, ex1 - 2, 9):
+        t.vlinha(x, 72, base - 4, gr, 1)
+    for k in range(10):                                              # reflexo diagonal no vidro
+        t.px(ex0 + 8 + k, 82 + k * 2, va, 1)
+    t.escurecer_ret(ex1 + 1, 69, L - 1, base, 1, so_mat=cz)
+    # logo do G9 no meio
+    logo_g9(t, 100, 80, esc=1.15)
+    # marquise metálica escura na frente, com pilares
+    t.ret(30, 136, L - 1, 141, gr, 2)
+    t.hlinha(30, L - 1, 136, gr, 0)
+    t.hlinha(30, L - 1, 141, gr, 4)
+    for x in (44, 110, 176):
+        t.ret(x, 142, x + 3, base, M['branco'], 1)
+        t.vlinha(x + 3, 142, base, M['branco'], 3)
+    # palmeirinhas de folha amarelada e arvorezinha fina à esquerda
+    amarela = M['folha']
+    for x, h in ((70, 24), (128, 30), (150, 22)):
+        for ang in range(-170, 10, 22):
+            a = math.radians(ang)
+            for k in range(11):
+                xx = x + math.cos(a) * k
+                yy = base - h + 8 + math.sin(a) * k + k * k / 14
+                t.px(xx, yy, amarela, 0 if k < 4 else 1)
+                t.px(xx, yy + 1, amarela, 2)
+        t.ret(x - 1, base - h + 8, x + 1, base, amarela, 3)
+    t.vlinha(64, 40, base, gr, 1)
+    for _ in range(40):
+        x = t.rnd.randint(54, 76)
+        y = t.rnd.randint(36, 110)
+        t.ret(x, y, x + 1, y + 1, amarela, t.rnd.choice((0, 1, 2)))
+    t.contorno()
+    return t.imagem()
+
+
 def matriz_para_img(linhas, pal):
     img = Image.new('RGBA', (len(linhas[0]), len(linhas)), (0, 0, 0, 0))
     for y, l in enumerate(linhas):

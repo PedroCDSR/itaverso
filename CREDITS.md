@@ -8,6 +8,7 @@ Tudo que vem de fora do projeto fica registrado aqui (autoria, licença e onde e
 | Vite | Evan You e colaboradores | MIT | dependência de desenvolvimento |
 | Fonte "Press Start 2P" | CodeMan38 | SIL Open Font License 1.1 | `public/assets/fonts/PressStart2P.woff2` (licença em `OFL-PressStart2P.txt`) |
 | ZzFX (gerador de efeitos sonoros, função `zzfxG`) | Frank Force ([KilledByAPixel/ZzFX](https://github.com/KilledByAPixel/ZzFX)) | MIT | adaptado em `src/audio/zzfx.js` |
+| Logo do Colégio G9 (redesenhado em pixel na fachada do teatro) | Colégio G9 | Uso autorizado pelo G9 (parceiro do espetáculo), informado pelo Pedro em 02/11/2026 | `public/assets/cenario/teatro-g9.png` (gerado por `ferramentas/arte/gerar_lugares.py`); originais de referência em `references/logo/g9-logo.png` e `references/lugares/7-colegio-g9-fachada.png` |
 | Fonte "Patrick Hand" | Patrick Wagesreiter | SIL Open Font License 1.1 | `public/assets/fonts/PatrickHand.woff2` (licença em `OFL-PatrickHand.txt`) |
 
 As fontes vêm do repositório oficial `google/fonts` e foram convertidas para woff2, só com o alfabeto latino

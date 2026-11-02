@@ -156,7 +156,7 @@ export const TEXTOS = {
     comecarTeclado: 'Aperte espaço para voar',
     perdeu: '-{n}',
     teatro: 'TEATRO',
-    teatroNome: 'Colégio G9',
+    teatroNome: 'COLÉGIO G9', // embaixo do logo, como o letreiro da fachada
     chegou: 'Chegamos ao Teatro do Colégio G9!',
   },
 };

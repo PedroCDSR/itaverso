@@ -7,7 +7,7 @@ Saída em public/assets/cenario/ (o Preload carrega; ver CENARIO_PNG em src/art/
                           clube, fonte, cafe, igreja, posto, estatua, helicoptero, arvore, arvore2 (lugares reais)
   Fase 3 (pôr do sol):    arena.png (480x270: céu, sol na serra, terraço; chão e plataformas são tiles)
   Fase 4 (crepúsculo):    ceu-crepusculo.png (parado), serra-crepusculo, cidade-crepusculo, telhados-crepusculo
-                          (960x270, repetem), coroados.png (morro com o hotel), unifei.png
+                          (960x270, repetem), coroados.png (morro com o hotel), unifei.png, teatro-g9.png (fim do voo)
 
 As faixas que repetem são feitas para emendar sem costura: a serra usa ondas com número inteiro de ciclos na
 largura, e as casas e copas que passam da borda direita são desenhadas de novo na esquerda.
@@ -152,6 +152,7 @@ def main():
     salvar(PT.acender_janelas(casario_repete(9, 312), '#4A3A80', 0.22, 0.45, 4), 'telhados-crepusculo')
     salvar(PT.acender_janelas(PT.morro_coroados(), '#4A3A80', 0.32, 0.7, 2), 'coroados')
     salvar(PT.acender_janelas(PT.unifei(), '#4A3A80', 0.22, 0.45, 5), 'unifei')
+    salvar(PT.acender_janelas(GL.teatro_g9(), '#4A3A80', 0.18, 0.6, 6), 'teatro-g9')
 
 
 if __name__ == '__main__':

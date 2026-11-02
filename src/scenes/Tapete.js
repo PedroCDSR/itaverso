@@ -157,49 +157,28 @@ export class Tapete extends Phaser.Scene {
     return f.y + f.flecha * Math.sin((Math.PI * (x - f.x1)) / (f.x2 - f.x1));
   }
 
-  // Fachada do Teatro do Colégio G9 (provisória e genérica: falta foto de referência, ver CLAUDE.md seção 13).
+  // Fachada do Teatro do Colégio G9, a partir da foto e do logo enviados pelo Pedro (uso autorizado pelo G9):
+  // PNG de ferramentas/arte/gerar_lugares.py (teatro_g9). Os letreiros são texto (data/textos.js).
   criarTeatro() {
     const { largura: w, altura: h } = TEATRO;
     const x0 = this.teatroX;
     const y0 = ALTURA - h;
-    const g = this.add.graphics().setDepth(42);
-    // prédio
-    g.fillStyle(0xf2deb0).fillRect(x0, y0 + 26, w, h - 26);
-    g.fillStyle(0xcdb386).fillRect(x0, y0 + 26, 6, h - 26);
-    // frontão com a borda roxa
-    g.fillStyle(CORES.roxo).fillRect(x0 - 6, y0 + 18, w + 12, 10);
-    g.fillStyle(0xf2deb0).fillTriangle(x0 + 10, y0 + 18, x0 + w / 2, y0 - 6, x0 + w - 10, y0 + 18);
-    g.lineStyle(2, CORES.roxo).strokeTriangle(x0 + 10, y0 + 18, x0 + w / 2, y0 - 6, x0 + w - 10, y0 + 18);
-    // letreiro com luzinhas
-    g.fillStyle(CORES.rosa).fillRect(x0 + 30, y0 + 34, w - 60, 30);
-    g.lineStyle(2, CORES.roxo).strokeRect(x0 + 30, y0 + 34, w - 60, 30);
-    this.luzes = [];
-    for (let lx = x0 + 34; lx < x0 + w - 30; lx += 8) {
-      this.luzes.push(this.add.circle(lx, y0 + 32, 1.5, CORES.amarelo).setDepth(43));
-      this.luzes.push(this.add.circle(lx, y0 + 66, 1.5, CORES.amarelo).setDepth(43));
-    }
-    this.tweens.add({ targets: this.luzes, alpha: 0.3, duration: 400, yoyo: true, repeat: -1 });
-    // colunas
-    for (const cx of [x0 + 14, x0 + 44, x0 + w - 54, x0 + w - 24]) {
-      g.fillStyle(0xfff6dc).fillRect(cx, y0 + 74, 10, h - 84);
-      g.fillStyle(0xd9c8a0).fillRect(cx + 7, y0 + 74, 3, h - 84);
-    }
-    // porta com cortina lilás
-    const px = x0 + w / 2 - 28;
-    g.fillStyle(CORES.roxo).fillRect(px - 3, y0 + 84, 62, h - 94);
-    g.fillStyle(CORES.lilas).fillRect(px, y0 + 87, 56, h - 97);
-    g.fillStyle(0x7c7ce0).fillRect(px + 27, y0 + 87, 2, h - 97);
-    // degraus
-    g.fillStyle(0xcdb386).fillRect(x0 - 8, ALTURA - 10, w + 16, 10);
-    g.fillStyle(0xe7d2a8).fillRect(x0 - 4, ALTURA - 14, w + 8, 4);
-
-    const estilo = { fontFamily: FONTES.titulo, fontSize: '12px', color: CORES_CSS.roxo };
-    this.add.text(x0 + w / 2, y0 + 44, T.teatro, estilo).setOrigin(0.5).setDepth(43);
+    this.add.image(x0, y0, 'teatro-g9').setOrigin(0).setDepth(42);
+    // letreiro embaixo do logo, em letras escuras como na fachada
     this.add
-      .text(x0 + w / 2, y0 + 57, T.teatroNome, { ...estilo, fontSize: '7px' })
+      .text(x0 + 100, y0 + 112, T.teatroNome, { fontFamily: FONTES.titulo, fontSize: '7px', color: '#2A2733' })
       .setOrigin(0.5)
       .setDepth(43);
-    this.portaTeatro = { x: x0 + w / 2, y: ALTURA - 40 };
+    // "TEATRO" na testeira da entrada de vidro, com luzinhas piscando
+    const ex = x0 + 169;
+    this.add
+      .text(ex, y0 + 66, T.teatro, { fontFamily: FONTES.titulo, fontSize: '6px', color: CORES_CSS.roxo })
+      .setOrigin(0.5)
+      .setDepth(43);
+    this.luzes = [];
+    for (let lx = ex - 18; lx <= ex + 18; lx += 6) this.luzes.push(this.add.circle(lx, y0 + 60, 1, CORES.amarelo).setDepth(43));
+    this.tweens.add({ targets: this.luzes, alpha: 0.3, duration: 400, yoyo: true, repeat: -1 });
+    this.portaTeatro = { x: ex, y: ALTURA - 40 };
   }
 
   // ---------- HUD e início ----------

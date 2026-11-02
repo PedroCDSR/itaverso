@@ -26,7 +26,11 @@ grande e reconhecível (camada do meio ou de jogo, com a qualidade de `estilo/re
 
 ## Ainda faltam
 
-- Estúdio do Espaço Paula De Marco e fachada do **Teatro do Colégio G9**: sem fotos; continuam provisórios.
+- Estúdio do Espaço Paula De Marco: sem fotos; continua provisório.
+
+## Teatro do Colégio G9 (fim do voo, Fase 4)
+
+`7-colegio-g9-fachada.png` (foto do Pedro, 02/11/2026) e `../logo/g9-logo.png` (uso autorizado pelo G9, ver `CREDITS.md`): prédio moderno de concreto cinza-claro com laje reta, faixa de janelas e ar-condicionado à esquerda, **logo grande do G9** (anel preto metálico e o "9" laranja) no meio com o letreiro embaixo, entrada em caixa de vidro à direita, marquise metálica escura e palmeiras de folha amarelada na frente. No jogo o letreiro diz "COLÉGIO G9" (a foto mostra "CURSO G9") para combinar com o nome do evento; o texto fica em `src/data/textos.js`.
 
 **Validação:** prancha foto × cenário para cada lugar, em `ferramentas/arte/previas/`; silhueta e detalhes da tabela
 presentes; linguagem visual igual à das outras fases.
