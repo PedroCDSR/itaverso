@@ -156,7 +156,7 @@ export const TEXTOS = {
     comecarTeclado: 'Aperte espaço para voar',
     perdeu: '-{n}',
     teatro: 'TEATRO',
-    teatroNome: 'Colégio G9',
+    teatroNome: 'CURSO G9', // embaixo do logo, como o letreiro da fachada (decisão do Pedro, 02/11/2026)
     chegou: 'Chegamos ao Teatro do Colégio G9!',
   },
 };

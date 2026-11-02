@@ -24,7 +24,7 @@ export const SPRITES_PNG = {
 export const CENARIO_PNG = [
   'ceu', 'morros', 'casas', 'clube', 'fonte', 'cafe', 'igreja', 'posto', 'estatua', 'helicoptero', 'arvore', 'arvore2',
   'arena',
-  'ceu-crepusculo', 'serra-crepusculo', 'cidade-crepusculo', 'telhados-crepusculo', 'coroados', 'unifei',
+  'ceu-crepusculo', 'serra-crepusculo', 'cidade-crepusculo', 'telhados-crepusculo', 'coroados', 'unifei', 'teatro-g9',
 ];
 
 export * as ArteJogador from './jogador.js';

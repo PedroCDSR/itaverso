@@ -9,3 +9,8 @@ escola em texto (`TEM_LOGO = false` em `src/art/index.js`).
 `TEM_LOGO` e conferir a estampa do tapete.
 
 **Validação:** cores do HUD, menus e tapete batem com o logo; logo nítido no Título e no Final.
+
+
+## Logo do Colégio G9
+
+`g9-logo.png` (enviado pelo Pedro em 02/11/2026; uso autorizado pelo G9, parceiro do espetáculo). Redesenhado em pixel (`logo_g9` em `ferramentas/arte/gerar_lugares.py`) só na fachada do teatro, no fim do voo. O original não vai para `public/`.
