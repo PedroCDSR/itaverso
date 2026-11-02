@@ -187,4 +187,9 @@ export const SOM = {
   volumeEfeitos: 0.7,
   volumeMusica: 0.25, // a música fica baixinha, por baixo dos efeitos
   volumeVinheta: 0.6,
+  // Música tema em arquivo (public/assets/audio/tema.m4a, fornecida pelo Pedro; ver CREDITS.md). Toca em loop,
+  // sem reiniciar, nas cenas desta lista; o chefe (Jafar) continua com a música dele, feita em código.
+  tema: 'assets/audio/tema.m4a',
+  cenasTema: ['titulo', 'itajuba', 'espaco', 'tapete', 'final'],
+  volumeTema: 0.55,
 };
