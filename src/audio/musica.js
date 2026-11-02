@@ -150,10 +150,65 @@ function tique() {
   }
 }
 
+// ---------- música tema em arquivo (SOM.tema) ----------
+// Uma faixa só para quase o jogo todo: baixa o arquivo uma vez, decodifica quando o som existir e toca em loop.
+// Ao sair para o chefe, guarda onde parou; na volta, continua dali.
+let temaBytes = null; // Promise<ArrayBuffer>
+let temaBuffer = null; // Promise<AudioBuffer>
+let temaPosicao = 0; // segundos já tocados (para continuar de onde parou)
+let barramentoTema = null;
+
+function carregarTema(c) {
+  if (!temaBytes) temaBytes = fetch(SOM.tema).then((r) => (r.ok ? r.arrayBuffer() : Promise.reject(new Error(r.status))));
+  if (!temaBuffer && c) {
+    // forma com callbacks: funciona também nos Safari mais antigos
+    temaBuffer = temaBytes.then((b) => new Promise((ok, erro) => c.decodeAudioData(b.slice(0), ok, erro)));
+    temaBuffer.catch(() => {}); // sem o arquivo, o jogo segue sem música (nunca trava)
+  }
+  return temaBuffer;
+}
+
+function tocarTema(c) {
+  if (!barramentoTema) {
+    barramentoTema = c.createGain();
+    barramentoTema.gain.value = SOM.volumeTema;
+    barramentoTema.connect(saidaAudio());
+  }
+  const volume = c.createGain();
+  volume.gain.setValueAtTime(0, c.currentTime);
+  volume.connect(barramentoTema);
+  const faixa = { nome: 'tema', volume, fonte: null, inicio: 0, duracao: 0 };
+  atual = faixa;
+  carregarTema(c)
+    .then((buf) => {
+      if (atual !== faixa) return; // trocou de música enquanto carregava
+      const f = c.createBufferSource();
+      f.buffer = buf;
+      f.loop = true;
+      f.connect(volume);
+      const desde = temaPosicao % buf.duration;
+      f.start(c.currentTime + 0.02, desde);
+      faixa.fonte = f;
+      faixa.duracao = buf.duration;
+      faixa.inicio = c.currentTime + 0.02 - desde;
+      volume.gain.setValueAtTime(0, c.currentTime);
+      volume.gain.linearRampToValueAtTime(1, c.currentTime + 0.6);
+    })
+    .catch(() => {});
+}
+
 // Troca a música de fundo (ou continua, se já for a mesma). Pode chamar antes do 1º toque: ela começa quando o som ligar.
 export function tocarMusica(nome) {
-  if (atual?.nome === nome || pendente === nome) return;
+  const chave = SOM.cenasTema.includes(nome) ? 'tema' : nome;
+  if (atual?.nome === chave || pendente === chave) return;
   pararMusica();
+  if (chave === 'tema') {
+    carregarTema(null); // já começa a baixar, mesmo antes do 1º toque
+    const c = contextoAudio(false);
+    if (!c) pendente = 'tema';
+    else tocarTema(c);
+    return;
+  }
   const p = partitura(nome, MUSICAS);
   const c = contextoAudio(false);
   if (!p) return;
@@ -181,6 +236,12 @@ export function pararMusica(fade = 0.4) {
   v.gain.setValueAtTime(v.gain.value, c.currentTime);
   v.gain.linearRampToValueAtTime(0, c.currentTime + fade);
   setTimeout(() => v.disconnect(), (fade + ANTECEDENCIA + 0.5) * 1000);
+  const fonte = atual.fonte;
+  if (fonte) {
+    // tema: guarda onde parou e desliga a fonte depois do fade
+    temaPosicao = (c.currentTime - atual.inicio) % atual.duracao;
+    fonte.stop(c.currentTime + fade + 0.05);
+  }
   atual = null;
 }
 
@@ -209,6 +270,14 @@ export function tocarVinheta(nome) {
   b.linearRampToValueAtTime(SOM.volumeMusica * 0.25, inicio + 0.05);
   b.setValueAtTime(SOM.volumeMusica * 0.25, fim);
   b.linearRampToValueAtTime(SOM.volumeMusica, fim + 0.4);
+  if (barramentoTema) {
+    const t = barramentoTema.gain;
+    t.cancelScheduledValues(c.currentTime);
+    t.setValueAtTime(t.value, c.currentTime);
+    t.linearRampToValueAtTime(SOM.volumeTema * 0.25, inicio + 0.05);
+    t.setValueAtTime(SOM.volumeTema * 0.25, fim);
+    t.linearRampToValueAtTime(SOM.volumeTema, fim + 0.4);
+  }
 }
 
 // Quando o som liga (1º toque, volta da pausa), agenda na hora, sem esperar o próximo tique.
