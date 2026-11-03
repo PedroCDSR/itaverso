@@ -1,7 +1,8 @@
 """Proposta do mapa-múndi do Itamania (Itajubá em pixel art, linguagem de mapa de mundo de plataforma de 16 bits).
 
-Gera ferramentas/arte/previas/mapa-mundi-proposta.png (640x360 nativo, ampliado 3x).
-Posições seguem o esboço do Pedro (references/mapa/esboco-pedro.jpg), com o norte para cima.
+Gera ferramentas/arte/previas/mapa-mundi-proposta.png (360x640 nativo, em pé, ampliado 3x).
+Posições seguem o 2º esboço do Pedro (references/mapa/esboco-pedro-2.jpg), com o norte para cima: a cidade
+num vale cercado de montanhas, com a Av. BPS (e o rio no meio dela) como eixo central até o lago.
 Tudo é desenhado aqui, com formas próprias: nenhum tile ou sprite de outro jogo.
 
 Uso: python3 ferramentas/mapa-mundi/gerar_mapa.py
@@ -13,7 +14,7 @@ import random
 import numpy as np
 from PIL import Image, ImageDraw
 
-W, H = 640, 360
+W, H = 360, 640
 ESCALA = 3
 random.seed(7)
 np.random.seed(7)
@@ -622,146 +623,487 @@ def m_inicio():
     return s
 
 
-# ---------------------------------------------------------------- mapa
+
+
+# ---------------------------------------------------------------- marcos novos (versão em pé)
+def m_hotel_grande():
+    """Hotel Coroados: prédio enorme no alto do morro."""
+    s, d = spr(30, 50)
+    ret(d, 2, 6, 27, 49, C['pa'])
+    ret(d, 21, 6, 27, 49, C['pa2'])
+    ret(d, 0, 3, 29, 6, C['ci1'])
+    ret(d, 0, 3, 29, 3, C['ci2'])
+    for y in range(9, 44, 4):
+        for x in range(4, 26, 4):
+            c = C['am'] if (x * 7 + y * 3) % 5 == 0 else (C['a1'] if x < 21 else C['a0'])
+            ret(d, x, y, x + 1, y + 1, c)
+            px(d, x, y, C['a3'] if c == C['a1'] else c)
+    ret(d, 10, 44, 18, 49, C['mad0'])
+    ret(d, 8, 43, 20, 43, C['vm'])
+    ret(d, 12, 0, 16, 2, C['vm'])
+    ret(d, 13, 0, 15, 0, C['vm3'])
+    return s
+
+
+def m_unifei_campus():
+    """Campus grande: três blocos, gramado e a roda-d'água (energia)."""
+    s, d = spr(96, 46)
+    d.rounded_rectangle([0, 6, 95, 45], radius=6, fill=rgba(C['g3']))
+    d.rounded_rectangle([2, 8, 93, 43], radius=5, fill=rgba(C['g2']))
+    for x in range(6, 92, 9):
+        px(d, x, 40, C['g1'])
+
+    def bloco(x0, y0, w, h):
+        ret(d, x0, y0, x0 + w, y0 + h, (232, 228, 216))
+        ret(d, x0 + w - 4, y0, x0 + w, y0 + h, C['pa2'])
+        ret(d, x0 - 1, y0 - 2, x0 + w + 1, y0, C['ci1'])
+        ret(d, x0 - 1, y0 - 2, x0 + w + 1, y0 - 2, C['ci2'])
+        for y in range(y0 + 3, y0 + h - 3, 4):
+            ret(d, x0 + 2, y, x0 + w - 6, y + 1, C['a1'])
+            for x in range(x0 + 2, x0 + w - 5, 3):
+                px(d, x, y, C['a3'])
+        ret(d, x0 + w // 2 - 2, y0 + h - 4, x0 + w // 2 + 1, y0 + h, C['mad0'])
+
+    bloco(6, 12, 30, 24)
+    bloco(42, 6, 24, 20)
+    bloco(44, 30, 22, 12)
+    ret(d, 50, 0, 51, 5, C['ci0'])
+    ret(d, 49, 0, 52, 0, C['vm'])
+    cx, cy = 82, 26
+    d.ellipse([cx - 9, cy - 9, cx + 9, cy + 9], outline=rgba(C['mad1']))
+    d.ellipse([cx - 8, cy - 8, cx + 8, cy + 8], outline=rgba(C['mad2']))
+    for k in range(8):
+        a = k * math.pi / 4 + 0.2
+        d.line([(cx, cy), (cx + 8 * math.cos(a), cy + 8 * math.sin(a))], fill=rgba(C['mad2']))
+    d.ellipse([cx - 2, cy - 2, cx + 2, cy + 2], fill=rgba(C['ci0']))
+    ret(d, 72, 35, 92, 39, C['a1'])
+    ret(d, 73, 36, 91, 37, C['a2'])
+    px(d, 76, 36, C['a4'])
+    px(d, 86, 37, C['a4'])
+    return s
+
+
+def m_prefeitura():
+    """Prefeitura: prédio cívico com colunas e as bandeiras."""
+    s, d = spr(40, 34)
+    ret(d, 2, 14, 37, 33, (236, 228, 208))
+    ret(d, 30, 14, 37, 33, (204, 192, 168))
+    d.polygon([(0, 15), (20, 6), (39, 15)], fill=rgba(C['ci1']))
+    d.polygon([(20, 6), (39, 15), (20, 15)], fill=rgba(C['ci0']))
+    d.polygon([(6, 14), (20, 8), (33, 14)], fill=rgba(C['ci2']))
+    ret(d, 1, 15, 38, 16, C['pa'])
+    for x in (5, 11, 17, 23, 29):
+        ret(d, x, 17, x + 2, 30, C['br'])
+        px(d, x + 2, 17, C['pa2'])
+        ret(d, x + 2, 18, x + 2, 30, C['pa2'])
+    ret(d, 15, 24, 24, 30, C['mad0'])
+    ret(d, 0, 31, 39, 33, C['pa2'])
+    # mastros com bandeiras (Brasil e Minas)
+    ret(d, 3, 0, 3, 13, C['ci0'])
+    ret(d, 4, 0, 10, 4, C['g1'])
+    d.polygon([(5, 2), (7, 0), (9, 2), (7, 4)], fill=rgba(C['am']))
+    px(d, 7, 2, C['a1'])
+    ret(d, 36, 0, 36, 13, C['ci0'])
+    ret(d, 29, 0, 35, 4, C['br'])
+    d.polygon([(31, 3), (32, 1), (33, 3)], fill=rgba(C['vm']))
+    return s
+
+
+def m_capela_gotica():
+    """Capelinha gótica do cemitério: torre pontuda, janela ogival e vitral roxo."""
+    s, d = spr(24, 36)
+    p0, p1, p2, p3 = (52, 44, 72), (84, 72, 108), (120, 104, 148), (164, 148, 188)
+    ret(d, 3, 18, 20, 35, p1)
+    ret(d, 15, 18, 20, 35, p0)
+    d.polygon([(1, 19), (11, 10), (22, 19)], fill=rgba(p0))
+    ret(d, 8, 4, 14, 18, p2)
+    ret(d, 12, 4, 14, 18, p1)
+    d.polygon([(7, 5), (11, -6), (15, 5)], fill=rgba(p1))
+    d.polygon([(11, -6), (15, 5), (11, 5)], fill=rgba(p0))
+    ret(d, 11, -10, 11, -6, p3)
+    ret(d, 10, -9, 12, -9, p3)
+    # janelas ogivais com luz roxa
+    d.polygon([(10, 12), (11, 9), (12, 12)], fill=rgba((216, 160, 255)))
+    ret(d, 10, 12, 12, 15, (216, 160, 255))
+    for x in (5, 16):
+        ret(d, x, 23, x + 1, 28, (176, 112, 232))
+        px(d, x, 22, (176, 112, 232))
+    d.polygon([(8, 35), (8, 29), (11, 26), (15, 29), (15, 35)], fill=rgba((28, 20, 40)))
+    # pináculos
+    for x in (2, 20):
+        ret(d, x, 15, x + 1, 19, p2)
+        px(d, x, 14, p3)
+    return s
+
+
+def morcego(base, x, y, abre):
+    s, d = spr(9, 5)
+    c = (40, 28, 56)
+    ret(d, 3, 1, 5, 3, c)
+    px(d, 3, 0, c)
+    px(d, 5, 0, c)
+    px(d, 3, 2, (255, 220, 96))
+    px(d, 5, 2, (255, 220, 96))
+    if abre:
+        ret(d, 0, 0, 2, 1, c)
+        ret(d, 6, 0, 8, 1, c)
+        px(d, 0, 2, c)
+        px(d, 8, 2, c)
+    else:
+        ret(d, 0, 2, 2, 3, c)
+        ret(d, 6, 2, 8, 3, c)
+        px(d, 1, 4, c)
+        px(d, 7, 4, c)
+    base.alpha_composite(s, (x - 4, y - 2))
+
+
+def cruz(base, x, y, var):
+    s, d = spr(5, 8)
+    c1, c2 = ((176, 168, 192), (120, 112, 140)) if var % 2 else ((148, 140, 164), (96, 88, 116))
+    ret(d, 2, 0, 2, 7, c1)
+    ret(d, 0, 2, 4, 2, c1)
+    px(d, 3, 3, c2)
+    ret(d, 2, 4, 2, 7, c2)
+    colar(base, s, x, y, (28, 20, 40))
+
+
+def lapide(base, x, y):
+    s, d = spr(5, 6)
+    d.rounded_rectangle([0, 0, 4, 5], radius=2, fill=rgba((150, 144, 164)))
+    ret(d, 3, 1, 4, 5, (108, 100, 128))
+    px(d, 1, 1, (196, 190, 210))
+    colar(base, s, x, y, (28, 20, 40))
+
+
+def m_coreto():
+    s, d = spr(22, 18)
+    ret(d, 4, 7, 17, 15, C['pa'])
+    for x in (5, 10, 16):
+        ret(d, x, 8, x, 15, C['pa2'])
+    d.polygon([(2, 8), (11, 1), (19, 8)], fill=rgba(C['vm']))
+    d.polygon([(11, 1), (19, 8), (11, 8)], fill=rgba(C['vm2']))
+    ret(d, 11, 0, 11, 1, C['am'])
+    ret(d, 2, 15, 19, 17, C['pa2'])
+    ret(d, 2, 15, 19, 15, C['pa'])
+    return s
+
+
+def m_estatua_soldado():
+    s, d = spr(12, 26)
+    bz, bz2, bz3 = (120, 104, 72), (84, 72, 52), (168, 150, 100)
+    ret(d, 1, 12, 10, 25, C['pa'])
+    ret(d, 8, 12, 10, 25, C['pa2'])
+    ret(d, 0, 23, 11, 25, C['pa2'])
+    ret(d, 3, 17, 7, 19, (200, 180, 120))
+    ret(d, 4, 3, 7, 11, bz)
+    ret(d, 6, 3, 7, 11, bz2)
+    ret(d, 3, 1, 7, 3, bz2)
+    px(d, 4, 1, bz3)
+    ret(d, 8, 4, 11, 5, bz)
+    ret(d, 2, 4, 2, 11, bz2)
+    px(d, 5, 5, bz3)
+    return s
+
+
+def m_helicoptero():
+    s, d = spr(30, 16)
+    ret(d, 8, 5, 22, 11, C['ci1'])
+    ret(d, 8, 5, 22, 6, C['ci2'])
+    ret(d, 18, 6, 22, 9, C['a3'])
+    px(d, 19, 6, C['a4'])
+    ret(d, 0, 6, 8, 7, C['ci1'])
+    ret(d, 0, 4, 1, 8, C['ci0'])
+    ret(d, 10, 7, 14, 9, C['g1'])
+    d.polygon([(11, 8), (12, 7), (13, 8), (12, 9)], fill=rgba(C['am']))
+    ret(d, 14, 2, 15, 4, C['ci0'])
+    ret(d, 2, 1, 29, 1, C['ci0'])
+    ret(d, 8, 13, 23, 13, C['ci0'])
+    px(d, 10, 12, C['ci0'])
+    px(d, 20, 12, C['ci0'])
+    ret(d, 6, 14, 25, 15, C['pa2'])
+    return s
+
+
+def m_locomotiva():
+    s, d = spr(48, 18)
+    # vagão
+    ret(d, 0, 6, 15, 14, C['am2'])
+    ret(d, 0, 6, 15, 7, C['am'])
+    for x in (2, 7, 12):
+        ret(d, x, 9, x + 2, 11, C['a3'])
+    # locomotiva a vapor (desenho próprio)
+    ret(d, 18, 8, 37, 14, C['vm'])
+    ret(d, 18, 8, 37, 8, C['vm3'])
+    ret(d, 33, 3, 41, 14, C['vm2'])
+    ret(d, 34, 5, 39, 8, C['a3'])
+    ret(d, 22, 3, 24, 7, C['preto'])
+    ret(d, 21, 2, 25, 2, C['preto'])
+    ret(d, 16, 13, 43, 14, C['preto'])
+    d.polygon([(42, 14), (47, 17), (42, 17)], fill=rgba(C['ci0']))
+    for x in (4, 12, 22, 29, 38):
+        d.ellipse([x - 2, 13, x + 2, 17], fill=rgba(C['preto']))
+        px(d, x, 15, C['ci2'])
+    for i, (x, y) in enumerate([(23, 0), (19, 0), (15, 1)]):
+        d.ellipse([x - 1, y, x + 1, y + 1], fill=rgba(C['ci3']))
+    return s
+
+
+def m_estacao():
+    s, d = spr(30, 20)
+    ret(d, 1, 7, 28, 19, (236, 216, 176))
+    ret(d, 22, 7, 28, 19, (204, 180, 140))
+    ret(d, 0, 4, 29, 7, C['ru'])
+    ret(d, 0, 3, 29, 3, C['ru3'])
+    ret(d, 0, 7, 29, 7, C['ru2'])
+    for x in (3, 10, 17):
+        ret(d, x, 10, x + 3, 17, C['a1'])
+        px(d, x, 10, C['a3'])
+        d.point((x + 1, 9), fill=rgba(C['pa']))
+    ret(d, 12, 0, 17, 3, C['pa'])
+    d.ellipse([13, 0, 16, 3], fill=rgba(C['br']))
+    px(d, 14, 1, C['preto'])
+    ret(d, 0, 18, 29, 19, C['pa2'])
+    return s
+
+
+def m_lago_retrato():
+    s, d = spr(46, 62)
+    d.ellipse([0, 0, 45, 61], fill=rgba(C['areia']))
+    d.ellipse([2, 1, 43, 59], fill=rgba(C['a0']))
+    d.ellipse([3, 2, 42, 58], fill=rgba(C['a1']))
+    d.ellipse([6, 5, 39, 54], fill=rgba(C['a2']))
+    d.ellipse([10, 9, 26, 28], fill=rgba(C['a3']))
+    for x, y in [(12, 36), (30, 18), (24, 46), (33, 40), (16, 22)]:
+        ret(d, x, y, x + 2, y, C['a4'])
+    # pedalinho de cisne
+    ret(d, 26, 30, 33, 33, C['br'])
+    ret(d, 26, 33, 33, 33, C['ci2'])
+    ret(d, 32, 26, 33, 30, C['br'])
+    px(d, 34, 26, C['am'])
+    ret(d, 27, 29, 29, 30, C['vm'])
+    return s
+
+
+# ---------------------------------------------------------------- mapa (em pé)
 def main():
     base = terreno()
     d = ImageDraw.Draw(base)
+    relevo_mask = Image.new('L', (W, H), 0)
 
-    # ----- serra no fundo (norte e laterais): Itajubá fica num vale
-    for k in range(-1, 18):
-        cx = k * 40 + random.randint(-8, 8)
-        if 120 < cx < 300 and False:
-            continue
-        montanha(base, cx, 30 + random.randint(-4, 4), 70 + random.randint(-10, 20), 34 + random.randint(-6, 10),
-                 ('m0', 'm1', 'm2', 'm3', 'm4'))
-    for y in range(40, 350, 34):
-        montanha(base, 6 + random.randint(-6, 4), y + 30, 50, 34 + random.randint(-4, 8))
-        montanha(base, 636 + random.randint(-4, 6), y + 30, 50, 34 + random.randint(-4, 8))
+    # ----- montanhas em volta da cidade (o vale de Itajubá)
+    serra = camada()
+    for k in range(-1, 11):
+        montanha(serra, k * 36 + random.randint(-6, 6), 46 + random.randint(-6, 8), 64 + random.randint(-6, 14),
+                 40 + random.randint(-4, 12))
+    for y in range(80, 300, 34):  # lado esquerdo, até o Coroados
+        montanha(serra, 8 + random.randint(-6, 6), y + 26, 58, 40 + random.randint(-4, 10))
+    for y in range(200, 640, 40):  # lado direito
+        montanha(serra, 356 + random.randint(-4, 6), y + 30, 44, 36 + random.randint(-4, 8))
+    for x in (6, 352):  # cantos de baixo
+        montanha(serra, x, 652, 60, 40)
+    base.alpha_composite(serra)
 
-    # ----- morros verdes da parte de cima (Agonia, Piranguinho, Kart)
-    for cx, by, w, h in [(95, 92, 110, 34), (190, 80, 90, 26), (345, 84, 120, 46), (460, 70, 90, 24),
-                         (590, 82, 80, 30), (40, 210, 50, 22), (105, 238, 70, 36)]:
-        morro(base, cx, by, w, h)
+    # ----- morros: Coroados (crista à esquerda), Alameda, Agonia e o do cemitério
+    morros = camada()
+    morro(morros, 60, 482, 112, 196)        # Coroados: morro comprido
+    morro(morros, 74, 548, 92, 52)          # Alameda: morro com a rua subindo
+    morro(morros, 226, 120, 96, 70)         # Agonia
+    morro(morros, 132, 150, 120, 40)        # encosta do Pinheirinho
+    base.alpha_composite(morros)
+    # cemitério: morro escuro (parte "assombrada" do mapa, em tom de desenho animado)
+    esc = camada()
+    de = ImageDraw.Draw(esc)
+    p = [(40, 32, 60), (60, 48, 84), (84, 68, 112), (112, 92, 140), (150, 128, 170)]
+    cx, by, w, h = 284, 358, 132, 98
+    de.ellipse([cx - w / 2, by - h, cx + w / 2, by + h], fill=rgba(p[1]))
+    de.ellipse([cx - w / 2 + 3, by - h + 2, cx + w / 2 - w * 0.25, by + h * 0.3], fill=rgba(p[2]))
+    de.ellipse([cx - w / 2 + w * 0.16, by - h + 3, cx - w * 0.05, by - h * 0.5], fill=rgba(p[3]))
+    a = np.array(esc)
+    a[by + 1:, :, 3] = 0
+    yy, xx = np.mgrid[0:H, 0:W]
+    pont = ((xx + yy) % 2 == 0) & (a[:, :, 3] > 0) & (np.abs(yy - (by - 8)) < 8) & ((yy + xx // 3) % 4 == 0)
+    a[pont, :3] = p[0]
+    esc = contorno(Image.fromarray(a), (24, 16, 36))
+    a = np.array(esc)
+    a[by + 1:, :, 3] = 0
+    esc = Image.fromarray(a)
+    base.alpha_composite(esc)
+    # lua cheia por trás da capela
 
-    # ----- máscara de onde não pode ter casa nem árvore
+    relevo = np.maximum(np.array(serra)[:, :, 3], np.maximum(np.array(morros)[:, :, 3], np.array(esc)[:, :, 3]))
+
     livre = Image.new('L', (W, H), 0)
     dl = ImageDraw.Draw(livre)
 
-    # ----- rio Sapucaí: atravessa a cidade de leste para oeste, abaixo do centro (como no satélite)
-    rio = catmull([(650, 286), (600, 290), (560, 272), (520, 282), (470, 300), (420, 290), (380, 268), (330, 270),
-                   (290, 290), (250, 300), (205, 296), (160, 280), (110, 292), (60, 280), (-10, 286)], 10)
-    linha_grossa(d, rio, 15, C['areia'])
-    linha_grossa(d, rio, 13, C['a0'])
-    linha_grossa(d, rio, 11, C['a1'])
-    linha_grossa(d, rio, 5, C['a2'])
-    linha_grossa(dl, rio, 19, 255) if False else dl.line(rio, fill=255, width=21)
-    for i in range(0, len(rio), 3):
-        x, y = rio[i]
-        if random.random() < 0.5:
-            dx = random.randint(-3, 3)
-            d.line([(x + dx, y + random.randint(-2, 2)), (x + dx + 2, y)], fill=rgba(C['a3']))
-        if random.random() < 0.15:
-            d.point((x + random.randint(-3, 3), y + random.randint(-2, 2)), fill=rgba(C['a4']))
+    # ----- Av. BPS: eixo central da cidade, com o rio correndo no meio, até o lago
+    eixo = [(124, H + 10), (124, 520), (124, 236), (128, 230), (262, 230), (268, 224), (268, 168)]
+    linha_grossa(d, eixo, 24, C['ci0'])
+    linha_grossa(d, eixo, 22, (112, 116, 128))
+    linha_grossa(d, eixo, 12, C['g1'])  # canteiro gramado na beira do rio
+    linha_grossa(d, eixo, 9, C['a0'])
+    linha_grossa(d, eixo, 7, C['a1'])
+    linha_grossa(d, eixo, 3, C['a2'])
+    dl.line(eixo, fill=255, width=26)
+    rio_mask = Image.new('L', (W, H), 0)
+    ImageDraw.Draw(rio_mask).line(eixo, fill=255, width=9)
+    rio_a = np.array(rio_mask) > 0
+    # faixas da pista e brilhos na água
+    for (x0, y0), (x1, y1) in zip(eixo, eixo[1:]):
+        seg = int(math.hypot(x1 - x0, y1 - y0))
+        for k in range(0, seg, 1):
+            t = k / max(1, seg)
+            x, y = x0 + (x1 - x0) * t, y0 + (y1 - y0) * t
+            nx, ny = (-(y1 - y0) / max(1, seg), (x1 - x0) / max(1, seg))
+            if k % 8 < 3:
+                for lado in (-8.5, 8.5):
+                    d.point((round(x + nx * lado), round(y + ny * lado)), fill=rgba((236, 228, 200)))
+            if random.random() < 0.08:
+                d.point((round(x + nx * random.choice((-2, 1))), round(y + ny * random.choice((-2, 1)))),
+                        fill=rgba(C['a3']))
+            if random.random() < 0.02:
+                d.point((round(x), round(y)), fill=rgba(C['a4']))
 
-    # ----- nós e caminhos (rota de fases)
-    N = {
-        'trem': (48, 312), 'soldado': (128, 329), 'ruanova': (232, 328), 'alameda': (190, 252),
-        'j1': (196, 204), 'coroados': (112, 196), 'j2': (206, 140), 'j3': (322, 140), 'unifei': (322, 112),
-        'pracona': (334, 196), 'praca': (436, 248), 'cemiterio': (520, 206), 'j4': (512, 140),
-        'lago': (530, 112), 'kart': (572, 58), 'agonia': (354, 52), 'piranguinho': (98, 56),
-    }
-    ROTAS = [
-        ('trem', 'soldado'), ('soldado', 'ruanova'), ('ruanova', 'alameda'),
-        ('alameda', 'j1'), ('j1', 'coroados'), ('j1', 'j2'), ('j2', 'j3'), ('j3', 'unifei'), ('j3', 'pracona'),
-        ('pracona', 'praca'), ('praca', 'cemiterio'), ('cemiterio', 'j4'), ('j3', 'j4'), ('j4', 'lago'),
-        ('lago', 'kart'), ('kart', 'agonia'),
-    ]
-    SECRETA = [('agonia', 'piranguinho')]
+    # ----- marcos fixos
+    lago = m_lago_retrato()
+    colar(base, lago, 268, 172)
+    dl.rectangle([244, 108, 292, 174], fill=255)
 
-    def trajeto(a, b):
-        (x0, y0), (x1, y1) = N[a], N[b]
-        # caminhos em "L" suaves, como estradas de mapa
-        if abs(x1 - x0) > 8 and abs(y1 - y0) > 8:
-            meio = (x1, y0) if a in ('j3', 'j4', 'kart', 'lago') else (x0, y1)
-            return catmull([(x0, y0), ((x0 + meio[0]) / 2, (y0 + meio[1]) / 2), meio,
-                            ((meio[0] + x1) / 2, (meio[1] + y1) / 2), (x1, y1)], 6)
-        return [(x0, y0), (x1, y1)]
+    # ----- cidade: ruas em grade e casario (a parte de baixo é a mais densa)
+    zona = Image.new('L', (W, H), 0)
+    dz = ImageDraw.Draw(zona)
+    dz.polygon([(98, 250), (150, 236), (232, 248), (236, 300), (222, 380), (346, 380), (346, 632), (14, 632),
+                (14, 560), (40, 556), (100, 520)], fill=255)
+    dz.polygon([(98, 236), (98, 182), (154, 182), (240, 210), (240, 240)], fill=255)
+    dz.ellipse([86, 84, 178, 136], fill=255)      # Pinheirinho
+    dz.rectangle([288, 160, 346, 230], fill=255)  # bairro da Prefeitura
+    zona_a = (np.array(zona) > 0) & (relevo == 0)
+    # morros pequenos podem ter casas no Pinheirinho
+    zona_a |= (np.array(zona) > 0) & (np.arange(H)[:, None] < 150) & (np.arange(H)[:, None] > 84)
 
-    caminhos = [trajeto(a, b) for a, b in ROTAS]
-    secretos = [trajeto(a, b) for a, b in SECRETA]
-    for c in caminhos + secretos:
-        dl.line(c, fill=255, width=13)
-
-    # ----- marcos (posições e sprites)
+    # ----- marcos (sprites), registrados na máscara
+    praca = (226, 516, 284, 574)   # Praça: um quadrado
+    ruanova = (138, 560, 214, 576)  # Rua Nova: rua larga
     MARCOS = [
-        ('trem', m_trem(), (40, 300)), ('soldado', m_soldado(), (124, 326)), ('ruanova', m_ruanova(), (232, 318)),
-        ('alameda', m_alameda(), (168, 246)), ('coroados', m_hotel(), (96, 192)), ('unifei', m_unifei(), (300, 106)),
-        ('pracona', m_praca_coreto(), (360, 196)), ('praca', m_praca_matriz(), (466, 246)),
-        ('cemiterio', m_cemiterio(), (552, 204)), ('lago', m_lago(), (576, 132)), ('kart', m_kart(), (596, 50)),
-        ('agonia', m_agonia(), (354, 46)), ('piranguinho', m_piranguinho(), (68, 54)),
+        ('hotel', m_hotel_grande(), (60, 302)),
+        ('unifei', m_unifei_campus(), (186, 214)),
+        ('prefeitura', m_prefeitura(), (326, 150)),
+        ('kart', m_kart(), (300, 70)),
+        ('agonia', m_agonia(), (226, 68)),
+        ('capela', m_capela_gotica(), (294, 290)),
+        ('coreto', m_coreto(), (196, 392)),
+        ('estacao', m_estacao(), (36, 584)),
+        ('trem', m_locomotiva(), (40, 606)),
+        ('soldado', m_estatua_soldado(), (98, 624)),
+        ('heli', m_helicoptero(), (132, 628)),
     ]
     for _, s, (x, y) in MARCOS:
-        dl.rectangle([x - s.width // 2 - 3, y - s.height - 3, x + s.width // 2 + 3, y + 3], fill=255)
-    for nome in N:
-        x, y = N[nome]
-        dl.rectangle([x - 8, y - 8, x + 8, y + 8], fill=255)
+        dl.rectangle([x - s.width // 2 - 2, y - s.height - 2, x + s.width // 2 + 2, y + 3], fill=255)
+    dl.rectangle([praca[0] - 3, praca[1] - 3, praca[2] + 3, praca[3] + 3], fill=255)
+    dl.rectangle([ruanova[0] - 8, ruanova[1] - 9, ruanova[2] + 4, ruanova[3] + 3], fill=255)
+    dl.rectangle([226, 254, 344, 352], fill=255)  # topo do cemitério
+    dl.rectangle([170, 380, 222, 402], fill=255)  # Praçona
+    dl.rectangle([70, 596, 160, 632], fill=255)   # Praça do Soldado
+    dl.rectangle([0, 598, 70, 612], fill=255)     # trilho
 
-    livre_a = np.array(livre)
+    # ----- rota das fases
+    N = {
+        'trem': (54, 578), 'soldado': (114, 604), 'ruanova': (176, 568), 'praca': (255, 545),
+        'alameda': (76, 522), 'coroados': (60, 322), 'pracona': (196, 404), 'cemiterio': (276, 300),
+        'unifei': (186, 246), 'pinheirinho': (132, 118), 'agonia': (226, 82), 'kart': (300, 84),
+        'lago': (300, 140), 'prefeitura': (326, 166),
+        'j1': (144, 522), 'j2': (144, 360), 'j3': (144, 246), 'j4': (226, 404),
+    }
+    ROTAS = [
+        [N['trem'], (54, 604), N['soldado']],
+        [N['soldado'], (144, 604), (144, 568), N['ruanova']],
+        [N['ruanova'], (226, 568), (226, 545), N['praca']],
+        [N['praca'], (255, 522), N['j1']],
+        [N['j1'], (102, 522), N['alameda']],
+        [N['alameda'], (88, 504), (70, 488), (86, 470), (68, 452), (84, 434), (66, 414), (80, 394), (62, 372),
+         (74, 350), N['coroados']],
+        [N['coroados'], (90, 336), (106, 360), N['j2']],
+        [N['j2'], (144, 404), N['pracona']],
+        [N['pracona'], N['j4'], (226, 330), (252, 312), N['cemiterio']],
+        [N['cemiterio'], (276, 262), (226, 262), (226, 246), N['unifei']],
+        [N['unifei'], N['j3']],
+        [N['j2'], N['j3']],
+        [N['j3'], (144, 168), (132, 160), N['pinheirinho']],
+        [N['pinheirinho'], (160, 118), (180, 96), N['agonia']],
+        [N['agonia'], (262, 96), (262, 84), N['kart']],
+        [N['kart'], (312, 96), (312, 130), N['lago']],
+        [N['lago'], (316, 156), N['prefeitura']],
+    ]
+    for r in ROTAS:
+        dl.line(r, fill=255, width=11)
+    livre_a = (np.array(livre) > 0) | (relevo > 0) & ~zona_a
 
-    def pode(x, y, r=4):
-        if not (8 <= x < W - 8 and 8 <= y < H - 8):
-            return False
-        return livre_a[max(0, y - r):y + 2, max(0, x - r):x + r].max() == 0
+    # ruas em grade (como no satélite) e casario em lotes: 2 x 2 casas por quarteirão
+    PX, PY, OX, OY = 20, 18, 4, 176
+    livre_np0 = np.array(livre) > 0
+    ba = np.array(base)
+    rua_px = np.zeros((H, W), bool)
+    for y in range(OY, H, PY):
+        rua_px[y:y + 2, :] = True
+    for x in range(OX, W, PX):
+        rua_px[OY:, x:x + 2] = True
+    rua_px &= zona_a & ~livre_np0
+    rua_px[:OY, :] = False
+    ba[rua_px, :3] = (184, 178, 164)
+    sombra = np.zeros_like(rua_px)
+    sombra[1:, :] = rua_px[:-1, :] & ~rua_px[1:, :]
+    ba[sombra & zona_a & ~livre_np0, :3] = (150, 146, 136)
+    base = Image.fromarray(ba)
+    d = ImageDraw.Draw(base)
 
-    # ----- cidade: casario no vale (entre os morros de cima e o rio), mais denso no centro
-    pontos = []
-    for _ in range(9000):
-        x, y = random.randrange(150, 600), random.randrange(96, 340)
-        cx, cy = 340, 220
-        dist = ((x - cx) / 260) ** 2 + ((y - cy) / 130) ** 2
-        if dist > 1 or random.random() < dist * 0.7:
-            continue
-        pontos.append((x, y))
-    pontos += [(random.randrange(20, 150), random.randrange(250, 345)) for _ in range(700)]
-    ocup = np.zeros((H, W), bool)
+    ocup = livre_np0.copy()
     casas = []
-    for x, y in pontos:
-        if not pode(x, y, 5):
+    for by_ in range(OY, H, PY):
+        for bx_ in range(OX, W, PX):
+            for cx_, cy_ in ((bx_ + 6, by_ + 9), (bx_ + 15, by_ + 9), (bx_ + 6, by_ + 18), (bx_ + 15, by_ + 18)):
+                x, y = cx_ + random.randint(-1, 0), cy_ - 1
+                if not (8 < x < W - 8 and y < H - 6) or not zona_a[y - 6:y + 1, x - 4:x + 5].all():
+                    continue
+                if ocup[y - 6:y + 1, x - 4:x + 5].any() or random.random() < 0.06:
+                    continue
+                ocup[y - 6:y + 1, x - 4:x + 5] = True
+                casas.append((x, y))
+    # Pinheirinho: casinhas soltas no morro
+    for _ in range(3000):
+        x, y = random.randrange(86, 178), random.randrange(90, 150)
+        if not zona_a[y, x] or ocup[y - 7:y + 1, x - 5:x + 6].any():
             continue
-        if ocup[y - 7:y + 2, x - 6:x + 6].any():
-            continue
-        ocup[y - 7:y + 2, x - 6:x + 6] = True
+        ocup[y - 7:y + 1, x - 5:x + 6] = True
         casas.append((x, y))
 
-    # ----- árvores: matas nos morros e ipês nas ruas
     arvores = []
-    for _ in range(1400):
-        x, y = random.randrange(10, W - 10), random.randrange(40, H - 6)
-        perto_cidade = ((x - 340) / 260) ** 2 + ((y - 220) / 130) ** 2 < 1
-        if perto_cidade and random.random() < 0.85:
+    livre_np = np.array(livre) > 0
+    serra_a = np.array(serra)[:, :, 3]
+    esc_a = np.array(esc)[:, :, 3]
+    for _ in range(5000):
+        x, y = random.randrange(8, W - 8), random.randrange(60, H - 4)
+        if zona_a[y, x] and random.random() < 0.97:
             continue
-        if not pode(x, y, 4) or ocup[y - 9:y + 1, x - 4:x + 5].any():
+        if livre_np[max(0, y - 9):y + 1, x - 4:x + 5].any() or ocup[y - 9:y + 1, x - 4:x + 5].any():
+            continue
+        if serra_a[y, x] > 0 and random.random() < 0.7:
+            continue
+        if esc_a[y, x] > 0:
             continue
         ocup[y - 9:y + 1, x - 4:x + 5] = True
-        arvores.append((x, y, 0))
+        arvores.append((x, y))
 
-    obj = sorted([(y, 'c', x, i) for i, (x, y) in enumerate(casas)] +
-                 [(y, 'a', x, t) for (x, y, t) in arvores])
-
-    # caminhos por baixo dos objetos
-    for c in secretos:
-        linha_grossa(d, c, 7, C['c0'])
-        for i in range(0, len(c) - 1):
-            pass
-    for c in caminhos:
-        linha_grossa(d, c, 9, C['c0'])
-    for c in caminhos:
-        linha_grossa(d, c, 7, C['c1'])
-        linha_grossa(d, c, 5, C['c2'])
-    # pontilhado no meio da estrada
-    for c in caminhos:
+    # ----- caminhos
+    subida = ROTAS[5]
+    linha_grossa(d, subida, 15, C['ci0'])
+    linha_grossa(d, subida, 13, (112, 116, 128))
+    for r in ROTAS:
+        linha_grossa(d, r, 9, C['c0'])
+    for r in ROTAS:
+        linha_grossa(d, r, 7, C['c1'])
+        linha_grossa(d, r, 5, C['c2'])
+    for r in ROTAS:
         tot = 0
-        for (x0, y0), (x1, y1) in zip(c, c[1:]):
+        for (x0, y0), (x1, y1) in zip(r, r[1:]):
             seg = math.hypot(x1 - x0, y1 - y0)
             k = 0
             while k < seg:
@@ -770,72 +1112,160 @@ def main():
                     d.point((round(x0 + (x1 - x0) * t), round(y0 + (y1 - y0) * t)), fill=rgba(C['c3']))
                 k += 1
             tot += seg
-    # caminho secreto: só pegadas (aparece quando a fase secreta é vencida)
-    for c in secretos:
-        tot = 0
-        for (x0, y0), (x1, y1) in zip(c, c[1:]):
-            seg = math.hypot(x1 - x0, y1 - y0)
-            k = 0
-            while k < seg:
-                if int(tot + k) % 8 < 3:
-                    t = k / seg
-                    x, y = round(x0 + (x1 - x0) * t), round(y0 + (y1 - y0) * t)
-                    d.rectangle([x - 1, y - 1, x + 1, y + 1], fill=rgba(C['c2']))
-                k += 1
-            tot += seg
+    # pontes de madeira onde a rota cruza o rio
+    feitas = []
+    for r in ROTAS:
+        for (x0, y0), (x1, y1) in zip(r, r[1:]):
+            seg = int(math.hypot(x1 - x0, y1 - y0))
+            for k in range(seg + 1):
+                t = k / max(1, seg)
+                x, y = round(x0 + (x1 - x0) * t), round(y0 + (y1 - y0) * t)
+                if 0 <= y < H and 0 <= x < W and rio_a[y, x] and all(math.hypot(x - a, y - b) > 10 for a, b in feitas):
+                    feitas.append((x, y))
+                    horiz = abs(x1 - x0) > abs(y1 - y0)
+                    if horiz:
+                        ret(d, x - 7, y - 5, x + 7, y + 5, C['mad0'])
+                        for xx in range(x - 6, x + 7):
+                            ret(d, xx, y - 3, xx, y + 3, C['mad2'] if xx % 3 else C['mad1'])
+                        ret(d, x - 7, y - 5, x + 7, y - 4, C['mad3'])
+                        ret(d, x - 7, y + 4, x + 7, y + 5, C['mad1'])
+                    else:
+                        ret(d, x - 5, y - 7, x + 5, y + 7, C['mad0'])
+                        for yy in range(y - 6, y + 7):
+                            ret(d, x - 3, yy, x + 3, yy, C['mad2'] if yy % 3 else C['mad1'])
 
-    # ponte de madeira onde a estrada da Rua Nova cruza o rio
-    bx = N['ruanova'][0]
-    ys = [y for x, y in rio if abs(x - bx) < 1.5]
-    by = round(sum(ys) / len(ys)) if ys else 298
-    ret(d, bx - 7, by - 10, bx + 7, by + 10, C['mad0'])
-    for y in range(by - 9, by + 10):
-        ret(d, bx - 5, y, bx + 5, y, C['mad2'] if y % 3 else C['mad1'])
-    for x in (bx - 6, bx + 6):
-        ret(d, x, by - 10, x, by + 10, C['mad3'])
-        for y in (by - 10, by - 3, by + 4, by + 10):
-            px(d, x, y, C['mad0'])
+    # ----- Praça (quadrado) e Rua Nova (rua larga)
+    x0, y0, x1, y1 = praca
+    ret(d, x0 - 1, y0 - 1, x1 + 1, y1 + 1, C['ci0'])
+    ret(d, x0, y0, x1, y1, (216, 208, 192))
+    for yy in range(y0, y1 + 1, 4):
+        for xx in range(x0 + (yy // 4) % 2 * 2, x1 + 1, 4):
+            px(d, xx, yy, (196, 188, 172))
+    ret(d, x0 + 6, y0 + 6, x1 - 6, y1 - 6, C['g2'])
+    ret(d, x0 + 6, y0 + 6, x1 - 6, y0 + 6, C['g3'])
+    mx, my = (x0 + x1) // 2, (y0 + y1) // 2
+    ret(d, mx - 1, y0 + 6, mx + 1, y1 - 6, (216, 208, 192))
+    ret(d, x0 + 6, my - 1, x1 - 6, my + 1, (216, 208, 192))
+    d.ellipse([mx - 9, my - 7, mx + 9, my + 7], fill=rgba(C['pa2']))
+    d.ellipse([mx - 8, my - 6, mx + 8, my + 6], fill=rgba(C['a1']))
+    d.ellipse([mx - 6, my - 5, mx + 6, my + 4], fill=rgba(C['a2']))
+    for ddx, ddy in [(-5, -3), (5, -3), (-6, 2), (6, 2)]:
+        px(d, mx + ddx, my + ddy, C['a4'])
+    ret(d, mx - 1, my - 7, mx + 1, my, (100, 112, 96))  # busto
+    ret(d, mx - 1, my - 9, mx + 1, my - 8, (84, 96, 80))
+    for ax, ay in [(x0 + 4, y0 + 10), (x1 - 4, y0 + 10), (x0 + 4, y1 - 1), (x1 - 4, y1 - 1),
+                   (mx - 14, y0 + 10), (mx + 14, y0 + 10), (mx - 14, y1 - 1), (mx + 14, y1 - 1)]:
+        arvore(base, ax, ay, 0)
 
-    for y, tipo, x, v in obj:
-        if tipo == 'c':
-            casa(base, x, y, v)
+    x0, y0, x1, y1 = ruanova
+    ret(d, x0 - 2, y0 - 1, x1 + 2, y1 + 1, C['ci0'])
+    ret(d, x0 - 2, y0, x1 + 2, y1, (104, 108, 120))
+    ret(d, x0 - 2, y0, x1 + 2, y0 + 1, (200, 196, 184))
+    ret(d, x0 - 2, y1 - 1, x1 + 2, y1, (200, 196, 184))
+    for xx in range(x0, x1, 8):
+        ret(d, xx, (y0 + y1) // 2, xx + 3, (y0 + y1) // 2, (240, 232, 200))
+    # lojas de toldo listrado dos dois lados da Rua Nova
+    toldos = [(C['vm'], C['br']), (C['a1'], C['br']), (C['g1'], C['am3']), (C['roxo'], C['am3'])]
+    for i, xx in enumerate(range(x0, x1 - 8, 12)):
+        for lado, yb in ((0, y0 - 2), (1, y1 + 10)):
+            s, ds = spr(11, 10)
+            ret(ds, 0, 0, 10, 9, C['pa'] if (i + lado) % 2 else (240, 220, 176))
+            ret(ds, 0, 0, 10, 0, C['ru2'])
+            ret(ds, 3, 6, 6, 9, C['mad1'])
+            a1, b1 = toldos[(i + lado) % 4]
+            for k in range(11):
+                ret(ds, k, 3, k, 4, a1 if (k // 2) % 2 == 0 else b1)
+            ret(ds, 0, 5, 10, 5, a1)
+            colar(base, s, xx + 6, yb, C['c0'])
+
+    # ----- trilho do trem
+    ret(d, 0, 603, 72, 608, (120, 96, 72))
+    for xx in range(0, 72, 3):
+        ret(d, xx, 603, xx, 608, C['mad0'])
+    ret(d, 0, 604, 72, 604, C['ci2'])
+    ret(d, 0, 607, 72, 607, C['ci2'])
+    # piso da Praça do Soldado
+    d.rectangle([80, 606, 156, 632], fill=rgba((216, 208, 192)))
+    d.rectangle([80, 606, 156, 606], fill=rgba(C['ci1']))
+
+    # ----- objetos em ordem de profundidade
+    obj = [(y, 'c', x) for x, y in casas] + [(y, 'a', x) for x, y in arvores]
+    for y, t, x in sorted(obj):
+        if t == 'c':
+            casa(base, x, y, random.randrange(12))
         else:
-            arvore(base, x, y, v)
+            arvore(base, x, y, 0)
 
-    # marcos
+    # cemitério: cruzes, lápides, cerca, capela e morcegos
+    dd = ImageDraw.Draw(base)
+    for k in range(240, 336, 3):
+        if abs(k - 276) > 6:
+            ret(dd, k, 314, k, 318, (60, 48, 84))
+    ret(dd, 238, 315, 336, 315, (60, 48, 84))
+    for i, (x, y) in enumerate([(248, 296), (258, 304), (240, 306), (318, 300), (326, 308), (310, 310), (264, 290),
+                                (252, 284), (330, 292)]):
+        if i % 3:
+            cruz(base, x, y, i)
+        else:
+            lapide(base, x, y)
+    for i, (x, y) in enumerate([(244, 250), (330, 262), (262, 236), (312, 230), (222, 276)]):
+        morcego(base, x, y, i % 2)
+    # árvores secas
+    for tx, ty in [(236, 300), (338, 304)]:
+        dd.line([(tx, ty), (tx, ty - 12)], fill=rgba((40, 28, 52)), width=2)
+        dd.line([(tx, ty - 8), (tx - 4, ty - 13)], fill=rgba((40, 28, 52)))
+        dd.line([(tx, ty - 10), (tx + 4, ty - 15)], fill=rgba((40, 28, 52)))
+
+    # pinheiros (araucárias) no Pinheirinho
+    for tx, ty in [(96, 100), (170, 96), (110, 140), (162, 138)]:
+        s, ds = spr(11, 16)
+        ret(ds, 5, 6, 5, 15, C['mad1'])
+        for j, w_ in enumerate([3, 5, 7, 9, 11]):
+            yb = 2 + j * 2
+            ret(ds, 5 - w_ // 2, yb, 5 + w_ // 2, yb, C['g0'])
+            px(ds, 5 - w_ // 2, yb - 1, C['g1'])
+            px(ds, 5 + w_ // 2, yb - 1, C['g1'])
+        ret(ds, 4, 0, 6, 1, C['g1'])
+        colar(base, s, tx, ty, C['gl'])
+
     for _, s, (x, y) in sorted(MARCOS, key=lambda m: m[2][1]):
         colar(base, s, x, y, C['preto'])
+    # lua minguante sobre a capela
+    lua, dlua = spr(15, 15)
+    dlua.ellipse([0, 0, 14, 14], fill=rgba((248, 240, 200)))
+    dlua.ellipse([2, 1, 9, 9], fill=rgba((255, 252, 230)))
+    la = np.array(lua)
+    yy_, xx_ = np.mgrid[0:15, 0:15]
+    la[((xx_ - 10) ** 2 + (yy_ - 5) ** 2) < 36, 3] = 0
+    colar(base, Image.fromarray(la), 326, 248)
 
-    # ----- pontos de fase: amarelo = fase, vermelho = fase com saída secreta, pequeno = cruzamento
-    ORDEM = ['trem', 'soldado', 'ruanova', 'alameda', 'coroados', 'unifei', 'pracona', 'praca', 'cemiterio',
-             'lago', 'kart', 'agonia']
+    # ----- pontos de fase
+    ORDEM = ['trem', 'soldado', 'ruanova', 'praca', 'alameda', 'coroados', 'pracona', 'cemiterio', 'unifei',
+             'pinheirinho', 'agonia', 'kart', 'lago', 'prefeitura']
+    d = ImageDraw.Draw(base)
     for nome, (x, y) in N.items():
         if nome.startswith('j'):
             d.ellipse([x - 2, y - 2, x + 2, y + 2], fill=rgba(C['c0']))
             d.ellipse([x - 1, y - 1, x + 1, y + 1], fill=rgba(C['c3']))
             continue
-        cor, cor2, cor3 = (C['vm'], C['vm2'], C['vm3']) if nome == 'agonia' else \
+        cor, cor2, cor3 = (C['vm'], C['vm2'], C['vm3']) if nome in ('prefeitura', 'cemiterio') else \
             (C['am'], C['am2'], C['am3'])
-        if nome == 'piranguinho':
-            cor, cor2, cor3 = C['roxo'], (56, 40, 104), (176, 160, 240)
         d.ellipse([x - 6, y - 4, x + 6, y + 5], fill=rgba(C['mad0']))
         d.ellipse([x - 5, y - 4, x + 5, y + 3], fill=rgba(cor2))
         d.ellipse([x - 5, y - 4, x + 5, y + 2], fill=rgba(cor))
         d.rectangle([x - 2, y - 3, x, y - 2], fill=rgba(cor3))
-    # ----- placas com os nomes
+
     PLACAS = [
-        ('ESTAÇÃO', 40, 321), ('PRAÇA DO SOLDADO', 128, 344 - 4), ('RUA NOVA', 238, 336),
-        ('ALAMEDA', 150, 254), ('COROADOS', 96, 202), ('UNIFEI', 284, 116), ('PRAÇONA?', 368, 204),
-        ('PRAÇA E MATRIZ', 462, 256), ('CEMITÉRIO', 552, 214), ('LAGO', 572, 142), ('KART', 590, 66),
-        ('AGONIA', 400, 40), ('PIRANGUINHO', 70, 64), ('AV. BPS', 262, 144),
+        ('TREM', 26, 618), ('PRAÇA DO SOLDADO', 208, 618), ('RUA NOVA', 176, 529), ('PRAÇA', 255, 578),
+        ('ALAMEDA', 40, 536), ('COROADOS', 60, 326), ('PRAÇONA', 196, 410), ('CEMITÉRIO', 286, 320),
+        ('UNIFEI', 186, 252), ('PINHEIRINHO', 132, 124), ('AGONIA', 190, 54), ('KART', 266, 52),
+        ('LAGO', 228, 150), ('PREFEITURA', 312, 172), ('AV. BPS', 160, 470),
     ]
     for txt, x, y in PLACAS:
         w = len(txt) * 6 + 10
-        x = min(max(x, w // 2 + 8), W - w // 2 - 8)
-        y = min(y, H - 24)
-        placa(base, txt, x, y)
+        x = min(max(x, w // 2 + 7), W - w // 2 - 7)
+        placa(base, txt, x, min(y, H - 22))
 
-    # número de cada fase num selinho ao lado do ponto (ordem sugerida)
     for k, nome in enumerate(ORDEM):
         x, y = N[nome]
         t = texto_img(str(k + 1), C['br'], C['preto']).crop((0, 2, 6 * len(str(k + 1)) + 1, 10))
@@ -844,23 +1274,12 @@ def main():
         ret(d, bx0 + 1, by0 + 1, bx0 + t.width + 1, by0 + t.height, C['vm2'])
         base.alpha_composite(t, (bx0 + 2, by0 + 1))
 
-    # nome do rio, escrito na água
     t = texto_img('RIO SAPUCAÍ', C['a4'], C['a0'])
-    base.alpha_composite(t, (560, 268))
+    tv = t.rotate(90, expand=True)
+    base.alpha_composite(tv, (119, 410))
 
-    # ----- título
-    placa(base, 'ITAMANIA', 222, 9, esc=2, cor=C['am'])
+    placa(base, 'ITAMANIA', 180, 8, esc=2, cor=C['am'])
 
-    # ----- rosa dos ventos simples
-    rx, ry = 612, 318
-    d.polygon([(rx, ry - 12), (rx + 3, ry), (rx - 3, ry)], fill=rgba(C['vm']))
-    d.polygon([(rx, ry + 10), (rx + 3, ry), (rx - 3, ry)], fill=rgba(C['pa']))
-    d.polygon([(rx - 10, ry), (rx, ry - 3), (rx, ry + 3)], fill=rgba(C['pa2']))
-    d.polygon([(rx + 10, ry), (rx, ry - 3), (rx, ry + 3)], fill=rgba(C['pa2']))
-    t = texto_img('N', C['br'], C['preto'])
-    base.alpha_composite(t, (rx - 3, ry - 24))
-
-    # ----- moldura
     fr = camada()
     df = ImageDraw.Draw(fr)
     for i, c in enumerate([C['mad0'], C['mad1'], C['mad2'], C['mad1'], C['mad0']]):
