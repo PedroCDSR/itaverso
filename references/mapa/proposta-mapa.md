@@ -43,6 +43,19 @@
   - escadaria larga até a avenida e palmeiras.
 - As fotos (de terceiros) foram usadas só como referência e não estão no repositório.
 
+## Kart e Lago (satélite enviado pelo Pedro, 03/11/2026)
+
+- **Kart:**
+  - fica logo ao norte do lago, na mesma faixa norte-sul, entre a mata (a oeste) e a Av. Dr. Jerson Dias (a leste);
+  - a pista é sinuosa e cheia de curvas, com grama no meio e zebras;
+  - na ponta sul ficam os boxes, a arquibancada e o estacionamento, de frente para o lago.
+- **Lago do Parque Municipal:**
+  - comprido de norte a sul, mais largo em cima;
+  - água esverdeada, calçada em volta e chafariz na parte de cima;
+  - o rio chega por baixo.
+- **Av. Dr. Jerson Dias:** passa a leste do lago e do kart e encontra a BPS. A Prefeitura fica do outro lado da avenida.
+- **Removido:** a cachoeira inventada ao lado do lago, porque não existe ali.
+
 ## O que o mapa mostra
 
 - **Formato em pé.** O eixo central de Itajubá é a **Av. BPS**, com o **Rio Sapucaí** correndo no meio dela. A avenida sobe pela
@@ -97,7 +110,7 @@
 
 ## A confirmar com o Pedro
 
-1. **Fotos:** estação/trem, Praçona, a Praça (é a do Theodomiro?), Rua Nova, Kart, Lago e Praça do Soldado.
+1. **Fotos:** estação/trem, Praçona, a Praça (é a do Theodomiro?) e Rua Nova.
 2. **Prefeitura:** o caderno diz "cadastrar pessoas". Se o jogo for coletar dados, isso precisa ser decidido antes,
    porque a regra 5 do projeto proíbe coletar dados pessoais.
 3. **Figurões:** onde entram? Pessoas vivas só com o OK delas.

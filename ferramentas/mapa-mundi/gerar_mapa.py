@@ -1128,6 +1128,77 @@ def m_prefeitura_itajuba():
     return s
 
 
+def m_kart_pista():
+    """Kartódromo (satélite de 03/11/2026): pista sinuosa e comprida de norte a sul, com grama no meio,
+    zebras nas curvas, e boxes, arquibancada e estacionamento na ponta sul, de frente para o lago."""
+    s, d = spr(50, 58)
+    d.rounded_rectangle([0, 0, 49, 44], radius=10, fill=rgba(C['g1']))
+    d.rounded_rectangle([1, 1, 48, 42], radius=9, fill=rgba(C['g2']))
+    pista = [(12, 6), (22, 4), (26, 12), (20, 18), (28, 22), (36, 8), (44, 14), (42, 26), (34, 30), (40, 38),
+             (30, 41), (22, 34), (14, 40), (6, 34), (12, 26), (5, 18), (8, 9), (12, 6)]
+    d.line(pista, fill=rgba(C['br']), width=7, joint='curve')
+    d.line(pista, fill=rgba((84, 88, 100)), width=5, joint='curve')
+    d.line(pista, fill=rgba((104, 108, 120)), width=1, joint='curve')
+    for x, y in pista[1:-1:2]:
+        px(d, x, y - 3, C['vm'])
+        px(d, x + 1, y - 3, C['br'])
+        px(d, x + 2, y - 3, C['vm'])
+    # largada quadriculada
+    for i in range(4):
+        for j in range(2):
+            px(d, 15 + i, 3 + j * 2 + i % 2, C['preto'] if (i + j) % 2 else C['br'])
+    ret(d, 19, 0, 19, 5, C['ci0'])
+    # boxes, arquibancada e estacionamento
+    ret(d, 2, 45, 47, 57, (156, 156, 160))
+    for x in range(4, 46, 6):
+        ret(d, x, 52, x, 56, C['br'])
+    ret(d, 4, 44, 20, 49, (236, 232, 224))
+    ret(d, 4, 44, 20, 44, C['vm'])
+    for x in range(6, 20, 3):
+        px(d, x, 47, (72, 80, 96))
+    ret(d, 26, 44, 44, 48, (120, 128, 144))
+    for y in (45, 47):
+        ret(d, 27, y, 43, y, (180, 188, 200))
+    for x, c in [(8, C['vm']), (14, C['a1']), (32, C['am']), (38, C['br'])]:
+        ret(d, x, 53, x + 2, 54, c)
+    return s
+
+
+def lago_parque(base, dl):
+    """Lago do Parque Municipal (satélite): comprido de norte a sul, mais largo em cima, água esverdeada,
+    calçada em volta e chafariz no meio da parte de cima."""
+    pts = [(252, 108), (286, 106), (292, 116), (290, 140), (284, 160), (280, 184), (272, 200), (260, 200),
+           (254, 186), (252, 160), (248, 132)]
+    d = ImageDraw.Draw(base)
+    d.polygon(pts, fill=rgba((200, 196, 184)))
+    m = Image.new('L', (W, H), 0)
+    ImageDraw.Draw(m).polygon(pts, fill=255)
+    a = np.array(m) > 0
+    for k, c in enumerate([(36, 104, 92), (56, 140, 116), (84, 168, 136)]):
+        e = a.copy()
+        for _ in range(2 + k * 2):
+            e2 = e.copy()
+            e2[1:, :] &= e[:-1, :]
+            e2[:-1, :] &= e[1:, :]
+            e2[:, 1:] &= e[:, :-1]
+            e2[:, :-1] &= e[:, 1:]
+            e = e2
+        ba = np.array(base)
+        ba[e, :3] = c
+        base.paste(Image.fromarray(ba))
+    d = ImageDraw.Draw(base)
+    d.polygon(pts, outline=rgba((120, 116, 104)))
+    d.ellipse([258, 116, 272, 130], fill=rgba((112, 192, 160)))
+    for x, y in [(262, 150), (274, 140), (266, 176), (276, 160), (258, 136)]:
+        ret(d, x, y, x + 2, y, (168, 224, 196))
+    # chafariz
+    for dx, dy in ((0, -4), (-1, -3), (1, -3), (-2, -1), (2, -1), (0, -2)):
+        px(d, 268 + dx, 126 + dy, C['br'])
+    d.ellipse([265, 125, 271, 128], fill=rgba(C['a4']))
+    dl.polygon(pts, fill=255)
+    dl.rectangle([246, 104, 294, 202], fill=255)
+
+
 # ---------------------------------------------------------------- mapa (em pé)
 def main():
     base = terreno()
@@ -1167,13 +1238,11 @@ def main():
     morros = camada()
     planalto(morros, 24, 232, 104, 494, 12, raio=16)   # Coroados: crista comprida norte-sul
     planalto(morros, 30, 500, 110, 540, 10, raio=12)   # Alameda: morro com a rua
-    planalto(morros, 186, 74, 256, 110, 12, raio=14)   # Agonia
-    planalto(morros, 262, 70, 290, 78, 6, raio=4)      # beirada da cachoeira
+    planalto(morros, 178, 74, 242, 110, 12, raio=14)   # Agonia
     base.alpha_composite(morros)
     esc = camada()
     planalto(esc, 222, 254, 346, 330, 14, escuro=True, raio=18)   # cemitério: a parte "assombrada"
     base.alpha_composite(esc)
-    cachoeira(base, 270, 86, 280, 116)
 
     relevo = np.maximum(np.array(serra)[:, :, 3], np.maximum(np.array(morros)[:, :, 3], np.array(esc)[:, :, 3]))
 
@@ -1181,7 +1250,14 @@ def main():
     dl = ImageDraw.Draw(livre)
 
     # ----- Av. BPS: eixo central da cidade, com o rio correndo no meio, até o lago
-    eixo = [(124, H + 10), (124, 520), (124, 236), (128, 230), (262, 230), (268, 224), (268, 168)]
+    # Av. Dr. Jerson Dias: corre de norte a sul a leste do lago e do kart e encontra a BPS
+    jerson = [(298, 30), (298, 220), (288, 232), (262, 232)]
+    linha_grossa(d, jerson, 13, C['ci0'])
+    linha_grossa(d, jerson, 11, (112, 116, 128))
+    for y in range(34, 220, 8):
+        ret(d, 298, y, 298, y + 2, (236, 228, 200))
+    dl.line(jerson, fill=255, width=15)
+    eixo = [(124, H + 10), (124, 520), (124, 236), (128, 230), (262, 230), (268, 224), (268, 196)]
     linha_grossa(d, eixo, 24, C['ci0'])
     linha_grossa(d, eixo, 22, (112, 116, 128))
     linha_grossa(d, eixo, 12, C['g1'])  # canteiro gramado na beira do rio
@@ -1209,9 +1285,7 @@ def main():
                 d.point((round(x), round(y)), fill=rgba(C['a4']))
 
     # ----- marcos fixos
-    lago = m_lago_retrato()
-    colar(base, lago, 268, 172)
-    dl.rectangle([244, 108, 292, 174], fill=255)
+    lago_parque(base, dl)
 
     # ----- cidade: ruas em grade e casario (a parte de baixo é a mais densa)
     zona = Image.new('L', (W, H), 0)
@@ -1220,7 +1294,7 @@ def main():
                 (14, 560), (40, 556), (100, 520)], fill=255)
     dz.polygon([(98, 236), (98, 182), (154, 182), (240, 210), (240, 240)], fill=255)
     dz.ellipse([86, 84, 178, 136], fill=255)      # Pinheirinho
-    dz.rectangle([288, 160, 346, 230], fill=255)  # bairro da Prefeitura
+    dz.rectangle([304, 196, 346, 230], fill=255)  # bairro da Prefeitura
     zona_a = (np.array(zona) > 0) & (relevo == 0)
     # morros pequenos podem ter casas no Pinheirinho
     zona_a |= (np.array(zona) > 0) & (np.arange(H)[:, None] < 150) & (np.arange(H)[:, None] > 84)
@@ -1231,9 +1305,9 @@ def main():
     MARCOS = [
         ('hotel', m_hotel_coroados(), (59, 418)),
         ('unifei', m_unifei_campus(), (186, 214)),
-        ('prefeitura', m_prefeitura_itajuba(), (322, 158)),
-        ('kart', m_kart(), (318, 70)),
-        ('agonia', m_agonia_santuario(), (224, 98)),
+        ('prefeitura', m_prefeitura_itajuba(), (328, 170)),
+        ('kart', m_kart_pista(), (270, 104)),
+        ('agonia', m_agonia_santuario(), (210, 98)),
         ('capela', m_capela_gotica(), (294, 290)),
         ('coreto', m_coreto(), (196, 392)),
         ('estacao', m_estacao(), (36, 584)),
@@ -1254,8 +1328,8 @@ def main():
     N = {
         'trem': (54, 578), 'soldado': (114, 604), 'ruanova': (176, 568), 'praca': (255, 545),
         'alameda': (76, 522), 'coroados': (92, 376), 'pracona': (196, 404), 'cemiterio': (276, 300),
-        'unifei': (186, 246), 'pinheirinho': (132, 118), 'agonia': (238, 100), 'kart': (318, 84),
-        'lago': (300, 140), 'prefeitura': (322, 166),
+        'unifei': (186, 246), 'pinheirinho': (132, 118), 'agonia': (226, 102), 'kart': (284, 104),
+        'lago': (298, 150), 'prefeitura': (328, 182),
         'j1': (144, 522), 'j2': (144, 360), 'j3': (144, 246), 'j4': (226, 404),
     }
     ROTAS = [
@@ -1272,10 +1346,10 @@ def main():
         [N['unifei'], N['j3']],
         [N['j2'], N['j3']],
         [N['j3'], (144, 168), (132, 160), N['pinheirinho']],
-        [N['pinheirinho'], (170, 118), (190, 100), N['agonia']],
-        [N['agonia'], (256, 100), (300, 92), N['kart']],
-        [N['kart'], (318, 130), N['lago']],
-        [N['lago'], (316, 156), N['prefeitura']],
+        [N['pinheirinho'], (166, 118), (182, 102), N['agonia']],
+        [N['agonia'], (244, 102), (244, 106), (284, 106), N['kart']],
+        [N['kart'], (298, 104), N['lago']],
+        [N['lago'], (298, 182), N['prefeitura']],
     ]
     for r in ROTAS:
         dl.line(r, fill=255, width=11)
@@ -1520,8 +1594,8 @@ def main():
     PLACAS = [
         ('TREM', 26, 618), ('PRAÇA DO SOLDADO', 208, 618), ('RUA NOVA', 176, 529), ('PRAÇA', 255, 578),
         ('ALAMEDA', 40, 536), ('COROADOS', 64, 428), ('PRAÇONA', 196, 410), ('CEMITÉRIO', 286, 320),
-        ('UNIFEI', 186, 252), ('PINHEIRINHO', 132, 124), ('AGONIA', 222, 124), ('KART', 318, 92),
-        ('LAGO', 228, 150), ('PREFEITURA', 312, 172), ('AV. BPS', 160, 470),
+        ('UNIFEI', 186, 252), ('PINHEIRINHO', 132, 124), ('AGONIA', 206, 124), ('KART', 242, 56),
+        ('LAGO', 230, 160), ('PREFEITURA', 314, 190), ('AV. BPS', 160, 470),
     ]
     for txt, x, y in PLACAS:
         w = len(txt) * 6 + 10
