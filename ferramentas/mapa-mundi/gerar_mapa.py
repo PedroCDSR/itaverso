@@ -24,8 +24,8 @@ SAIDA = os.path.join(AQUI, '..', 'arte', 'previas', 'mapa-mundi-proposta.png')
 
 # ---------------------------------------------------------------- paleta
 C = {
-    'g0': (40, 96, 56), 'g1': (64, 136, 64), 'g2': (100, 172, 72), 'g3': (148, 204, 88), 'g4': (196, 228, 120),
-    'gl': (24, 64, 40),
+    'g0': (36, 124, 52), 'g1': (60, 164, 60), 'g2': (100, 200, 68), 'g3': (156, 224, 84), 'g4': (212, 244, 132),
+    'gl': (16, 72, 32),
     'm0': (44, 60, 72), 'm1': (70, 102, 104), 'm2': (100, 140, 120), 'm3': (140, 178, 136), 'm4': (190, 214, 168),
     'a0': (24, 40, 96), 'a1': (40, 88, 176), 'a2': (72, 136, 224), 'a3': (136, 192, 248), 'a4': (232, 248, 255),
     'areia': (224, 196, 140),
@@ -884,51 +884,213 @@ def m_lago_retrato():
     return s
 
 
+
+# ---------------------------------------------------------------- linguagem do mapa (v3)
+# Referência de estilo: mapa de mundo de plataforma de 16 bits (planaltos com paredão, morros arredondados,
+# nuvens, cachoeira, flores, título colorido). Só a linguagem do gênero: nenhum personagem, item ou objeto
+# característico de outro jogo (nada de canos, blocos "?", cogumelos, morros ou nuvens com olhos).
+def morro_pilula(lay, cx, by, w, h, tom=1):
+    """Morro arredondado alto (forma de cápsula), luz da esquerda."""
+    if tom:
+        base_, sombra_, luz_, brilho = (64, 176, 72), (40, 136, 56), (128, 216, 96), (196, 244, 148)
+    else:
+        base_, sombra_, luz_, brilho = (44, 140, 76), (28, 108, 60), (80, 172, 96), (128, 204, 120)
+    s, d = spr(w, h)
+    d.ellipse([0, 0, w - 1, w - 1], fill=rgba(base_))
+    ret(d, 0, w // 2, w - 1, h - 1, base_)
+    d.ellipse([w * 0.62, 2, w - 1, w - 2], fill=rgba(sombra_))
+    ret(d, round(w * 0.62), w // 2, w - 1, h - 1, sombra_)
+    d.ellipse([w * 0.18, 4, w * 0.4, w * 0.6], fill=rgba(luz_))
+    ret(d, round(w * 0.18), round(w * 0.3), round(w * 0.4), round(h * 0.7), luz_)
+    d.ellipse([w * 0.22, 6, w * 0.32, 6 + w * 0.16], fill=rgba(brilho))
+    colar(lay, s, cx, by, C['gl'])
+
+
+def planalto(lay, x0, y0, x1, y1, falesia, escuro=False, raio=14):
+    """Planalto: topo de grama arredondado e paredão de pedra em camadas embaixo."""
+    topo = Image.new('L', (W, H), 0)
+    ImageDraw.Draw(topo).rounded_rectangle([x0, y0, x1, y1], radius=raio, fill=255)
+    t = np.array(topo) > 0
+    dep = np.zeros(t.shape, int)
+    for k in range(1, falesia + 1):
+        m = np.zeros_like(t)
+        m[k:, :] = t[:-k, :]
+        dep[(dep == 0) & m & ~t] = k
+    cl = dep > 0
+    if escuro:
+        pedra = [(156, 136, 168), (116, 100, 136), (84, 70, 104), (52, 42, 72)]
+        grama = [(70, 56, 100), (96, 78, 128), (128, 108, 160), (164, 144, 192)]
+        borda = (22, 14, 34)
+    else:
+        pedra = [(236, 192, 120), (204, 148, 80), (164, 104, 52), (112, 66, 34)]
+        grama = [C['g1'], C['g2'], C['g3'], C['g4']]
+        borda = (56, 30, 14)
+    a = np.zeros((H, W, 4), np.uint8)
+    cx = (x0 + x1) / 2
+    w = x1 - x0
+    xx = np.arange(W)[None, :].repeat(H, 0)
+    idx = np.where(dep <= 1, 3, np.where(dep == falesia, 3, 1 + ((dep - 2) // 3) % 2))
+    idx = np.where(xx < cx - w * 0.3, idx - 1, idx)
+    idx = np.where(xx > cx + w * 0.3, np.minimum(idx + 1, 3), idx)
+    rach = np.zeros(W, bool)
+    rach[random.sample(range(W), W // 7)] = True
+    idx = np.where(rach[None, :] & (dep > 3) & (dep < falesia - 1) & ((dep + xx) % 5 != 0), 3, idx)
+    idx = np.clip(idx, 0, 3)
+    for i, c in enumerate(pedra):
+        a[cl & (idx == i)] = rgba(c)
+    # topo com chanfro de luz em cima e à esquerda
+    im = Image.fromarray(a)
+    d = ImageDraw.Draw(im)
+    d.rounded_rectangle([x0, y0, x1, y1], radius=raio, fill=rgba(grama[0]))
+    d.rounded_rectangle([x0 + 1, y0, x1 - 1, y1 - 2], radius=max(2, raio - 1), fill=rgba(grama[2]))
+    d.rounded_rectangle([x0 + 3, y0 + 2, x1 - 2, y1 - 3], radius=max(2, raio - 3), fill=rgba(grama[1]))
+    for _ in range(int(w * (y1 - y0) / 40)):
+        x, y = random.randint(x0 + 4, x1 - 4), random.randint(y0 + 4, y1 - 4)
+        if t[y, x]:
+            d.point((x, y), fill=rgba(grama[3]))
+            d.point((x + 1, y + 1), fill=rgba(grama[0]))
+    lay.alpha_composite(contorno(im, borda))
+
+
+def nuvem(base, cx, cy, w):
+    s, d = spr(w, w // 2 + 2)
+    h = w // 2
+    for (ex, ey, r) in [(0.28, 0.6, 0.26), (0.5, 0.45, 0.32), (0.74, 0.62, 0.24), (0.5, 0.75, 0.3)]:
+        d.ellipse([w * (ex - r), h * ey - w * r * 0.7, w * (ex + r), h * ey + w * r * 0.7], fill=rgba((255, 255, 255)))
+    a = np.array(s)
+    yy = np.arange(a.shape[0])[:, None]
+    som = (a[:, :, 3] > 0) & (yy > h * 0.72)
+    a[som, :3] = (200, 228, 255)
+    colar(base, Image.fromarray(a), cx, cy + h // 2, (88, 136, 200))
+
+
+def cachoeira(base, x0, y0, x1, y1):
+    d = ImageDraw.Draw(base)
+    for x in range(x0, x1 + 1):
+        for y in range(y0, y1 + 1):
+            fase = (x * 3 + y) % 7
+            c = C['a4'] if fase < 2 else (C['a3'] if fase < 5 else C['a2'])
+            d.point((x, y), fill=rgba(c))
+    d.line([(x0 - 1, y0), (x0 - 1, y1)], fill=rgba(C['a0']))
+    d.line([(x1 + 1, y0), (x1 + 1, y1)], fill=rgba(C['a0']))
+    for k in range(5):
+        d.ellipse([x0 - 4 + k * 3, y1 - 2, x0 + k * 3 + 1, y1 + 3], fill=rgba(C['br']))
+
+
+def titulo_colorido(txt, esc=3):
+    cores = [C['vm'], C['am'], (72, 184, 72), (56, 120, 232)]
+    letras = []
+    for k, ch in enumerate(txt):
+        letras.append(texto_img(ch, cores[k % 4], cores[k % 4], esc))
+    passo = 6 * esc + 3
+    w = passo * len(txt) + 8
+    im = camada(w, 9 * esc + 8)
+    for k, l in enumerate(letras):
+        im.alpha_composite(l, (4 + k * passo, 4 - 2 * esc))
+    a = np.array(im)
+    m = a[:, :, 3] > 0
+    # brilho na metade de cima de cada letra
+    yy = np.arange(a.shape[0])[:, None]
+    claro = m & (yy < 4 + 3 * esc)
+    a[claro, :3] = np.minimum(255, a[claro, :3].astype(int) + 60)
+    im = Image.fromarray(a)
+    im = contorno(im, (24, 20, 32))
+    out = camada(im.width + 2, im.height + 2)
+    sombra = np.array(im)
+    sombra[sombra[:, :, 3] > 0] = (24, 20, 32, 160)
+    out.alpha_composite(Image.fromarray(sombra), (2, 2))
+    out.alpha_composite(im, (0, 0))
+    return out
+
+
+def flor(base, x, y, cor):
+    d = ImageDraw.Draw(base)
+    for dx, dy in ((0, -1), (-1, 0), (1, 0), (0, 1)):
+        d.point((x + dx, y + dy), fill=rgba(cor))
+    d.point((x, y), fill=rgba((255, 208, 48)))
+
+
+def m_hotel_coroados():
+    """Hotel Coroados (fotos e satélite de 03/11/2026): prédio comprido de 2 andares, branco com faixas
+    vermelho-terracota e telhado escalonado, ao longo da Rua São Judas Tadeu. A rua passa por baixo de uma
+    marquise apoiada em pilares. Piscina na ponta norte. Aqui o prédio fica a oeste da rua (à esquerda)."""
+    br, br2 = (244, 240, 232), (208, 200, 192)
+    vm, vm2, vm3 = (204, 88, 64), (150, 56, 44), (232, 128, 100)
+    s, d = spr(46, 92)
+    # piscina (ponta norte)
+    ret(d, 4, 0, 24, 8, (232, 228, 216))
+    ret(d, 6, 2, 22, 6, C['a2'])
+    ret(d, 7, 2, 12, 3, C['a4'])
+    # módulos escalonados descendo o morro
+    for i in range(6):
+        y = 10 + i * 13
+        x0 = 2 + (i % 2) * 2
+        ret(d, x0, y, x0 + 26, y + 3, vm)
+        ret(d, x0, y, x0 + 26, y, vm3)
+        for k in range(x0, x0 + 27, 3):
+            px(d, k, y + 2, vm2)
+        ret(d, x0, y + 4, x0 + 26, y + 10, br)
+        ret(d, x0 + 20, y + 4, x0 + 26, y + 10, br2)
+        for wx in range(x0 + 2, x0 + 20, 5):
+            ret(d, wx, y + 5, wx + 2, y + 7, (48, 52, 64))
+            px(d, wx, y + 5, (120, 136, 160))
+        ret(d, x0, y + 11, x0 + 26, y + 12, vm)
+    # marquise sobre a rua, com pilares do outro lado (a rua passa por baixo)
+    ret(d, 26, 46, 45, 50, vm)
+    ret(d, 26, 46, 45, 46, vm3)
+    ret(d, 26, 51, 45, 51, vm2)
+    for x in (41, 44):
+        ret(d, x, 52, x + 1, 58, br)
+        ret(d, x, 56, x + 1, 58, vm)
+    return s
+
+
 # ---------------------------------------------------------------- mapa (em pé)
 def main():
     base = terreno()
     d = ImageDraw.Draw(base)
     relevo_mask = Image.new('L', (W, H), 0)
 
-    # ----- montanhas em volta da cidade (o vale de Itajubá)
+    # ----- céu no alto, atrás dos morros
+    ba = np.array(base)
+    yy, xx = np.mgrid[0:H, 0:W]
+    ceu = [(112, 184, 248), (136, 200, 252), (160, 214, 255), (184, 228, 255)]
+    for k, c in enumerate(ceu):
+        faixa = (yy >= k * 14) & (yy < (k + 1) * 14 + ((xx + yy) % 2) * 2)
+        ba[faixa & (yy < 64), :3] = c
+    base = Image.fromarray(ba)
+    d = ImageDraw.Draw(base)
+    nuvem(base, 36, 16, 44)
+    nuvem(base, 318, 12, 52)
+    nuvem(base, 330, 40, 30)
+
+    # ----- morros arredondados em volta da cidade (o vale de Itajubá)
     serra = camada()
-    for k in range(-1, 11):
-        montanha(serra, k * 36 + random.randint(-6, 6), 46 + random.randint(-6, 8), 64 + random.randint(-6, 14),
-                 40 + random.randint(-4, 12))
-    for y in range(80, 300, 34):  # lado esquerdo, até o Coroados
-        montanha(serra, 8 + random.randint(-6, 6), y + 26, 58, 40 + random.randint(-4, 10))
-    for y in range(200, 640, 40):  # lado direito
-        montanha(serra, 356 + random.randint(-4, 6), y + 30, 44, 36 + random.randint(-4, 8))
-    for x in (6, 352):  # cantos de baixo
-        montanha(serra, x, 652, 60, 40)
+    for k in range(13):  # fileira de trás
+        x = k * 30 + random.randint(-4, 4)
+        morro_pilula(serra, x, 74, 26 + random.randint(0, 10), 34 + random.randint(0, 14), 0)
+    for k in range(7):   # fileira da frente, nos cantos
+        for x in (6 + k * 3, 354 - k * 3):
+            pass
+    for x, by_, w_, h_ in [(10, 88, 30, 52), (34, 86, 24, 36), (350, 100, 30, 56), (328, 92, 22, 34)]:
+        morro_pilula(serra, x, by_, w_, h_, 1)
+    for y in range(120, 640, 26):  # laterais
+        morro_pilula(serra, 4 + random.randint(-3, 3), y + 30, 22 + random.randint(0, 6), 40 + random.randint(0, 10), 1)
+        if y > 180:
+            morro_pilula(serra, 356 + random.randint(-3, 3), y + 30, 22 + random.randint(0, 6), 40 + random.randint(0, 10), 1)
     base.alpha_composite(serra)
 
-    # ----- morros: Coroados (crista à esquerda), Alameda, Agonia e o do cemitério
+    # ----- planaltos: Coroados (morro comprido a oeste da BPS), Alameda, Agonia e cemitério
     morros = camada()
-    morro(morros, 60, 482, 112, 196)        # Coroados: morro comprido
-    morro(morros, 74, 548, 92, 52)          # Alameda: morro com a rua subindo
-    morro(morros, 226, 120, 96, 70)         # Agonia
-    morro(morros, 132, 150, 120, 40)        # encosta do Pinheirinho
+    planalto(morros, 24, 232, 104, 494, 12, raio=16)   # Coroados: crista comprida norte-sul
+    planalto(morros, 30, 500, 110, 540, 10, raio=12)   # Alameda: morro com a rua
+    planalto(morros, 186, 74, 256, 110, 12, raio=14)   # Agonia
+    planalto(morros, 262, 70, 290, 78, 6, raio=4)      # beirada da cachoeira
     base.alpha_composite(morros)
-    # cemitério: morro escuro (parte "assombrada" do mapa, em tom de desenho animado)
     esc = camada()
-    de = ImageDraw.Draw(esc)
-    p = [(40, 32, 60), (60, 48, 84), (84, 68, 112), (112, 92, 140), (150, 128, 170)]
-    cx, by, w, h = 284, 358, 132, 98
-    de.ellipse([cx - w / 2, by - h, cx + w / 2, by + h], fill=rgba(p[1]))
-    de.ellipse([cx - w / 2 + 3, by - h + 2, cx + w / 2 - w * 0.25, by + h * 0.3], fill=rgba(p[2]))
-    de.ellipse([cx - w / 2 + w * 0.16, by - h + 3, cx - w * 0.05, by - h * 0.5], fill=rgba(p[3]))
-    a = np.array(esc)
-    a[by + 1:, :, 3] = 0
-    yy, xx = np.mgrid[0:H, 0:W]
-    pont = ((xx + yy) % 2 == 0) & (a[:, :, 3] > 0) & (np.abs(yy - (by - 8)) < 8) & ((yy + xx // 3) % 4 == 0)
-    a[pont, :3] = p[0]
-    esc = contorno(Image.fromarray(a), (24, 16, 36))
-    a = np.array(esc)
-    a[by + 1:, :, 3] = 0
-    esc = Image.fromarray(a)
+    planalto(esc, 222, 254, 346, 330, 14, escuro=True, raio=18)   # cemitério: a parte "assombrada"
     base.alpha_composite(esc)
-    # lua cheia por trás da capela
+    cachoeira(base, 270, 86, 280, 116)
 
     relevo = np.maximum(np.array(serra)[:, :, 3], np.maximum(np.array(morros)[:, :, 3], np.array(esc)[:, :, 3]))
 
@@ -984,11 +1146,11 @@ def main():
     praca = (226, 516, 284, 574)   # Praça: um quadrado
     ruanova = (138, 560, 214, 576)  # Rua Nova: rua larga
     MARCOS = [
-        ('hotel', m_hotel_grande(), (60, 302)),
+        ('hotel', m_hotel_coroados(), (59, 418)),
         ('unifei', m_unifei_campus(), (186, 214)),
         ('prefeitura', m_prefeitura(), (326, 150)),
-        ('kart', m_kart(), (300, 70)),
-        ('agonia', m_agonia(), (226, 68)),
+        ('kart', m_kart(), (318, 70)),
+        ('agonia', m_agonia(), (222, 94)),
         ('capela', m_capela_gotica(), (294, 290)),
         ('coreto', m_coreto(), (196, 392)),
         ('estacao', m_estacao(), (36, 584)),
@@ -1008,8 +1170,8 @@ def main():
     # ----- rota das fases
     N = {
         'trem': (54, 578), 'soldado': (114, 604), 'ruanova': (176, 568), 'praca': (255, 545),
-        'alameda': (76, 522), 'coroados': (60, 322), 'pracona': (196, 404), 'cemiterio': (276, 300),
-        'unifei': (186, 246), 'pinheirinho': (132, 118), 'agonia': (226, 82), 'kart': (300, 84),
+        'alameda': (76, 522), 'coroados': (92, 376), 'pracona': (196, 404), 'cemiterio': (276, 300),
+        'unifei': (186, 246), 'pinheirinho': (132, 118), 'agonia': (238, 100), 'kart': (318, 84),
         'lago': (300, 140), 'prefeitura': (326, 166),
         'j1': (144, 522), 'j2': (144, 360), 'j3': (144, 246), 'j4': (226, 404),
     }
@@ -1019,18 +1181,17 @@ def main():
         [N['ruanova'], (226, 568), (226, 545), N['praca']],
         [N['praca'], (255, 522), N['j1']],
         [N['j1'], (102, 522), N['alameda']],
-        [N['alameda'], (88, 504), (70, 488), (86, 470), (68, 452), (84, 434), (66, 414), (80, 394), (62, 372),
-         (74, 350), N['coroados']],
-        [N['coroados'], (90, 336), (106, 360), N['j2']],
+        [N['alameda'], (74, 500), (74, 376), N['coroados']],
+        [N['coroados'], (110, 376), (110, 360), N['j2']],
         [N['j2'], (144, 404), N['pracona']],
         [N['pracona'], N['j4'], (226, 330), (252, 312), N['cemiterio']],
         [N['cemiterio'], (276, 262), (226, 262), (226, 246), N['unifei']],
         [N['unifei'], N['j3']],
         [N['j2'], N['j3']],
         [N['j3'], (144, 168), (132, 160), N['pinheirinho']],
-        [N['pinheirinho'], (160, 118), (180, 96), N['agonia']],
-        [N['agonia'], (262, 96), (262, 84), N['kart']],
-        [N['kart'], (312, 96), (312, 130), N['lago']],
+        [N['pinheirinho'], (170, 118), (190, 100), N['agonia']],
+        [N['agonia'], (256, 100), (300, 92), N['kart']],
+        [N['kart'], (318, 130), N['lago']],
         [N['lago'], (316, 156), N['prefeitura']],
     ]
     for r in ROTAS:
@@ -1079,6 +1240,7 @@ def main():
     livre_np = np.array(livre) > 0
     serra_a = np.array(serra)[:, :, 3]
     esc_a = np.array(esc)[:, :, 3]
+    morros_a = np.array(morros)[:, :, 3]
     for _ in range(5000):
         x, y = random.randrange(8, W - 8), random.randrange(60, H - 4)
         if zona_a[y, x] and random.random() < 0.97:
@@ -1089,13 +1251,21 @@ def main():
             continue
         if esc_a[y, x] > 0:
             continue
+        if morros_a[y, x] > 0 and (y > 500 or y < 130 or random.random() < 0.35):
+            continue
         ocup[y - 9:y + 1, x - 4:x + 5] = True
         arvores.append((x, y))
 
     # ----- caminhos
-    subida = ROTAS[5]
-    linha_grossa(d, subida, 15, C['ci0'])
-    linha_grossa(d, subida, 13, (112, 116, 128))
+    rua_coroados = [(76, 548), (74, 500), (74, 240), (80, 224), (100, 214), (118, 226)]
+    linha_grossa(d, rua_coroados, 13, C['ci0'])
+    linha_grossa(d, rua_coroados, 11, (112, 116, 128))
+    for (x0, y0), (x1, y1) in zip(rua_coroados, rua_coroados[1:]):
+        seg = int(math.hypot(x1 - x0, y1 - y0))
+        for k in range(0, seg, 8):
+            t = k / max(1, seg)
+            ret(d, round(x0 + (x1 - x0) * t), round(y0 + (y1 - y0) * t), round(x0 + (x1 - x0) * t),
+                round(y0 + (y1 - y0) * t) + 2, (236, 228, 200))
     for r in ROTAS:
         linha_grossa(d, r, 9, C['c0'])
     for r in ROTAS:
@@ -1196,6 +1366,15 @@ def main():
         else:
             arvore(base, x, y, 0)
 
+    # flores espalhadas na grama (fora da cidade, das ruas e dos planaltos escuros)
+    cores_flor = [C['br'], (255, 120, 160), C['vm'], (255, 236, 96), (176, 140, 255)]
+    for _ in range(4000):
+        x, y = random.randrange(10, W - 10), random.randrange(70, H - 8)
+        if ocup[y - 2:y + 3, x - 2:x + 3].any() or zona_a[y, x] or esc_a[y, x] or serra_a[y, x]:
+            continue
+        ocup[y - 2:y + 3, x - 2:x + 3] = True
+        flor(base, x, y, random.choice(cores_flor))
+
     # cemitério: cruzes, lápides, cerca, capela e morcegos
     dd = ImageDraw.Draw(base)
     for k in range(240, 336, 3):
@@ -1257,8 +1436,8 @@ def main():
 
     PLACAS = [
         ('TREM', 26, 618), ('PRAÇA DO SOLDADO', 208, 618), ('RUA NOVA', 176, 529), ('PRAÇA', 255, 578),
-        ('ALAMEDA', 40, 536), ('COROADOS', 60, 326), ('PRAÇONA', 196, 410), ('CEMITÉRIO', 286, 320),
-        ('UNIFEI', 186, 252), ('PINHEIRINHO', 132, 124), ('AGONIA', 190, 54), ('KART', 266, 52),
+        ('ALAMEDA', 40, 536), ('COROADOS', 64, 428), ('PRAÇONA', 196, 410), ('CEMITÉRIO', 286, 320),
+        ('UNIFEI', 186, 252), ('PINHEIRINHO', 132, 124), ('AGONIA', 222, 124), ('KART', 318, 92),
         ('LAGO', 228, 150), ('PREFEITURA', 312, 172), ('AV. BPS', 160, 470),
     ]
     for txt, x, y in PLACAS:
@@ -1278,7 +1457,9 @@ def main():
     tv = t.rotate(90, expand=True)
     base.alpha_composite(tv, (119, 410))
 
-    placa(base, 'ITAMANIA', 180, 8, esc=2, cor=C['am'])
+    tit = titulo_colorido('ITAMANIA', 3)
+    base.alpha_composite(tit, (W // 2 - tit.width // 2, 6))
+    placa(base, 'MUNDO DE ITAJUBÁ', W // 2, 6 + tit.height - 2)
 
     fr = camada()
     df = ImageDraw.Draw(fr)
