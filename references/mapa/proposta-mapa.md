@@ -28,6 +28,21 @@
   começa na Alameda.
 - **Arquivos:** os prints e a foto (de terceiros, no Google Maps) foram usados só como referência e não estão no repositório.
 
+## Agonia e Prefeitura (fotos do Pedro, 03/11/2026)
+
+- **Santuário N. Sra. da Agonia:**
+  - pirâmide de vidro azul em degraus, com nervuras brancas nos cantos;
+  - cúpula prateada com cruz;
+  - anexos brancos e azuis na base, com o painel da imagem;
+  - torre-agulha azul na frente;
+  - no alto do morro.
+- **Prefeitura de Itajubá:**
+  - duas alas compridas branco-azuladas com faixas cinza;
+  - bloco central amarelo com placa azul e entrada de vidro;
+  - torrinha em cima;
+  - escadaria larga até a avenida e palmeiras.
+- As fotos (de terceiros) foram usadas só como referência e não estão no repositório.
+
 ## O que o mapa mostra
 
 - **Formato em pé.** O eixo central de Itajubá é a **Av. BPS**, com o **Rio Sapucaí** correndo no meio dela. A avenida sobe pela
@@ -82,7 +97,7 @@
 
 ## A confirmar com o Pedro
 
-1. **Fotos:** Agonia, Hotel Coroados, Prefeitura, estação/trem, Praçona e a Praça (é a do Theodomiro?).
+1. **Fotos:** estação/trem, Praçona, a Praça (é a do Theodomiro?), Rua Nova, Kart, Lago e Praça do Soldado.
 2. **Prefeitura:** o caderno diz "cadastrar pessoas". Se o jogo for coletar dados, isso precisa ser decidido antes,
    porque a regra 5 do projeto proíbe coletar dados pessoais.
 3. **Figurões:** onde entram? Pessoas vivas só com o OK delas.

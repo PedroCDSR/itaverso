@@ -1045,6 +1045,89 @@ def m_hotel_coroados():
     return s
 
 
+def m_agonia_santuario():
+    """Santuário N. Sra. da Agonia (fotos do Pedro, 03/11/2026): pirâmide de vidro azul em degraus, nervuras
+    brancas nos cantos, cúpula prateada com cruz, anexos brancos e azuis na base e a torre-agulha azul na frente."""
+    s, d = spr(44, 44)
+    vid, vid2, vid3, vid4 = (64, 164, 224), (32, 104, 176), (144, 216, 248), (24, 64, 128)
+    br, br2 = (236, 242, 250), (176, 196, 220)
+    # anexos na base
+    ret(d, 0, 34, 43, 43, br)
+    ret(d, 0, 34, 43, 35, br2)
+    ret(d, 32, 34, 43, 43, br2)
+    for x in range(2, 42, 4):
+        ret(d, x, 38, x + 1, 40, vid2)
+    ret(d, 3, 36, 9, 42, (96, 128, 200))  # painel azul com a imagem
+    ret(d, 5, 37, 7, 41, br)
+    # degraus da pirâmide (de baixo para cima)
+    for i, (w_, y_) in enumerate([(34, 29), (28, 24), (22, 19), (16, 14)]):
+        x0 = 22 - w_ // 2
+        ret(d, x0, y_, x0 + w_ - 1, y_ + 5, vid)
+        ret(d, x0, y_ + 3, x0 + w_ - 1, y_ + 5, vid2)
+        ret(d, 22, y_ + 1, x0 + w_ - 1, y_ + 5, vid2)
+        ret(d, x0, y_ + 1, 21, y_ + 2, vid3)
+        ret(d, x0 - 1, y_, x0 + w_, y_, br)
+        for x in range(x0 + 2, x0 + w_ - 1, 3):
+            px(d, x, y_ + 4, vid4)
+    # nervuras diagonais dos cantos até a cúpula
+    for x0_, x1_ in ((5, 16), (38, 27)):
+        d.line([(x0_, 34), (x1_, 13)], fill=rgba(br), width=2)
+    d.line([(22, 34), (22, 13)], fill=rgba(br2), width=1)
+    # cúpula prateada
+    d.ellipse([14, 3, 30, 19], fill=rgba((200, 206, 216)))
+    ret(d, 14, 11, 30, 14, (200, 206, 216))
+    d.ellipse([16, 4, 23, 12], fill=rgba((240, 244, 248)))
+    d.ellipse([25, 6, 30, 14], fill=rgba((144, 152, 168)))
+    for x in (18, 22, 26):
+        d.line([(x, 5), (x, 14)], fill=rgba((160, 168, 184)))
+    ret(d, 14, 13, 30, 14, (120, 128, 148))
+    ret(d, 22, 0, 22, 3, C['am'])
+    ret(d, 21, 1, 23, 1, C['am'])
+    # torre-agulha azul na frente
+    d.polygon([(38, 43), (40, 22), (42, 43)], fill=rgba(vid))
+    d.line([(40, 22), (40, 43)], fill=rgba(vid3))
+    return s
+
+
+def m_prefeitura_itajuba():
+    """Prefeitura (foto do Pedro, 03/11/2026): duas alas compridas branco-azuladas com faixas cinza, bloco central
+    amarelo com placa azul e entrada de vidro, torrinha em cima, escadaria larga até a avenida, palmeiras."""
+    s, d = spr(52, 38)
+    pa, pa2, faixa, jan = (224, 234, 246), (184, 198, 218), (150, 162, 182), (48, 72, 128)
+    for x0, x1 in ((0, 18), (33, 51)):
+        ret(d, x0, 10, x1, 25, pa)
+        ret(d, x0, 9, x1, 9, (112, 124, 144))
+        for y in (13, 18, 23):
+            ret(d, x0, y, x1, y, faixa)
+            for x in range(x0 + 1, x1, 2):
+                px(d, x, y - 1, jan)
+        ret(d, x1 - 3 if x0 else x1 - 3, 10, x1, 25, pa2)
+    # bloco central
+    ret(d, 18, 5, 33, 26, (232, 200, 72))
+    ret(d, 18, 5, 19, 26, (248, 224, 120))
+    ret(d, 31, 5, 33, 26, (196, 160, 48))
+    ret(d, 20, 6, 31, 8, (40, 72, 176))
+    for x in range(21, 31, 2):
+        px(d, x, 7, C['br'])
+    ret(d, 21, 10, 30, 25, (56, 104, 184))
+    for y in range(11, 25, 3):
+        ret(d, 21, y, 30, y, (136, 184, 232))
+    for x in (23, 26, 29):
+        ret(d, x, 10, x, 25, (32, 64, 128))
+    ret(d, 23, 1, 28, 4, C['br'])
+    ret(d, 23, 1, 28, 1, pa2)
+    # escadaria
+    for k, y in enumerate(range(27, 37)):
+        ret(d, 20 - k // 3, y, 31 + k // 3, y, (200, 200, 196) if y % 2 else (160, 160, 156))
+    # palmeiras
+    for x in (8, 44):
+        ret(d, x, 26, x, 35, C['mad1'])
+        for dx, dy in ((-3, -1), (3, -1), (-2, -2), (2, -2), (0, -3)):
+            d.line([(x, 26), (x + dx, 26 + dy)], fill=rgba(C['g1']))
+        px(d, x, 25, C['g3'])
+    return s
+
+
 # ---------------------------------------------------------------- mapa (em pé)
 def main():
     base = terreno()
@@ -1148,9 +1231,9 @@ def main():
     MARCOS = [
         ('hotel', m_hotel_coroados(), (59, 418)),
         ('unifei', m_unifei_campus(), (186, 214)),
-        ('prefeitura', m_prefeitura(), (326, 150)),
+        ('prefeitura', m_prefeitura_itajuba(), (322, 158)),
         ('kart', m_kart(), (318, 70)),
-        ('agonia', m_agonia(), (222, 94)),
+        ('agonia', m_agonia_santuario(), (224, 98)),
         ('capela', m_capela_gotica(), (294, 290)),
         ('coreto', m_coreto(), (196, 392)),
         ('estacao', m_estacao(), (36, 584)),
@@ -1172,7 +1255,7 @@ def main():
         'trem': (54, 578), 'soldado': (114, 604), 'ruanova': (176, 568), 'praca': (255, 545),
         'alameda': (76, 522), 'coroados': (92, 376), 'pracona': (196, 404), 'cemiterio': (276, 300),
         'unifei': (186, 246), 'pinheirinho': (132, 118), 'agonia': (238, 100), 'kart': (318, 84),
-        'lago': (300, 140), 'prefeitura': (326, 166),
+        'lago': (300, 140), 'prefeitura': (322, 166),
         'j1': (144, 522), 'j2': (144, 360), 'j3': (144, 246), 'j4': (226, 404),
     }
     ROTAS = [
@@ -1448,7 +1531,7 @@ def main():
     for k, nome in enumerate(ORDEM):
         x, y = N[nome]
         t = texto_img(str(k + 1), C['br'], C['preto']).crop((0, 2, 6 * len(str(k + 1)) + 1, 10))
-        bx0, by0 = x + 5, y - 13
+        bx0, by0 = (x - 22, y - 6) if nome == 'lago' else (x + 5, y - 13)
         ret(d, bx0, by0, bx0 + t.width + 2, by0 + t.height + 1, C['preto'])
         ret(d, bx0 + 1, by0 + 1, bx0 + t.width + 1, by0 + t.height, C['vm2'])
         base.alpha_composite(t, (bx0 + 2, by0 + 1))
