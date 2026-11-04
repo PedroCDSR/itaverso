@@ -6,9 +6,7 @@ import { HEROIS, escolherHeroi } from '../genero.js';
 import { carregar, estado } from '../estado.js';
 import { FASES } from '../levels/index.js';
 
-// Arte do pacote Ninja Adventure usada na praça (public/assets/ninja/)
-const NINJA_TILESETS = ['TilesetFloor', 'TilesetWater', 'TilesetNature', 'TilesetHouse', 'TilesetElement', 'TilesetLogic'];
-const NINJA_PERSONAGENS = ['Boy', 'Princess', 'OldMan', 'OldWoman', 'Woman', 'Villager4', 'Villager3', 'Noble'];
+import { OBJETOS_PRACA, PERSONAGENS_PRACA } from '../data/pracaArte.js';
 
 // Carrega a arte e cria as animações. Teste direto pelo link: ?fase=1 a ?fase=4, ?heroi=helena, ?bone=1,
 // ?pao=1 (já com o pão de queijo), ?cena=Praca | Mapa | Titulo | Fim.
@@ -31,13 +29,13 @@ export class Preload extends Phaser.Scene {
         this.load.spritesheet(`heroi-${chave}-${forma}`, `assets/sprites/heroi-${chave}-${forma}.png`, { frameWidth: w, frameHeight: h });
       }
     }
-    // Praça andável: mapa do Tiled e arte do pacote Ninja Adventure (CC0)
+    // Praça andável: mapa do Tiled e arte do Modern Exteriors (LimeZu); balões do Ninja Adventure (CC0)
     this.load.tilemapTiledJSON('praca', 'assets/mapas/praca.tmj');
-    for (const t of NINJA_TILESETS) this.load.image(`ninja-${t}`, `assets/ninja/tilesets/${t}.png`);
-    for (const c of NINJA_PERSONAGENS) {
-      this.load.spritesheet(`ninja-${c}`, `assets/ninja/personagens/${c}.png`, { frameWidth: 16, frameHeight: 16 });
+    this.load.image('limezu-chao', 'assets/limezu/chao.png');
+    for (const o of OBJETOS_PRACA) this.load.image(`limezu-${o}`, `assets/limezu/objetos/${o}.png`);
+    for (const c of PERSONAGENS_PRACA) {
+      this.load.spritesheet(`limezu-${c}`, `assets/limezu/personagens/${c}.png`, { frameWidth: 16, frameHeight: 32 });
     }
-    this.load.spritesheet('ninja-Cat', 'assets/ninja/personagens/Cat.png', { frameWidth: 16, frameHeight: 16 });
     for (const e of ['exclamacao', 'reticencias', 'coracao']) this.load.image(`ninja-${e}`, `assets/ninja/ui/${e}.png`);
     // o mapa do Pedro em alta resolução é mostrado em HTML (ui/mapaHtml.js); aqui só aquece o cache do navegador
     if (TEM_MAPA) new Image().src = 'assets/mapa-hd.png';
@@ -68,14 +66,14 @@ export class Preload extends Phaser.Scene {
         }
       }
     }
-    // personagens do pacote: quadro = linha * 4 + coluna (colunas: baixo, cima, esquerda, direita)
-    for (const c of NINJA_PERSONAGENS) {
-      ['baixo', 'cima', 'esquerda', 'direita'].forEach((dir, col) => {
-        anim(`${c}-andar-${dir}`, `ninja-${c}`, [0, 1, 2, 3].map((l) => l * 4 + col), 7);
-        anim(`${c}-parado-${dir}`, `ninja-${c}`, [col], 1);
+    // personagens da praça: 24 quadros por linha (direita, cima, esquerda, baixo; 6 cada); linha 0 parado, 1 andando
+    for (const c of PERSONAGENS_PRACA) {
+      ['direita', 'cima', 'esquerda', 'baixo'].forEach((dir, i) => {
+        const q = (linha) => [0, 1, 2, 3, 4, 5].map((k) => linha * 24 + i * 6 + k);
+        anim(`${c}-parado-${dir}`, `limezu-${c}`, q(0), 6);
+        anim(`${c}-andar-${dir}`, `limezu-${c}`, q(1), 10);
       });
     }
-    anim('gato-parado', 'ninja-Cat', [0, 1], 2);
     anim('itacoin-girar', 'itacoin', [0, 1, 2, 3], 8);
     anim('cafe-vapor', 'cafecomleite', [0, 1], 3);
     anim('heli-voar', 'heliceu', [0, 1], 16);

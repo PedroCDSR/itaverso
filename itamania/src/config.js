@@ -111,8 +111,8 @@ export const PRACA = {
   velocidade: 64, // px/s
   velocidadeNpc: 22,
   alcanceFala: 18, // distância até o ponto à frente do herói para conversar
-  // personagens do pacote Ninja Adventure (CC0) no lugar dos heróis, até existir o desenho do Pedro visto de cima
-  heroi: { geraldo: 'Boy', helena: 'Princess' },
+  // personagens do Modern Exteriors no lugar dos heróis, até existir o desenho do Pedro visto de cima
+  heroi: { geraldo: 'scout6', helena: 'scout2' },
   joystick: { zonaMorta: 6, raio: 26, opacidade: 0.4 },
   botao: { x: 432, y: 218, raio: 28 },
 };

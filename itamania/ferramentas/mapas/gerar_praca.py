@@ -1,61 +1,91 @@
-"""Gera o mapa da Praça (Centro explorável, vista de cima) no formato do Tiled: public/assets/mapas/praca.tmj.
+"""Gera a Praça Theodomiro Santiago (Centro explorável, vista de cima) no formato do Tiled.
 
-Arte: só tiles do pacote Ninja Adventure (Pixel-boy e AAA, CC0), em public/assets/ninja/tilesets/. Nada desenhado
-do zero. O arquivo .tmj abre no Tiled (https://www.mapeditor.org) para o Pedro editar à mão.
+Arte: pacote Modern Exteriors 16x16 (LimeZu, comprado pelo Pedro em 04/11/2026; licença em
+referencias/licenciados/modern-exteriors-licenca.pdf: pode editar e usar em qualquer projeto, inclusive aberto no
+GitHub; não pode revender nem distribuir o pacote; crédito obrigatório a https://limezu.itch.io/).
+O pacote completo fica fora do Git (referencias/licenciados/modern-exteriors/, no .gitignore). Este script copia
+para public/assets/limezu/ só o que a praça usa.
 
-Referência da praça (Praça Theodomiro Santiago): o mapa-múndi do Pedro (moldura de caminho, 4 gramados, caminhos
-em cruz, fonte redonda no meio com o busto, árvores nos cantos) e as notas em referencias/mapa (satélite).
+Disposição: satélite enviado pelo Pedro (04/11/2026). Praça retangular com 4 maciços de árvores, largo no meio com o
+espelho d'água retangular e uma área redonda a nordeste dele. Em volta: ruas de asfalto e calçadas. Em cima: Hotel
+Centenário e Café do Vadinho; em cima à direita, do outro lado da rua, o Cesar Burg; à esquerda, o Fórum Cível no
+alto e o Clube Itajubense embaixo; à direita, o açaí e a arena esportiva.
 
-Camadas (de baixo para cima):
-  chao      grama + caminhos de terra (bordas escolhidas automaticamente)
-  agua      espelho d'água da fonte
-  objetos   casas, troncos, bancos, placas, base da estátua (abaixo do herói)
-  cima      copas e topo da estátua (por cima do herói)
-  colisao   onde não se anda (camada invisível no jogo)
-  pontos    camada de objetos: início, moradores, placas, itacoins, saída
+Saída:
+  public/assets/mapas/praca.tmj           mapa (abre e edita no Tiled)
+  public/assets/limezu/chao.png           tiles de chão usados (calçada, grama, água, asfalto, faixa)
+  public/assets/limezu/objetos/*.png      prédios, árvores, bancos, postes, fonte
+  public/assets/limezu/personagens/*.png  quadros 16x32 (linha 0 parado, linha 1 andando; 6 por direção)
+  src/data/pracaArte.js                   lista do que o Preload carrega
+  ferramentas/arte/previas/praca-mapa.png prévia
 
 Uso (dentro de itamania/):  python3 ferramentas/mapas/gerar_praca.py
 """
 import json
 import os
 import random
+import shutil
 
 from PIL import Image
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-TS_DIR = os.path.join(RAIZ, 'public', 'assets', 'ninja', 'tilesets')
-SAIDA = os.path.join(RAIZ, 'public', 'assets', 'mapas', 'praca.tmj')
+PACOTE = os.path.join(RAIZ, 'referencias', 'licenciados', 'modern-exteriors')
+TEMAS = os.path.join(PACOTE, 'ME_Theme_Sorter_16x16')
+AUTO = os.path.join(PACOTE, 'Autotiles_16x16', 'Game_Maker_Studio_Autotiles_Singles_16x16')
+ASSETS = os.path.join(RAIZ, 'public', 'assets')
+DEST = os.path.join(ASSETS, 'limezu')
 T = 16
-L, A = 36, 28  # tamanho do mapa em tiles
-random.seed(1913)  # ano da fundação do IEMI: o mapa sai sempre igual
+L, A = 70, 45
+random.seed(1913)
 
-TILESETS = ['TilesetFloor', 'TilesetWater', 'TilesetNature', 'TilesetHouse', 'TilesetElement', 'TilesetLogic']
-IMGS = {n: Image.open(os.path.join(TS_DIR, n + '.png')).convert('RGBA') for n in TILESETS}
-FIRST = {}
-_g = 1
-for n in TILESETS:
-    FIRST[n] = _g
-    w, h = IMGS[n].size
-    _g += (w // T) * (h // T)
-
-
-def gid(ts, c, r):
-    return FIRST[ts] + r * (IMGS[ts].width // T) + c
-
-
-# ---------- bordas ----------
-# Cada bloco de terreno do pacote traz um terreno B (terra ou água) sobre a grama, sempre no mesmo arranjo:
-# um 3x3 com as bordas e os cantos de fora (canto de cima à esquerda em c0, r0) e, no bloco de terra, os 4 cantos
-# de dentro num 2x2. As posições foram conferidas na grade (ferramentas/arte/previas, grade dos tilesets).
-# Por isso os caminhos do mapa têm sempre 2 tiles de largura ou mais (faixas de 1 tile pediriam outros tiles).
-TERRA = dict(c0=0, r0=7, dentro={'no': (6, 9), 'ne': (5, 9), 'so': (6, 8), 'se': (5, 8)},
-             cheio=[(1, 8), (8, 8), (8, 9)])
-AGUA = dict(c0=0, r0=6, dentro=None, cheio=[(1, 7)])
-GRAMA_LISA = [(0, 12), (1, 12), (2, 12), (3, 11), (3, 12), (4, 12)]
+# ---------- chão: atlas com só os tiles usados ----------
+# Autotiles do pacote no formato do GameMaker (12x4 = 47 bordas + 1 vazio): 19 calçada bege sobre asfalto,
+# 5 grama (fundo transparente, vai por cima da calçada), 18 espelho d'água com borda de pedra.
+AUTOTILES = {'calcada': 19, 'grama': 5, 'agua': 18}
+ATLAS_COLS = 12
+atlas = Image.new('RGBA', (ATLAS_COLS * T, 17 * T), (0, 0, 0, 0))
+LINHA = {}
+for i, (nome, n) in enumerate(AUTOTILES.items()):
+    im = Image.open(os.path.join(AUTO, f'Game_Maker_Studio_Autotiles_Singles_16x16_{n}.png')).convert('RGBA')
+    atlas.alpha_composite(im, (0, i * 4 * T))
+    LINHA[nome] = i * 4
+# asfalto liso: só as variações sem pintura (nenhum pixel claro)
+def _liso(f):
+    im = Image.open(os.path.join(TEMAS, '2_City_Terrains_Singles_16x16', f)).convert('RGBA')
+    return im.size == (T, T) and all(p[3] == 255 and sum(p[:3]) / 3 < 110 for p in im.getdata())
 
 
-def autotile(mascara, bl, ts):
-    """mascara[y][x] = True onde é o terreno B. Devolve a camada de gids (0 = vazio)."""
+asfaltos = [f for f in sorted(os.listdir(os.path.join(TEMAS, '2_City_Terrains_Singles_16x16'))) if 'Asphalt' in f and _liso(f)][:ATLAS_COLS]
+print('asfaltos lisos:', len(asfaltos))
+for c, f in enumerate(asfaltos):
+    atlas.alpha_composite(Image.open(os.path.join(TEMAS, '2_City_Terrains_Singles_16x16', f)).convert('RGBA'), (c * T, 12 * T))
+# faixas de pedestre: bloco 4x4 da folha de terrenos da cidade (colunas 5 a 8, linhas 4 a 7)
+terrenos = Image.open(os.path.join(TEMAS, '2_City_Terrains_16x16.png')).convert('RGBA')
+atlas.alpha_composite(terrenos.crop((5 * T, 4 * T, 9 * T, 8 * T)), (0, 13 * T))
+os.makedirs(DEST, exist_ok=True)
+atlas.save(os.path.join(DEST, 'chao.png'))
+
+
+def gid_chao(c, r):
+    return 1 + r * ATLAS_COLS + c
+
+
+# Bordas: cada tile do autotile da calçada tem um jeito único de mostrar os 8 vizinhos. Lemos um ponto perto de
+# cada borda e de cada canto (calçada = claro) e guardamos qual tile corresponde a cada combinação. O arranjo é o
+# mesmo nos outros autotiles do pacote, então a tabela serve para grama e água também.
+PONTOS = {'n': (8, 1), 's': (8, 14), 'o': (1, 8), 'l': (14, 8), 'no': (1, 1), 'ne': (14, 1), 'so': (1, 14), 'se': (14, 14)}
+ORDEM = ['n', 's', 'o', 'l', 'no', 'ne', 'so', 'se']
+ref = Image.open(os.path.join(AUTO, 'Game_Maker_Studio_Autotiles_Singles_16x16_19.png')).convert('RGBA')
+TABELA = {}
+for r in range(4):
+    for c in range(12):
+        if (c, r) == (0, 0):
+            continue  # vazio
+        sig = tuple(sum(ref.getpixel((c * T + x, r * T + y))[:3]) / 3 > 120 for x, y in (PONTOS[k] for k in ORDEM))
+        TABELA.setdefault(sig, (c, r))
+
+
+def autotile(mascara, nome):
     camada = [[0] * L for _ in range(A)]
 
     def b(x, y):
@@ -66,212 +96,321 @@ def autotile(mascara, bl, ts):
             if not mascara[y][x]:
                 continue
             n, s, o, l = b(x, y - 1), b(x, y + 1), b(x - 1, y), b(x + 1, y)
-            dc = 0 if not o else 2 if not l else 1  # coluna dentro do 3x3
-            dr = 0 if not n else 2 if not s else 1  # linha dentro do 3x3
-            pos = (bl['c0'] + dc, bl['r0'] + dr)
-            if (dc, dr) == (1, 1):
-                pos = random.choice(bl['cheio'])
-                if bl['dentro']:
-                    for canto, (vx, vy) in (('no', (-1, -1)), ('ne', (1, -1)), ('so', (-1, 1)), ('se', (1, 1))):
-                        if not b(x + vx, y + vy):
-                            pos = bl['dentro'][canto]
-                            break
-            camada[y][x] = gid(ts, *pos)
+            viz = {'n': n, 's': s, 'o': o, 'l': l,
+                   'no': n and o and b(x - 1, y - 1), 'ne': n and l and b(x + 1, y - 1),
+                   'so': s and o and b(x - 1, y + 1), 'se': s and l and b(x + 1, y + 1)}
+            c, r = TABELA[tuple(viz[k] for k in ORDEM)]
+            camada[y][x] = gid_chao(c, LINHA[nome] + r)
     return camada
 
 
-# ---------- desenho da praça ----------
-terra = [[False] * L for _ in range(A)]
+# ---------- objetos (imagens soltas do pacote) ----------
+ARQ = {
+    # prédios
+    'hotel': '12_Hotel_and_Hospital_Singles_16x16/ME_Singles_Hotel_and_Hospital_16x16_Hotel_1.png',
+    'cafe': '9_Shopping_Center_and_Markets_Singles_16x16/ME_Singles_Shopping_Center_and_Markets_16x16_Market_Small_5.png',
+    'burg': '9_Shopping_Center_and_Markets_Singles_16x16/ME_Singles_Shopping_Center_and_Markets_16x16_Market_Small_1.png',
+    'subway': '9_Shopping_Center_and_Markets_Singles_16x16/ME_Singles_Shopping_Center_and_Markets_16x16_Market_Small_3.png',
+    'acai': '9_Shopping_Center_and_Markets_Singles_16x16/ME_Singles_Shopping_Center_and_Markets_16x16_Market_Small_8.png',
+    'arena': '9_Shopping_Center_and_Markets_Singles_16x16/ME_Singles_Shopping_Center_and_Markets_16x16_Market_Medium_9.png',
+    'clube': '24_Additional_Houses_Singles_16x16/24_Additional_Houses_Victorian_House_5_16x16.png',
+    'forum': '4_Generic_Building_Singles_16x16/ME_Singles_Generic_Building_16x16_Condo_4_17.png',
+    'sobrado1': '24_Additional_Houses_Singles_16x16/24_Additional_Houses_Terraced_House_1_16x16.png',
+    'sobrado4': '24_Additional_Houses_Singles_16x16/24_Additional_Houses_Terraced_House_4_16x16.png',
+    'predio9': '4_Generic_Building_Singles_16x16/ME_Singles_Generic_Building_16x16_Condo_9_Example.png',
+    # praça
+    'arvore_grande': '7_Villas_Singles_16x16/ME_Singles_Villas_16x16_Tree_4.png',
+    'arvore_media': '7_Villas_Singles_16x16/ME_Singles_Villas_16x16_Tree_3.png',
+    'arvore_rua': '3_City_Props_Singles_16x16/ME_Singles_City_Props_16x16_Tree_12.png',
+    'fonte_redonda': '17_Garden_Singles_16x16/ME_Singles_Garden_16x16_Fountain_3_4.png',
+    'banco_h': '3_City_Props_Singles_16x16/ME_Singles_City_Props_16x16_Bench_2.png',
+    'banco_v': '3_City_Props_Singles_16x16/ME_Singles_City_Props_16x16_Bench_4.png',
+    'poste': '3_City_Props_Singles_16x16/ME_Singles_City_Props_16x16_Street_Lamp_1.png',
+    'lixeira': '3_City_Props_Singles_16x16/ME_Singles_City_Props_16x16_Trashbin_1.png',
+    'placa': '3_City_Props_Singles_16x16/ME_Singles_City_Props_16x16_Info_Sign_1.png',
+    'flores': '3_City_Props_Singles_16x16/ME_Singles_City_Props_16x16_Flower_Bush_1.png',
+}
+
+
+def achar(rel):
+    p = os.path.join(TEMAS, rel)
+    if os.path.exists(p):
+        return p
+    # alguns nomes do pacote variam; procura pelo final do nome dentro da pasta
+    pasta, nome = os.path.split(p)
+    fim = nome.split('16x16_')[-1]
+    for f in os.listdir(pasta):
+        if f.endswith(fim):
+            return os.path.join(pasta, f)
+    raise FileNotFoundError(rel)
+
+
+os.makedirs(os.path.join(DEST, 'objetos'), exist_ok=True)
+TAM = {}
+for chave, rel in ARQ.items():
+    destino = os.path.join(DEST, 'objetos', chave + '.png')
+    shutil.copyfile(achar(rel), destino)
+    TAM[chave] = Image.open(destino).size
+
+# como cada tipo de objeto bate: retângulo (x, y, largura, altura) a partir do canto de baixo à esquerda, em px
+def caixa(chave):
+    w, h = TAM[chave]
+    if chave.startswith('arvore'):
+        return (w // 2 - 7, -12, 14, 10)  # só o tronco
+    if chave == 'fonte_redonda':
+        return (4, -h + 10, w - 8, h - 12)
+    if chave in ('banco_h', 'banco_v', 'lixeira', 'flores', 'placa'):
+        return (0, -min(h, 12), w, min(h, 12))
+    if chave == 'poste':
+        return (w // 2 - 3, -6, 6, 6)
+    return (0, -h, w, h)  # prédios: tudo
+
+
+# ---------- desenho ----------
+asfalto = [[True] * L for _ in range(A)]
+calcada = [[False] * L for _ in range(A)]
+grama = [[False] * L for _ in range(A)]
 agua = [[False] * L for _ in range(A)]
-objetos = [[0] * L for _ in range(A)]
-cima = [[0] * L for _ in range(A)]
-colisao = [[False] * L for _ in range(A)]
+faixas = [[0] * L for _ in range(A)]
+objetos = []
 pontos = []
 
 
-def retangulo(m, x0, y0, x1, y1, v=True):
-    for y in range(y0, y1 + 1):
-        for x in range(x0, x1 + 1):
+def ret(m, x0, y0, x1, y1, v=True):
+    for y in range(max(0, y0), min(A, y1 + 1)):
+        for x in range(max(0, x0), min(L, x1 + 1)):
             m[y][x] = v
 
 
-def colocar(camada, ts, c0, r0, w, h, x, y, bate=True):
-    """Copia um pedaço w×h do tileset (a partir de c0, r0) para o mapa na posição x, y."""
-    for dy in range(h):
-        for dx in range(w):
-            camada[y + dy][x + dx] = gid(ts, c0 + dx, r0 + dy)
-            if bate:
-                colisao[y + dy][x + dx] = True
+def obj(chave, x, y, **props):
+    """x, y em tiles: canto de baixo à esquerda do objeto."""
+    objetos.append(dict(chave=chave, x=x * T, y=y * T, props=props))
 
 
 def ponto(tipo, x, y, **props):
-    pontos.append(dict(tipo=tipo, x=x, y=y, props=props))
+    pontos.append(dict(tipo=tipo, x=x * T, y=y * T, props=props))
 
 
-# ruas de terra em volta da praça
-PX0, PY0, PX1, PY1 = 7, 9, 28, 23  # praça (gramado + caminhos)
-retangulo(terra, 1, 5, L - 2, 7)  # rua de cima, na frente das lojas
-retangulo(terra, 3, 5, 5, A - 3)  # rua da esquerda
-retangulo(terra, L - 6, 5, L - 4, A - 3)  # rua da direita
-retangulo(terra, 3, A - 4, L - 4, A - 3)  # rua de baixo
-retangulo(terra, 17, A - 3, 18, A - 1)  # saída para a Rua Nova (embaixo, no meio)
+# ruas (o resto é calçada): duas horizontais e duas verticais em volta da praça
+RUA_N, RUA_S = (13, 15), (38, 40)
+RUA_O, RUA_L = (18, 20), (55, 57)
+ret(calcada, 0, 0, L - 1, A - 1)
+ret(calcada, 0, RUA_N[0], L - 1, RUA_N[1], False)
+ret(calcada, 0, RUA_S[0], L - 1, RUA_S[1], False)
+ret(calcada, RUA_O[0], 0, RUA_O[1], A - 1, False)
+ret(calcada, RUA_L[0], 0, RUA_L[1], A - 1, False)
 
-# caminhos da praça: moldura e cruz
-for x0, y0, x1, y1 in [
-    (PX0, PY0, PX1, PY0 + 1), (PX0, PY1 - 1, PX1, PY1), (PX0, PY0, PX0 + 1, PY1), (PX1 - 1, PY0, PX1, PY1),  # moldura
-    (17, PY0, 18, PY1), (PX0, 15, PX1, 16),  # cruz
-    (17, 8, 18, 8), (17, PY1 + 1, 18, PY1 + 1), (6, 15, 6, 16), (PX1 + 1, 15, PX1 + 1, 16),  # entradas
-]:
-    retangulo(terra, x0, y0, x1, y1)
-# canteiro de grama em volta da fonte (no mapa do Pedro, a fonte fica no meio, onde a cruz se encontra)
-retangulo(terra, 15, 13, 20, 18, False)
+# faixas de pedestre nas entradas da praça. No atlas: colunas 2 e 3 = faixa sem borda; linhas FX e FX+1 = barras
+# deitadas (para atravessar uma rua horizontal), FX+2 e FX+3 = barras em pé (rua vertical).
+FX = 13
+for x0 in (30, 44):
+    for dy, y in enumerate(range(RUA_N[0], RUA_N[1] + 1)):
+        for dx in range(2):
+            faixas[y][x0 + dx] = gid_chao(2 + dx, FX + (dy % 2))
+for xs, y0s in ((RUA_O, (22, 31)), (RUA_L, (27,))):
+    for y0 in y0s:
+        for x in range(xs[0], xs[1] + 1):
+            for dy in range(2):
+                faixas[y0 + dy][x] = gid_chao(2 + (x % 2), FX + 2 + dy)
 
-# fonte: espelho d'água 4x4 no meio, estátua no centro (lugar do busto de Theodomiro Santiago)
-retangulo(agua, 16, 14, 19, 17)
-retangulo(colisao, 16, 14, 19, 17)
-colocar(objetos, 'TilesetHouse', 7, 20, 1, 2, 17, 15, bate=False)  # corpo e pedestal da estátua
-colocar(cima, 'TilesetHouse', 7, 19, 1, 1, 17, 14, bate=False)  # cabeça (por cima do herói)
-ponto('fonte', 17.5, 17.6, nome='Fonte', fala='fonte')
+# praça: x 21..54, y 16..37. Maciços de árvores (grama) como no satélite
+PX0, PX1, PY0, PY1 = 21, 54, 16, 37
+MACICOS = [
+    (22, 17, 32, 25),  # noroeste
+    (41, 17, 50, 22),  # nordeste
+    (22, 32, 34, 36),  # sudoeste
+    (41, 25, 53, 36),  # leste e sudeste
+]
+for m in MACICOS:
+    ret(grama, *m)
+# espelho d'água retangular no largo e área redonda (fonte) a nordeste dele
+ret(agua, 25, 27, 32, 30)
+obj('fonte_redonda', 36, 25.6, nome='Fonte', fala='fonte')
 
-# lojas e casas na rua de cima (frente para a praça)
-colocar(objetos, 'TilesetHouse', 0, 0, 4, 3, 1, 2)  # casa
-colocar(objetos, 'TilesetHouse', 4, 0, 4, 3, 6, 2)  # Club Itajubense (casarão creme)
-colocar(objetos, 'TilesetHouse', 19, 0, 4, 3, 12, 2)  # Café do Vadinho
-colocar(objetos, 'TilesetHouse', 16, 0, 3, 3, 19, 2)  # Cesar Burg (placa de lanche no telhado)
-colocar(objetos, 'TilesetHouse', 12, 0, 4, 3, 24, 2)  # casa vermelha
-colocar(objetos, 'TilesetHouse', 8, 0, 4, 3, 30, 2)  # casa
-for x, nome, fala in [(10, 'Club Itajubense', 'clube'), (16, 'Café do Vadinho', 'cafe'), (22, 'Cesar Burg', 'burg')]:
-    colocar(objetos, 'TilesetElement', 6, 3, 1, 1, x, 4, bate=True)  # placa (topo)
-    ponto('placa', x + 0.5, 5, nome=nome, fala=fala)
-# telhados de trás (fileira de cima do mapa): árvores, para fechar a borda
-for x in range(0, L, 2):
-    colocar(cima, 'TilesetNature', 0, 0, 2, 1, x, 0, bate=False)
-    colocar(objetos, 'TilesetNature', 0, 1, 2, 1, x, 1, bate=False)
-retangulo(colisao, 0, 0, L - 1, 1)
+# árvores nos maciços: copas grandes e sobrepostas
+for (x0, y0, x1, y1) in MACICOS:
+    y = y0 + 3
+    linha = 0
+    while y <= y1 + 1:
+        x = x0 + (0 if linha % 2 == 0 else 2)
+        while x + 5 <= x1 + 2:
+            chave = 'arvore_grande' if (x + y) % 3 else 'arvore_media'
+            obj(chave, x + random.uniform(-0.4, 0.4), y + random.uniform(-0.2, 0.2))
+            x += 5
+        y += 3
+        linha += 1
 
-# laterais: fileira de árvores e casas
-for y in range(9, A - 4, 3):
-    colocar(cima, 'TilesetNature', 2, 0, 2, 1, 0, y, bate=False)
-    colocar(objetos, 'TilesetNature', 2, 1, 2, 1, 0, y + 1)
-    colocar(cima, 'TilesetNature', 2, 0, 2, 1, L - 2, y, bate=False)
-    colocar(objetos, 'TilesetNature', 2, 1, 2, 1, L - 2, y + 1)
-retangulo(colisao, 0, 2, 0, A - 1)
-retangulo(colisao, L - 1, 2, L - 1, A - 1)
-# fundo (embaixo): árvores dos dois lados da saída
-for x in list(range(0, 16, 2)) + list(range(20, L, 2)):
-    colocar(cima, 'TilesetNature', 0, 0, 2, 1, x, A - 2, bate=False)
-    colocar(objetos, 'TilesetNature', 0, 1, 2, 1, x, A - 1)
-ponto('saida', 17.9, A - 0.5, nome='Saída', fala='saida')
-colocar(objetos, 'TilesetElement', 6, 3, 1, 2, 19, A - 4, bate=False)  # placa da saída
-colisao[A - 3][19] = True
-ponto('placa', 19.5, A - 2, nome='Placa', fala='placaSaida')
+# bancos e postes em volta do largo
+for x in (25, 29):
+    obj('banco_h', x, 26.2)
+    obj('banco_h', x, 32.6)
+obj('banco_v', 23.4, 30.2)
+obj('banco_v', 34.2, 30.2)
+for x, y in [(21.2, 16.8), (54.2, 16.8), (21.2, 37.6), (54.2, 37.6), (36.5, 31.5), (38.5, 18.5), (38.5, 36.5)]:
+    obj('poste', x, y)
+obj('lixeira', 33.4, 26.5)
+obj('placa', 33.5, 31.6, nome='Placa da praça', fala='placa')
+for x in (37, 39):
+    obj('flores', x, 23.4)
 
-# gramados: árvores grandes nos 4 cantos (no mapa do Pedro, palmeiras)
-for x, y in [(9, 10), (25, 10), (9, 20), (25, 20)]:
-    colocar(cima, 'TilesetNature', 6, 8, 2, 1, x, y, bate=False)
-    colocar(objetos, 'TilesetNature', 6, 9, 2, 1, x, y + 1)
-# arbustos e flores nos gramados
-for x, y in [(12, 11), (14, 10), (22, 11), (20, 10), (12, 20), (14, 21), (22, 20), (20, 21), (10, 13), (26, 13),
-             (10, 18), (26, 18)]:
-    colocar(objetos, 'TilesetNature', random.choice([0, 1, 2, 6]), 10, 1, 1, x, y, bate=False)
-# bancos nos caminhos, de frente para a fonte
-for x, y in [(11, 14), (22, 14), (11, 17), (22, 17)]:
-    colocar(objetos, 'TilesetElement', 11, 1, 3, 1, x, y)
+# prédios: quadra de cima (base na linha 11, a calçada fica embaixo)
+obj('sobrado1', 0, 11.6)
+obj('subway', 13, 11.6)
+obj('sobrado4', 21, 11.6)
+obj('hotel', 33, 11.6, nome='Hotel Centenário', fala='hotel')
+obj('cafe', 50, 11.6, nome='{cafe}', fala='cafe')
+obj('burg', 58, 11.6, nome='{lanchonete}', fala='burg')
+obj('predio9', 63.5, 11.6)
+# quadra da esquerda
+obj('forum', 8, 21.6, nome='Fórum Cível', fala='forum')
+obj('clube', -1, 37.6, nome='Club Itajubense', fala='clube')
+# quadra da direita
+obj('acai', 59, 24.6, nome='Açaí', fala='acai')
+obj('arena', 60, 36.6, nome='Arena', fala='arena')
+# calçada de baixo: árvores de rua
+for x in range(1, L, 6):
+    obj('arvore_rua', x, A - 1.2)
 
-# pontos: início, moradores (sprite do pacote), itacoins
-ponto('inicio', 17.9, 25.5)
-ponto('npc', 15, 18.6, sprite='OldMan', nome='Guia da praça', fala='guia')
-ponto('npc', 12.5, 13.6, sprite='OldWoman', nome='Dona Cida', fala='vovo')
-ponto('npc', 14, 6.4, sprite='Woman', nome='{barista}', fala='barista')
-ponto('npc', 21, 6.4, sprite='Villager4', nome='{atendente}', fala='atendente')
-ponto('npc', 24, 16.5, sprite='Villager3', nome='Estudante', fala='estudante', anda=1)
-ponto('gato', 27, 21.5)
-for x, y in [(8, 9.5), (28, 9.5), (8, 23.5), (28, 23.5), (13, 15.5), (23, 15.5), (17.9, 11), (17.9, 21), (4, 12),
-             (32, 12), (4, 20), (32, 20), (9.5, 6.5), (27.5, 6.5)]:
+# pontos: início, moradores, itacoins, saída
+ponto('inicio', 37.5, 43.5)
+ponto('saida', 37.5, A - 0.2)
+ponto('npc', 30, 33.8, sprite='postman3', nome='Guia da praça', fala='guia')
+ponto('npc', 26, 26.0, sprite='scout4', nome='Dona Cida', fala='vovo')
+ponto('npc', 52.5, 12.8, sprite='postman2', nome='Barista', fala='barista')
+ponto('npc', 60.5, 12.8, sprite='scout5', nome='Atendente', fala='atendente')
+ponto('npc', 37, 21.5, sprite='scout3', nome='Estudante', fala='estudante', anda=1)
+ponto('npc', 45, 24.0, sprite='postman1', nome='Carteiro', fala='carteiro')
+for x, y in [(22, 16.6), (53.5, 16.6), (22, 37.2), (53.5, 37.2), (36, 34), (39.5, 28), (24, 28.5), (47, 23.6),
+             (10, 12.6), (65, 12.6), (19, 27), (56, 20), (30, 42), (46, 42)]:
     ponto('itacoin', x, y)
 
-# ---------- montagem do .tmj ----------
-grama = [[gid('TilesetFloor', *random.choice(GRAMA_LISA[:1] if random.random() < 0.6 else GRAMA_LISA))
-          for _ in range(L)] for _ in range(A)]
-camada_terra = autotile(terra, TERRA, 'TilesetFloor')
-chao = [[camada_terra[y][x] or grama[y][x] for x in range(L)] for y in range(A)]
-camada_agua = autotile(agua, AGUA, 'TilesetWater')
-marca = gid('TilesetLogic', 0, 0)
-camada_colisao = [[marca if colisao[y][x] else 0 for x in range(L)] for y in range(A)]
+# ---------- colisão (camada de tiles invisível) ----------
+bate = [[False] * L for _ in range(A)]
+for y in range(A):
+    for x in range(L):
+        if agua[y][x]:
+            bate[y][x] = True
+for o in objetos:
+    cx, cy, cw, ch = caixa(o['chave'])
+    x0, y0 = o['x'] + cx, o['y'] + cy
+    for ty in range(int(y0 // T), int((y0 + ch - 1) // T) + 1):
+        for tx in range(int(x0 // T), int((x0 + cw - 1) // T) + 1):
+            if 0 <= tx < L and 0 <= ty < A:
+                bate[ty][tx] = True
+for y in range(A):  # bordas do mapa (menos a saída)
+    bate[y][0] = bate[y][L - 1] = True
+for x in range(L):
+    bate[0][x] = True
+    if not (35 <= x <= 40):
+        bate[A - 1][x] = True
+
+# ---------- personagens ----------
+CHAR = os.path.join(PACOTE, 'Character_Generator_Addons_16x16', 'Characters_16x16')
+PERSONAGENS = {
+    'scout6': 'Scout_16x16_6', 'scout2': 'Scout_16x16_2',  # Geraldo e Helena (provisório)
+    'scout1': 'Scout_16x16_1', 'scout3': 'Scout_16x16_3', 'scout4': 'Scout_16x16_4', 'scout5': 'Scout_16x16_5',
+    'postman1': 'Postman_16x16_1', 'postman2': 'Postman_16x16_2', 'postman3': 'Postman_16x16_3',
+}
+os.makedirs(os.path.join(DEST, 'personagens'), exist_ok=True)
+for chave, nome in PERSONAGENS.items():
+    im = Image.open(os.path.join(CHAR, f'Modern_Exteriors_Characters_{nome}.png')).convert('RGBA')
+    # linha 1 (y 32) = parado, linha 2 (y 64) = andando; 24 quadros de 16x32 (direita, cima, esquerda, baixo)
+    im.crop((0, 32, 24 * 16, 96)).save(os.path.join(DEST, 'personagens', chave + '.png'))
+
+# ---------- .tmj ----------
+camadas_chao = {
+    'asfalto': [[gid_chao(random.choice([0, 0, 0, 0, 1, 2, 3]) % max(1, len(asfaltos)), 12) for _ in range(L)] for _ in range(A)],
+    'calcada': autotile(calcada, 'calcada'),
+    'grama': autotile(grama, 'grama'),
+    'agua': autotile(agua, 'agua'),
+    'faixas': faixas,
+}
+n_chao = ATLAS_COLS * (atlas.height // T)
+GID_OBJ = 1 + n_chao
+chaves = list(ARQ)
+GID_BATE = gid_chao(1, LINHA['agua'])  # qualquer tile; a camada fica invisível
+lid = 0
 
 
-def tile_layer(lid, nome, dados, visivel=True):
-    return {
-        'id': lid, 'name': nome, 'type': 'tilelayer', 'x': 0, 'y': 0, 'width': L, 'height': A,
-        'opacity': 1, 'visible': visivel, 'data': [v for linha in dados for v in linha],
-    }
+def camada(nome, dados, visivel=True):
+    global lid
+    lid += 1
+    return {'id': lid, 'name': nome, 'type': 'tilelayer', 'x': 0, 'y': 0, 'width': L, 'height': A, 'opacity': 1,
+            'visible': visivel, 'data': [v for linha in dados for v in linha]}
 
 
+def props(d):
+    return [{'name': k, 'type': 'int' if isinstance(v, int) else 'string', 'value': v} for k, v in d.items()]
+
+
+layers = [camada(n, d) for n, d in camadas_chao.items()]
+layers.append(camada('colisao', [[GID_BATE if bate[y][x] else 0 for x in range(L)] for y in range(A)], False))
+oid = 0
 objs = []
-for i, p in enumerate(pontos, start=1):
-    props = [{'name': k, 'type': 'int' if isinstance(v, int) else 'string', 'value': v} for k, v in p['props'].items()]
-    objs.append({
-        'id': i, 'name': p['props'].get('nome', p['tipo']), 'type': p['tipo'], 'point': True,
-        'x': round(p['x'] * T, 1), 'y': round(p['y'] * T, 1), 'width': 0, 'height': 0, 'rotation': 0,
-        'visible': True, 'properties': props,
-    })
+for o in objetos:
+    oid += 1
+    w, h = TAM[o['chave']]
+    objs.append({'id': oid, 'name': o['props'].get('nome', o['chave']), 'type': o['chave'], 'gid': GID_OBJ + chaves.index(o['chave']),
+                 'x': round(o['x'], 1), 'y': round(o['y'], 1), 'width': w, 'height': h, 'rotation': 0, 'visible': True,
+                 'properties': props(o['props'])})
+lid += 1
+layers.append({'id': lid, 'name': 'objetos', 'type': 'objectgroup', 'x': 0, 'y': 0, 'opacity': 1, 'visible': True,
+               'draworder': 'topdown', 'objects': objs})
+pts = []
+for p in pontos:
+    oid += 1
+    pts.append({'id': oid, 'name': p['props'].get('nome', p['tipo']), 'type': p['tipo'], 'point': True,
+                'x': round(p['x'], 1), 'y': round(p['y'], 1), 'width': 0, 'height': 0, 'rotation': 0, 'visible': True,
+                'properties': props(p['props'])})
+lid += 1
+layers.append({'id': lid, 'name': 'pontos', 'type': 'objectgroup', 'x': 0, 'y': 0, 'opacity': 1, 'visible': True,
+               'draworder': 'topdown', 'objects': pts})
 
 mapa = {
-    'type': 'map', 'version': '1.10', 'tiledversion': '1.11.2', 'orientation': 'orthogonal',
-    'renderorder': 'right-down', 'infinite': False, 'width': L, 'height': A, 'tilewidth': T, 'tileheight': T,
-    'nextlayerid': 7, 'nextobjectid': len(objs) + 1,
+    'type': 'map', 'version': '1.10', 'tiledversion': '1.11.2', 'orientation': 'orthogonal', 'renderorder': 'right-down',
+    'infinite': False, 'width': L, 'height': A, 'tilewidth': T, 'tileheight': T, 'nextlayerid': lid + 1,
+    'nextobjectid': oid + 1,
     'properties': [{'name': 'origem', 'type': 'string',
-                    'value': 'gerado por ferramentas/mapas/gerar_praca.py; arte: Ninja Adventure (CC0)'}],
+                    'value': 'gerado por ferramentas/mapas/gerar_praca.py; arte: Modern Exteriors (LimeZu)'}],
     'tilesets': [
-        {
-            'firstgid': FIRST[n], 'name': n, 'image': f'../ninja/tilesets/{n}.png',
-            'imagewidth': IMGS[n].width, 'imageheight': IMGS[n].height, 'tilewidth': T, 'tileheight': T,
-            'columns': IMGS[n].width // T, 'tilecount': (IMGS[n].width // T) * (IMGS[n].height // T),
-            'margin': 0, 'spacing': 0,
-        }
-        for n in TILESETS
+        {'firstgid': 1, 'name': 'chao', 'image': '../limezu/chao.png', 'imagewidth': atlas.width,
+         'imageheight': atlas.height, 'tilewidth': T, 'tileheight': T, 'columns': ATLAS_COLS, 'tilecount': n_chao,
+         'margin': 0, 'spacing': 0},
+        {'firstgid': GID_OBJ, 'name': 'objetos', 'columns': 0, 'tilewidth': max(w for w, h in TAM.values()),
+         'tileheight': max(h for w, h in TAM.values()), 'tilecount': len(chaves), 'margin': 0, 'spacing': 0,
+         'grid': {'orientation': 'orthogonal', 'width': 1, 'height': 1},
+         'tiles': [{'id': i, 'image': f'../limezu/objetos/{k}.png', 'imagewidth': TAM[k][0], 'imageheight': TAM[k][1],
+                    'type': k} for i, k in enumerate(chaves)]},
     ],
-    'layers': [
-        tile_layer(1, 'chao', chao),
-        tile_layer(2, 'agua', camada_agua),
-        tile_layer(3, 'objetos', objetos),
-        tile_layer(4, 'cima', cima),
-        tile_layer(5, 'colisao', camada_colisao, visivel=False),
-        {'id': 6, 'name': 'pontos', 'type': 'objectgroup', 'x': 0, 'y': 0, 'opacity': 1, 'visible': True,
-         'draworder': 'topdown', 'objects': objs},
-    ],
+    'layers': layers,
 }
-os.makedirs(os.path.dirname(SAIDA), exist_ok=True)
-with open(SAIDA, 'w', encoding='utf-8') as f:
+with open(os.path.join(ASSETS, 'mapas', 'praca.tmj'), 'w', encoding='utf-8') as f:
     json.dump(mapa, f, ensure_ascii=False, separators=(',', ':'))
 
+with open(os.path.join(RAIZ, 'src', 'data', 'pracaArte.js'), 'w', encoding='utf-8') as f:
+    f.write('// Gerado por ferramentas/mapas/gerar_praca.py. Arte: Modern Exteriors (LimeZu). Não editar à mão.\n')
+    f.write(f'export const OBJETOS_PRACA = {json.dumps(chaves)};\n')
+    f.write(f'export const PERSONAGENS_PRACA = {json.dumps(list(PERSONAGENS))};\n')
 
-# prévia em PNG (só para conferir; não vai para o jogo)
-def previa():
-    im = Image.new('RGBA', (L * T, A * T), (0, 0, 0, 255))
-    porgid = {}
-    for n in TILESETS:
-        cols = IMGS[n].width // T
-        for i in range((IMGS[n].width // T) * (IMGS[n].height // T)):
-            porgid[FIRST[n] + i] = (n, i % cols, i // cols)
-    for dados in (chao, camada_agua, objetos, cima):
-        for y in range(A):
-            for x in range(L):
-                g = dados[y][x]
-                if g:
-                    n, c, r = porgid[g]
-                    im.alpha_composite(IMGS[n].crop((c * T, r * T, c * T + T, r * T + T)), (x * T, y * T))
-    for p in pontos:
-        cor = {'npc': (255, 60, 200, 255), 'itacoin': (255, 220, 0, 255), 'inicio': (0, 120, 255, 255)}.get(
-            p['tipo'], (255, 255, 255, 255))
-        x, y = int(p['x'] * T), int(p['y'] * T)
-        for dx in range(-2, 3):
-            for dy in range(-2, 3):
-                im.putpixel((min(L * T - 1, max(0, x + dx)), min(A * T - 1, max(0, y + dy))), cor)
-    destino = os.path.join(RAIZ, 'ferramentas', 'arte', 'previas', 'praca-mapa.png')
-    os.makedirs(os.path.dirname(destino), exist_ok=True)
-    im.resize((im.width * 2, im.height * 2), Image.NEAREST).save(destino)
-
-
-previa()
-print('ok:', os.path.relpath(SAIDA, RAIZ), f'{L}x{A} tiles,', len(pontos), 'pontos')
+# ---------- prévia ----------
+im = Image.new('RGBA', (L * T, A * T), (0, 0, 0, 255))
+for nome, dados in camadas_chao.items():
+    for y in range(A):
+        for x in range(L):
+            g = dados[y][x]
+            if g:
+                c, r = (g - 1) % ATLAS_COLS, (g - 1) // ATLAS_COLS
+                im.alpha_composite(atlas.crop((c * T, r * T, c * T + T, r * T + T)), (x * T, y * T))
+for o in sorted(objetos, key=lambda o: o['y']):
+    sp = Image.open(os.path.join(DEST, 'objetos', o['chave'] + '.png')).convert('RGBA')
+    x, y = int(o['x']), int(o['y']) - sp.height
+    canvas = Image.new('RGBA', im.size, (0, 0, 0, 0))
+    canvas.paste(sp, (x, y))
+    im.alpha_composite(canvas)
+for p in pontos:
+    cor = {'npc': (255, 60, 200, 255), 'itacoin': (255, 220, 0, 255), 'inicio': (0, 120, 255, 255)}.get(p['tipo'], (255, 255, 255, 255))
+    for dx in range(-2, 3):
+        for dy in range(-2, 3):
+            im.putpixel((min(L * T - 1, max(0, int(p['x']) + dx)), min(A * T - 1, max(0, int(p['y']) + dy))), cor)
+im.save(os.path.join(RAIZ, 'ferramentas', 'arte', 'previas', 'praca-mapa.png'))
+print('ok:', f'{L}x{A} tiles,', len(objetos), 'objetos,', len(pontos), 'pontos, tabela de bordas com', len(TABELA))

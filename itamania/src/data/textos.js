@@ -5,6 +5,7 @@
 export const TEXTOS = {
   jogo: 'ITAMANIA',
   subtitulo: 'uma aventura em Itajubá',
+  creditos: 'Arte da cidade: LimeZu (limezu.itch.io) e Pixel-boy (Ninja Adventure)',
   escolha: 'Quem vai conhecer Itajubá?',
   botoes: {
     jogar: 'JOGAR',
@@ -61,7 +62,7 @@ export const TEXTOS = {
     falas: {
       guia: [
         { quem: 'Guia da praça', texto: 'Bem-vind{o|a} à Praça Theodomiro Santiago, o coração do centro!' },
-        { quem: 'Guia da praça', texto: 'A estátua da fonte lembra quem fundou a escola de engenharia daqui.' },
+        { quem: 'Guia da praça', texto: 'Leia a placa perto do espelho d\'água. Ela conta uma história importante!' },
         { quem: 'heroi', texto: 'Uma escola de engenharia? Quero saber mais!' },
       ],
       vovo: [
@@ -80,15 +81,23 @@ export const TEXTOS = {
         { quem: 'Estudante', texto: 'Muita gente de lá vai trabalhar na fábrica de helicópteros!' },
         { quem: 'heroi', texto: 'Helicóptero feito aqui? Que demais!' },
       ],
-      fonte: [
-        { quem: 'Placa da fonte', texto: 'Theodomiro Santiago fundou aqui, em 1913, uma escola de engenharia.' },
-        { quem: 'Placa da fonte', texto: 'Hoje ela se chama UNIFEI.' },
+      fonte: [{ quem: 'heroi', texto: 'Que fonte bonita! Dá vontade de jogar uma moedinha.' }],
+      clube: [{ quem: 'Placa', texto: 'Club Itajubense. Bailes e festas desde muito tempo!' }],
+      hotel: [{ quem: 'Placa', texto: 'Hotel Centenário.' }],
+      forum: [{ quem: 'Placa', texto: 'Fórum Cível.' }],
+      acai: [{ quem: 'heroi', texto: 'Uma loja de açaí! Depois eu volto aqui.' }],
+      arena: [{ quem: 'heroi', texto: 'Uma arena esportiva bem do lado da praça!' }],
+      placa: [
+        { quem: 'Placa da praça', texto: 'Praça Theodomiro Santiago.' },
+        { quem: 'Placa da praça', texto: 'Theodomiro fundou aqui, em 1913, a escola de engenharia que hoje é a UNIFEI.' },
       ],
-      clube: [{ quem: 'Placa', texto: 'Club Itajubense.' }],
+      carteiro: [
+        { quem: 'Carteiro', texto: 'Bom dia! Conheço cada rua desta cidade.' },
+        { quem: 'Carteiro', texto: 'Desça pela rua de baixo para ver o mapa de Itajubá.' },
+      ],
       cafe: [{ quem: 'Placa', texto: '{cafe}.' }],
       burg: [{ quem: 'Placa', texto: '{lanchonete}.' }],
       placaSaida: [{ quem: 'Placa', texto: 'Para baixo: Rua Nova e o mapa da cidade.' }],
-      gato: [{ quem: 'heroi', texto: 'Um gatinho! Ele nem liga para mim.' }],
     },
     saida: 'Ir para o mapa da cidade?',
     moedas: 'Achei uma itacoin!',

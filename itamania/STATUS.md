@@ -1,5 +1,32 @@
 # STATUS · ITAMANIA
 
+## Praça com o Modern Exteriors (04/11/2026, noite)
+
+O Pedro achou o estilo do Ninja Adventure antigo demais e comprou o **Modern Exteriors 16x16** (LimeZu). A praça foi
+refeita com ele, na disposição do satélite que o Pedro mandou.
+
+- **Licença** (PDF no pacote, cópia em `referencias/licenciados/`): pode editar e usar em qualquer projeto, inclusive
+  aberto no GitHub; não pode revender nem distribuir o pacote; crédito obrigatório (na tela de título e no
+  `CREDITS.md`). Por isso o pacote completo (348 MB) fica em `referencias/licenciados/modern-exteriors/`, fora do Git
+  (`.gitignore`), e o gerador copia para `public/assets/limezu/` só o que a praça usa (~290 KB).
+- **Sessão nova:** o pacote não está no repositório. Para rodar o gerador de novo, baixar a versão 16x16 pelo link de
+  download da compra (está no e-mail do itch.io do Pedro; não guardar o link no repositório) e extrair a pasta
+  `Modern_Exteriors_16x16` em `referencias/licenciados/modern-exteriors/`.
+- **Mapa** (`gerar_praca.py` → `praca.tmj`, 70x45 tiles): ruas de asfalto com faixas de pedestre e calçadas em volta;
+  praça com piso claro, 4 maciços de árvores (noroeste, nordeste, sudoeste e o grande do leste/sudeste), espelho
+  d'água retangular no largo e fonte redonda a nordeste dele, bancos, postes, placa. Em cima: sobrado (G5), Hotel
+  Centenário, Café do Vadinho; do outro lado da rua, Cesar Burg. À esquerda: Fórum Cível e Club Itajubense (casarão
+  com torre). À direita: açaí e arena. As bordas de calçada, grama e água saem dos autotiles do pacote (47 bordas,
+  lidas automaticamente). Prédios e árvores são imagens na camada de objetos, ordenadas pela base.
+- **Personagens (provisório):** Geraldo = escoteiro de cabelo castanho, Helena = escoteira de cabelo cacheado; moradores
+  são carteiros e escoteiros do pacote (o pacote só traz esses). Para ter moradores variados, o Modern Interiors
+  (mesmo autor) traz um gerador de personagens.
+- **Placas em inglês** nas fachadas do pacote ("STORE", "MARKET"); os nomes certos aparecem nas falas. Falta: busto
+  de Theodomiro (o pacote não tem) e letreiros em português.
+- **Teste (Chromium):** praça carrega, andar, conversar (guia), placas, itacoins, pausa, saída para o mapa, título,
+  capturas antigas, sem erros no console. `dist/` = 2,3 MB.
+
+
 ## Praça andável (04/11/2026, tarde)
 
 Pedido do Pedro: reformular o começo com o Centro explorável, vista de cima, usando pacotes prontos (nada de arte

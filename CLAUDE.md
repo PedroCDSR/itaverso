@@ -102,8 +102,10 @@ A arte que dá vida ao jogo vem de mão humana; o Claude integra, anima, ajusta 
 - Diálogo em HTML nítido (`src/ui/Dialogo.js`), no máximo 2 linhas por caixa.
 - **Centro explorável (vista de cima):** o jogo começa na Praça (`src/scenes/Praca.js` + controles em `PracaUI.js`).
   Mapa no formato do Tiled em `public/assets/mapas/praca.tmj`, gerado por `ferramentas/mapas/gerar_praca.py` (pode ser
-  editado no Tiled; se for editado à mão, não rodar o gerador por cima). Arte do pacote Ninja Adventure (CC0) em
-  `public/assets/ninja/`. Câmera com zoom 2 (`PRACA` em `config.js`).
+  editado no Tiled; se for editado à mão, não rodar o gerador por cima). Arte do **Modern Exteriors** (LimeZu, licença
+  paga): o pacote completo fica fora do Git (`referencias/licenciados/modern-exteriors/`, proibido redistribuir) e só
+  os recortes usados vão para `public/assets/limezu/`. Crédito ao LimeZu é obrigatório (tela de título e
+  `CREDITS.md`). Câmera com zoom 2 (`PRACA` em `config.js`).
 
 ## 7. Estrutura do repositório
 

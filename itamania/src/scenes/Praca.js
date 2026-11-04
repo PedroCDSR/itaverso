@@ -11,14 +11,16 @@ import { abrirPausa } from '../fluxo.js';
 
 // Praça Theodomiro Santiago andável, vista de cima (o começo do Centro explorável).
 // Mapa no formato do Tiled (public/assets/mapas/praca.tmj, gerado por ferramentas/mapas/gerar_praca.py e editável no
-// Tiled). Arte: pacote Ninja Adventure (CC0). Personagens do pacote: 16x16, colunas = baixo, cima, esquerda, direita;
-// linhas 0 a 3 = passos.
-const DIRS = ['baixo', 'cima', 'esquerda', 'direita'];
+// Tiled). Arte: Modern Exteriors (LimeZu). Chão em camadas de tiles; prédios, árvores e móveis são imagens da camada
+// "objetos", ordenadas pela base (quem está mais embaixo aparece na frente).
+// Personagens do pacote: quadros de 16x32; linha 0 parado, linha 1 andando; 6 quadros por direção.
 
 // Texto com as marcações de gênero e os nomes das vagas (lugares reais autorizados ou genéricos).
 function texto(t) {
   return g(t.replace('{cafe}', nomeVaga('cafe')).replace('{lanchonete}', nomeVaga('lanchonete')));
 }
+
+const props = (o) => Object.fromEntries((o.properties || []).map((p) => [p.name, p.value]));
 
 export class Praca extends Phaser.Scene {
   constructor() {
@@ -29,39 +31,43 @@ export class Praca extends Phaser.Scene {
     this.ocupado = false;
     this.saindo = false;
     const mapa = this.make.tilemap({ key: 'praca' });
-    const tilesets = mapa.tilesets.map((t) => mapa.addTilesetImage(t.name, `ninja-${t.name}`));
-    const camada = (nome, prof) => mapa.createLayer(nome, tilesets, 0, 0).setDepth(prof);
-    camada('chao', 0);
-    camada('agua', 1);
-    camada('objetos', 2);
-    camada('cima', 5000);
-    this.colisao = camada('colisao', 0).setVisible(false);
+    const chao = mapa.addTilesetImage('chao', 'limezu-chao');
+    for (const nome of ['asfalto', 'calcada', 'grama', 'agua', 'faixas']) mapa.createLayer(nome, chao, 0, 0).setDepth(0);
+    this.colisao = mapa.createLayer('colisao', chao, 0, 0).setVisible(false);
     this.colisao.setCollisionByExclusion([-1]);
     this.physics.world.setBounds(0, 0, mapa.widthInPixels, mapa.heightInPixels);
 
-    // pontos do mapa (camada de objetos do Tiled)
-    const pontos = mapa.getObjectLayer('pontos').objects.map((o) => ({
-      tipo: o.type,
-      x: o.x,
-      y: o.y,
-      ...Object.fromEntries((o.properties || []).map((p) => [p.name, p.value])),
-    }));
+    // objetos: o gid aponta para uma imagem do tileset "objetos" (o tipo de cada imagem é a chave da textura)
+    // (o Phaser guarda tilesets de imagens soltas em imageCollections; a chave sai do nome do arquivo)
+    const tipoPorGid = {};
+    for (const col of mapa.imageCollections) {
+      for (const im of col.images) tipoPorGid[im.gid] = im.image.split('/').pop().replace('.png', '');
+    }
+    this.alvos = [];
+    for (const o of mapa.getObjectLayer('objetos').objects) {
+      const chave = tipoPorGid[o.gid] || o.type;
+      const img = this.add.image(o.x, o.y, `limezu-${chave}`).setOrigin(0, 1).setDepth(10 + o.y / 1000);
+      const p = props(o);
+      if (p.fala) this.alvos.push({ x: o.x + img.width / 2, y: o.y + 2, fala: p.fala });
+    }
+
+    // pontos do mapa (início, moradores, itacoins, saída)
+    const pontos = mapa.getObjectLayer('pontos').objects.map((o) => ({ tipo: o.type, x: o.x, y: o.y, ...props(o) }));
     const inicio = pontos.find((p) => p.tipo === 'inicio');
 
     // herói (personagem do pacote no lugar do desenho do Pedro, até existir a versão vista de cima)
     this.chaveHeroi = PRACA.heroi[heroi()];
-    this.heroi = this.physics.add.sprite(inicio.x, inicio.y, `ninja-${this.chaveHeroi}`, 1);
+    this.heroi = this.physics.add.sprite(inicio.x, inicio.y, `limezu-${this.chaveHeroi}`, 6);
     this.heroi.setOrigin(0.5, 1).setCollideWorldBounds(true);
-    this.heroi.body.setSize(10, 6).setOffset(3, 10);
+    this.heroi.body.setSize(10, 6).setOffset(3, 26);
     this.direcao = 'cima';
     this.physics.add.collider(this.heroi, this.colisao);
 
-    // moradores, placas e fonte (tudo com que se conversa)
-    this.alvos = [];
+    // moradores
     this.npcs = this.physics.add.group({ immovable: true });
     for (const p of pontos.filter((q) => q.tipo === 'npc')) {
-      const s = this.npcs.create(p.x, p.y, `ninja-${p.sprite}`, 0).setOrigin(0.5, 1);
-      s.body.setSize(10, 6).setOffset(3, 10);
+      const s = this.npcs.create(p.x, p.y, `limezu-${p.sprite}`, 18).setOrigin(0.5, 1);
+      s.body.setSize(10, 6).setOffset(3, 26);
       s.dados = p;
       s.chave = p.sprite;
       s.direcao = 'baixo';
@@ -69,14 +75,6 @@ export class Praca extends Phaser.Scene {
       this.alvos.push({ x: p.x, y: p.y - 4, fala: p.fala, npc: s, balao: this.balao(s, 'reticencias') });
     }
     this.physics.add.collider(this.heroi, this.npcs);
-    for (const p of pontos.filter((q) => q.tipo === 'placa' || q.tipo === 'fonte')) {
-      this.alvos.push({ x: p.x, y: p.y, fala: p.fala });
-    }
-    const gatoP = pontos.find((p) => p.tipo === 'gato');
-    if (gatoP) {
-      this.gato = this.add.sprite(gatoP.x, gatoP.y, 'ninja-Cat', 0).setOrigin(0.5, 1).play('gato-parado');
-      this.alvos.push({ x: gatoP.x, y: gatoP.y - 4, fala: 'gato', gato: true });
-    }
     this.saida = pontos.find((p) => p.tipo === 'saida');
 
     // itacoins (as que já foram pegas não voltam: estado.moedasPraca)
@@ -122,7 +120,7 @@ export class Praca extends Phaser.Scene {
   }
 
   balao(s, chave) {
-    return this.add.image(s.x, s.y - 18, `ninja-${chave}`).setOrigin(0.5, 1).setDepth(6000);
+    return this.add.image(s.x, s.y - 33, `ninja-${chave}`).setOrigin(0.5, 1).setDepth(6000);
   }
 
   // morador que anda de um lado para o outro e para um pouco
@@ -173,10 +171,9 @@ export class Praca extends Phaser.Scene {
       if (a.npc) {
         a.x = a.npc.x;
         a.y = a.npc.y - 4;
-        a.balao?.setPosition(a.npc.x, a.npc.y - 17);
+        a.balao?.setPosition(a.npc.x, a.npc.y - 33);
       }
     });
-    if (this.gato) this.gato.setDepth(10 + this.gato.y / 1000);
     this.heroi.setDepth(10 + this.heroi.y / 1000);
 
     if (this.ocupado || this.saindo) {
@@ -192,7 +189,7 @@ export class Praca extends Phaser.Scene {
     this.animar(this.heroi, this.chaveHeroi, this.direcao, andando);
 
     // quem está na frente do herói
-    const frente = { baixo: [0, 8], cima: [0, -14], esquerda: [-11, -4], direita: [11, -4] }[this.direcao];
+    const frente = { baixo: [0, 8], cima: [0, -10], esquerda: [-11, -3], direita: [11, -3] }[this.direcao];
     const fx = this.heroi.x + frente[0];
     const fy = this.heroi.y + frente[1];
     let alvo = null;
@@ -205,7 +202,7 @@ export class Praca extends Phaser.Scene {
       }
     }
     this.exclamacao.setVisible(!!alvo);
-    if (alvo) this.exclamacao.setPosition(this.heroi.x, this.heroi.y - 17);
+    if (alvo) this.exclamacao.setPosition(this.heroi.x, this.heroi.y - 33);
     if (alvo && falarApertou) this.conversar(alvo);
 
     if (this.saida && this.heroi.y > this.saida.y - 6 && Math.abs(this.heroi.x - this.saida.x) < 24) this.irParaMapa();
@@ -227,7 +224,6 @@ export class Praca extends Phaser.Scene {
       alvo.balao?.destroy();
       alvo.balao = null;
     }
-    if (alvo.gato) this.gato.play('gato-parado');
     await this.falar(TEXTOS.praca.falas[alvo.fala] || []);
     if (alvo.npc?.dados.anda) this.tweens.getTweensOf(alvo.npc).forEach((tw) => tw.resume());
     this.conversando = null;

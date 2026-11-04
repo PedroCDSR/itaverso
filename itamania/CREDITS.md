@@ -9,14 +9,15 @@ Tudo que vem de fora do projeto fica registrado aqui (autoria, licença e onde e
 | Fonte "Press Start 2P" | CodeMan38 | SIL Open Font License 1.1 | `public/assets/fonts/PressStart2P.woff2` (licença em `OFL-PressStart2P.txt`) |
 | Fonte "Patrick Hand" | Patrick Wagesreiter | SIL Open Font License 1.1 | `public/assets/fonts/PatrickHand.woff2` (licença em `OFL-PatrickHand.txt`) |
 | ZzFX (gerador de efeitos sonoros, função `zzfxG`) | Frank Force ([KilledByAPixel/ZzFX](https://github.com/KilledByAPixel/ZzFX)) | MIT | adaptado em `src/audio/zzfx.js` |
-| Ninja Adventure Asset Pack (tilesets, personagens, balões) | Pixel-boy e AAA ([pixel-boy.itch.io](https://pixel-boy.itch.io/ninja-adventure-asset-pack)) | CC0 1.0 (crédito opcional) | `public/assets/ninja/` (licença em `referencias/licenciados/ninja-adventure/`) |
+| Modern Exteriors 16x16 (chão, prédios, árvores, móveis e personagens da praça) | LimeZu ([limezu.itch.io](https://limezu.itch.io/)) | Licença paga, comprada pelo Pedro em 04/11/2026: pode editar e usar em projetos comerciais e abertos; não pode revender nem distribuir o pacote; **crédito obrigatório** (na tela de título) | recortes em `public/assets/limezu/` (licença em `referencias/licenciados/modern-exteriors-licenca.pdf`; o pacote completo fica fora do Git) |
+| Ninja Adventure Asset Pack (balões "!" e "...") | Pixel-boy e AAA ([pixel-boy.itch.io](https://pixel-boy.itch.io/ninja-adventure-asset-pack)) | CC0 1.0 (crédito opcional) | `public/assets/ninja/` (licença em `referencias/licenciados/ninja-adventure/`) |
 | Nomes e logos de comércios de Itajubá (Casa Joka, Cesar Burg, Café do Vadinho), redesenhados em pixel | os próprios comércios | Uso autorizado pelos donos, informado pelo Pedro em 04/11/2026 | `public/assets/cenario/` |
 
 As fontes vêm do repositório oficial `google/fonts` e foram convertidas para woff2, só com o alfabeto latino
 (Latin-1), para ficarem leves. A OFL permite essa conversão.
 
 Heróis (Geraldo e Helena) e mapa-múndi: desenhos do Pedro. Na praça vista de cima, os heróis e os moradores ainda
-são personagens do Ninja Adventure (provisório, até existir o desenho do Pedro visto de cima). Demais personagens, cenários, efeitos sonoros e músicas
+são personagens do Modern Exteriors (provisório, até existir o desenho do Pedro visto de cima). Demais personagens, cenários, efeitos sonoros e músicas
 (gerados em código): criação original deste projeto. Nenhum arquivo de arte, som ou música de outro jogo é usado.
 
 Licença do ZzFX:

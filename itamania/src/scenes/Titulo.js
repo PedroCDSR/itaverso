@@ -53,6 +53,11 @@ export class Titulo extends Phaser.Scene {
       new Botao(this, LARGURA / 2, 234, TEXTOS.botoes.jogar, () => this.jogar(), { largura: 150, altura: 28, cor: 'amarelo', tamanhoFonte: '10px' });
     }
     new BotaoSom(this, LARGURA - 20, 20);
+    // crédito obrigatório da licença do Modern Exteriors (arte da praça)
+    this.add.rectangle(0, ALTURA - 14, LARGURA, 14, CORES.roxo, 0.75).setOrigin(0);
+    this.add
+      .text(LARGURA / 2, ALTURA - 8, TEXTOS.creditos, { fontFamily: FONTES.dialogo, fontSize: '12px', color: CORES_CSS.branco })
+      .setOrigin(0.5);
     this.input.keyboard?.on('keydown-LEFT', () => this.escolher('geraldo'));
     this.input.keyboard?.on('keydown-RIGHT', () => this.escolher('helena'));
     this.input.keyboard?.on('keydown-ENTER', () => this.jogar());
