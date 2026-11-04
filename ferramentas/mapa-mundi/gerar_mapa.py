@@ -1174,7 +1174,7 @@ def lago_parque(base, dl):
     m = Image.new('L', (W, H), 0)
     ImageDraw.Draw(m).polygon(pts, fill=255)
     a = np.array(m) > 0
-    for k, c in enumerate([(36, 104, 92), (56, 140, 116), (84, 168, 136)]):
+    for k, c in enumerate([C['a0'], C['a1'], C['a2']]):
         e = a.copy()
         for _ in range(2 + k * 2):
             e2 = e.copy()
@@ -1188,9 +1188,9 @@ def lago_parque(base, dl):
         base.paste(Image.fromarray(ba))
     d = ImageDraw.Draw(base)
     d.polygon(pts, outline=rgba((120, 116, 104)))
-    d.ellipse([258, 116, 272, 130], fill=rgba((112, 192, 160)))
+    d.ellipse([258, 116, 272, 130], fill=rgba(C['a3']))
     for x, y in [(262, 150), (274, 140), (266, 176), (276, 160), (258, 136)]:
-        ret(d, x, y, x + 2, y, (168, 224, 196))
+        ret(d, x, y, x + 2, y, C['a4'])
     # chafariz
     for dx, dy in ((0, -4), (-1, -3), (1, -3), (-2, -1), (2, -1), (0, -2)):
         px(d, 268 + dx, 126 + dy, C['br'])
@@ -1207,8 +1207,8 @@ def m_unifei_v2():
     d.rounded_rectangle([0, 4, 91, 59], radius=6, fill=rgba(C['g3']))
     d.rounded_rectangle([2, 6, 89, 57], radius=5, fill=rgba(C['g2']))
     # laguinho do campus (oeste)
-    d.ellipse([4, 10, 18, 30], fill=rgba((56, 140, 116)))
-    d.ellipse([6, 12, 14, 22], fill=rgba((84, 168, 136)))
+    d.ellipse([4, 10, 18, 30], fill=rgba(C['a1']))
+    d.ellipse([6, 12, 14, 22], fill=rgba(C['a2']))
     # prédios baixos do campus (telhado cinza claro)
     for x0, y0, w, h in [(22, 8, 16, 7), (22, 18, 16, 7), (72, 8, 16, 8), (72, 20, 9, 7), (83, 20, 6, 7)]:
         ret(d, x0, y0, x0 + w, y0 + h, (236, 236, 232))
@@ -1357,6 +1357,70 @@ def m_predio(v):
     return s
 
 
+def m_hotel_coroados_v2():
+    """Hotel Coroados (v2, pedido do Pedro): o prédio comprido fica na encosta e COBRE a Rua São Judas Tadeu,
+    que entra por baixo dele (portal escuro embaixo e em cima). Branco com faixas terracota e módulos escalonados."""
+    br, br2 = (244, 240, 232), (208, 200, 192)
+    vm, vm2, vm3 = (204, 88, 64), (150, 56, 44), (232, 128, 100)
+    s, d = spr(32, 98)
+    for i in range(7):
+        y = 4 + i * 13
+        x0 = 1 + (i % 2)
+        ret(d, x0, y, x0 + 28, y + 3, vm)
+        ret(d, x0, y, x0 + 28, y, vm3)
+        for k in range(x0, x0 + 29, 3):
+            px(d, k, y + 2, vm2)
+        ret(d, x0, y + 4, x0 + 28, y + 10, br)
+        ret(d, x0 + 22, y + 4, x0 + 28, y + 10, br2)
+        for wx in range(x0 + 2, x0 + 22, 4):
+            ret(d, wx, y + 5, wx + 2, y + 7, (48, 52, 64))
+            px(d, wx, y + 5, (120, 136, 160))
+        ret(d, x0, y + 11, x0 + 28, y + 12, vm)
+    # piscina na ponta norte
+    ret(d, 18, 0, 30, 4, (232, 228, 216))
+    ret(d, 19, 1, 29, 3, (72, 184, 232))
+    # portais da rua (a rua passa por dentro do prédio)
+    for y in (93, 4):
+        ret(d, 11, y, 20, y + 4, (28, 28, 36))
+        ret(d, 11, y, 20, y, vm2)
+    ret(d, 10, 92, 10, 97, br)
+    ret(d, 21, 92, 21, 97, br)
+    return s
+
+
+def m_posto():
+    """Postinho de gasolina no começo da Rua Nova (só desenho, sem marca)."""
+    s, d = spr(16, 13)
+    ret(d, 0, 0, 15, 2, C['vm'])
+    ret(d, 0, 0, 15, 0, C['vm3'])
+    ret(d, 0, 2, 15, 2, C['br'])
+    ret(d, 2, 3, 2, 12, C['ci1'])
+    ret(d, 13, 3, 13, 12, C['ci1'])
+    ret(d, 6, 7, 9, 12, C['br'])
+    ret(d, 6, 7, 9, 8, C['vm'])
+    px(d, 7, 10, (48, 52, 64))
+    ret(d, 0, 12, 15, 12, C['ci0'])
+    return s
+
+
+def m_club_itajubense():
+    """Club Itajubense (foto do Aladdin, references/lugares/1-clube-itajubense.jpg): prédio creme de 2 andares,
+    4 colunas grandes na frente sobre pedestais escuros, janelas brancas e platibanda no alto."""
+    s, d = spr(18, 19)
+    cr, cr2 = (240, 228, 196), (210, 194, 156)
+    ret(d, 0, 3, 17, 18, cr)
+    ret(d, 14, 3, 17, 18, cr2)
+    ret(d, 0, 0, 17, 3, (228, 214, 178))
+    ret(d, 2, 1, 15, 2, (176, 164, 136))
+    for x in (2, 6, 10, 14):
+        ret(d, x, 4, x + 1, 15, C['br'])
+        ret(d, x, 15, x + 1, 18, (84, 80, 76))
+    for x in (4, 8, 12):
+        ret(d, x, 6, x + 1, 8, (96, 120, 150))
+        ret(d, x, 11, x + 1, 13, (96, 120, 150))
+    return s
+
+
 # ---------------------------------------------------------------- mapa (em pé)
 def main():
     base = terreno()
@@ -1395,7 +1459,7 @@ def main():
     # ----- planaltos: Coroados (morro comprido a oeste da BPS), Alameda, Agonia e cemitério
     morros = camada()
     planalto(morros, 14, 232, 92, 494, 12, raio=16)   # Coroados: crista comprida norte-sul
-    planalto(morros, 20, 500, 98, 540, 10, raio=12)   # Alameda: morro com a rua
+    planalto(morros, 4, 500, 46, 552, 6, raio=10)     # Morro Chic: morro baixo a oeste do centro
     planalto(morros, 178, 74, 242, 110, 12, raio=14)   # Agonia
     planalto(morros, 222, 250, 346, 408, 14, raio=18)  # Cruzeiro: bairro alto, no morro
     base.alpha_composite(morros)
@@ -1416,11 +1480,11 @@ def main():
     for y in range(34, 220, 8):
         ret(d, 298, y, 298, y + 2, (236, 228, 200))
     dl.line(jerson, fill=255, width=15)
-    eixo = [(124, H + 10), (124, 520), (124, 236), (128, 230), (262, 230), (268, 224), (268, 196)]
+    eixo = [(124, H + 10), (124, 520), (124, 236), (128, 230), (266, 230)]
     # o Rio Sapucaí corre no meio da BPS só daqui (y 470) até o lago; abaixo disso ele passa por baixo de uma
     # ponte e segue coberto pelo asfalto (informação do Pedro, 04/11/2026)
     FIM_RIO = 470
-    eixo_rio = [(124, FIM_RIO)] + eixo[2:]
+    eixo_rio = [(124, FIM_RIO), (124, 236), (128, 230), (254, 230)]
     linha_grossa(d, eixo, 24, C['ci0'])
     linha_grossa(d, eixo, 22, (112, 116, 128))
     linha_grossa(d, eixo_rio, 12, C['g1'])  # canteiro gramado na beira do rio
@@ -1433,8 +1497,15 @@ def main():
     ret(d, 118, FIM_RIO, 130, FIM_RIO, (228, 228, 232))
     ret(d, 119, FIM_RIO - 3, 129, FIM_RIO - 1, (20, 40, 72))
     # canteiro central da avenida coberta: faixa dupla amarela
-    ret(d, 123, FIM_RIO + 7, 123, H, (232, 192, 64))
-    ret(d, 125, FIM_RIO + 7, 125, H, (232, 192, 64))
+    ret(d, 123, 518, 123, H, (232, 192, 64))
+    ret(d, 125, 518, 125, H, (232, 192, 64))
+    # pracinha da Unimed: o canteiro largo onde o rio some
+    d.rounded_rectangle([112, FIM_RIO + 6, 136, 514], radius=6, fill=rgba(C['ci0']))
+    d.rounded_rectangle([113, FIM_RIO + 7, 135, 513], radius=5, fill=rgba((216, 208, 192)))
+    d.rounded_rectangle([115, FIM_RIO + 9, 133, 511], radius=4, fill=rgba(C['g2']))
+    ret(d, 123, FIM_RIO + 9, 125, 511, (216, 208, 192))
+    for fx, fy in [(118, 484), (130, 490), (118, 500), (130, 504)]:
+        flor(base, fx, fy, random.choice([(255, 120, 160), C['br'], (255, 236, 96)]))
     dl.line(eixo, fill=255, width=26)
     rio_mask = Image.new('L', (W, H), 0)
     ImageDraw.Draw(rio_mask).line(eixo_rio, fill=255, width=9)
@@ -1459,7 +1530,12 @@ def main():
 
     # rua em S que sobe do centro para o Cruzeiro, entre a Câmara e a Santa Casa
     rua_s = catmull([(176, 516), (226, 512), (240, 492), (236, 466), (232, 440), (242, 418), (262, 402)], 8)
-    dl.line(rua_s, fill=255, width=13)
+    dl.line(rua_s, fill=255, width=9)
+    # Alameda: rua pequena e curva que liga o Morro Chic ao centro
+    rua_alameda = catmull([(26, 538), (46, 528), (66, 522), (88, 524), (110, 526)], 8)
+    dl.line(rua_alameda, fill=255, width=9)
+    dl.rectangle([78, 528, 110, 556], fill=255)   # prédios entre a Alameda e a Rua Nova
+    dl.rectangle([108, 470, 140, 516], fill=255)  # pracinha da Unimed
 
     # ----- marcos fixos
     lago_parque(base, dl)
@@ -1488,7 +1564,7 @@ def main():
     praca = (226, 516, 284, 574)   # Praça: um quadrado
     ruanova = (138, 560, 214, 576)  # Rua Nova: rua larga
     MARCOS = [
-        ('hotel', m_hotel_coroados(), (49, 418)),
+        ('hotel', m_hotel_coroados_v2(), (64, 420)),
         ('unifei', m_unifei_v2(), (194, 222)),
         ('prefeitura', m_prefeitura_itajuba(), (328, 170)),
         ('kart', m_kart_pista(), (270, 104)),
@@ -1499,8 +1575,9 @@ def main():
         ('camara', m_camara(), (214, 500)),
         ('estacao', m_estacao(), (36, 584)),
         ('trem', m_locomotiva(), (40, 606)),
-        ('soldado', m_estatua_soldado(), (98, 624)),
-        ('heli', m_helicoptero(), (132, 628)),
+        ('soldado', m_estatua_soldado(), (90, 630)),
+        ('heli', m_helicoptero(), (112, 633)),
+        ('posto', m_posto(), (146, 556)),
     ]
     for _, s, (x, y) in MARCOS:
         dl.rectangle([x - s.width // 2 - 2, y - s.height - 2, x + s.width // 2 + 2, y + 3], fill=255)
@@ -1508,25 +1585,25 @@ def main():
     dl.rectangle([ruanova[0] - 8, ruanova[1] - 9, ruanova[2] + 4, ruanova[3] + 3], fill=255)
     dl.rectangle([234, 248, 342, 330], fill=255)  # cemitério
     dl.rectangle([164, 364, 228, 404], fill=255)  # Praçonha
-    dl.rectangle([70, 596, 160, 632], fill=255)   # Praça do Soldado
+    dl.rectangle([76, 562, 126, 638], fill=255)   # pracinha e Praça do Soldado
     dl.rectangle([0, 598, 70, 612], fill=255)     # trilho
 
     # ----- rota das fases
     N = {
-        'trem': (54, 578), 'soldado': (114, 604), 'ruanova': (176, 568), 'praca': (255, 545),
-        'alameda': (66, 522), 'coroados': (82, 376), 'pracona': (196, 404), 'cemiterio': (276, 300),
+        'trem': (54, 578), 'soldado': (102, 599), 'ruanova': (176, 568), 'praca': (240, 558),
+        'alameda': (66, 522), 'coroados': (64, 430), 'pracona': (196, 404), 'cemiterio': (276, 300),
         'unifei': (194, 246), 'pinheirinho': (132, 118), 'agonia': (226, 102), 'kart': (284, 104),
         'lago': (298, 150), 'prefeitura': (328, 182),
         'j1': (144, 522), 'j2': (144, 360), 'j3': (144, 246), 'j4': (226, 404),
     }
     ROTAS = [
-        [N['trem'], (54, 604), N['soldado']],
-        [N['soldado'], (144, 604), (144, 568), N['ruanova']],
-        [N['ruanova'], (226, 568), (226, 545), N['praca']],
-        [N['praca'], (255, 522), N['j1']],
-        [N['j1'], (102, 522), N['alameda']],
-        [N['alameda'], (64, 500), (64, 376), N['coroados']],
-        [N['coroados'], (110, 376), (110, 360), N['j2']],
+        [N['trem'], (54, 599), N['soldado']],
+        [N['soldado'], (144, 599), (144, 568), N['ruanova']],
+        [N['ruanova'], (226, 568), (226, 558), N['praca']],
+        [N['praca'], (240, 522), N['j1']],
+        [N['j1'], (104, 524), (88, 524), N['alameda']],
+        [N['alameda'], (64, 510), N['coroados']],
+        [N['coroados'], (64, 240), (70, 224), (96, 214), (144, 214), N['j3']],
         [N['j2'], (144, 404), N['pracona']],
         [N['pracona'], N['j4'], (226, 330), (252, 312), N['cemiterio']],
         [N['cemiterio'], (276, 262), (226, 262), (226, 246), N['unifei']],
@@ -1610,12 +1687,11 @@ def main():
         arvores.append((x, y))
 
     # ----- caminhos
-    linha_grossa(d, rua_s, 11, C['ci0'])
-    linha_grossa(d, rua_s, 9, (112, 116, 128))
-    for i in range(0, len(rua_s), 3):
-        x, y = rua_s[i]
-        d.point((round(x), round(y)), fill=rgba((236, 228, 200)))
-    rua_coroados = [(66, 548), (64, 500), (64, 240), (70, 224), (96, 214), (118, 226)]
+    linha_grossa(d, rua_s, 7, C['ci0'])
+    linha_grossa(d, rua_s, 5, (112, 116, 128))
+    linha_grossa(d, rua_alameda, 7, C['ci0'])
+    linha_grossa(d, rua_alameda, 5, (112, 116, 128))
+    rua_coroados = [(64, 524), (64, 240), (70, 224), (96, 214), (116, 214)]
     linha_grossa(d, rua_coroados, 13, C['ci0'])
     linha_grossa(d, rua_coroados, 11, (112, 116, 128))
     for (x0, y0), (x1, y1) in zip(rua_coroados, rua_coroados[1:]):
@@ -1696,19 +1772,26 @@ def main():
             px(d, xx, yy, (196, 188, 172))
     ret(d, x0 + 6, y0 + 6, x1 - 6, y1 - 6, C['g2'])
     ret(d, x0 + 6, y0 + 6, x1 - 6, y0 + 6, C['g3'])
-    mx, my = (x0 + x1) // 2, (y0 + y1) // 2
+    # caminhos em cruz deslocados para a fonte, que fica no centro-direita
+    mx, my = 262, 544
     ret(d, mx - 1, y0 + 6, mx + 1, y1 - 6, (216, 208, 192))
     ret(d, x0 + 6, my - 1, x1 - 6, my + 1, (216, 208, 192))
-    d.ellipse([mx - 9, my - 7, mx + 9, my + 7], fill=rgba(C['pa2']))
-    d.ellipse([mx - 8, my - 6, mx + 8, my + 6], fill=rgba(C['a1']))
-    d.ellipse([mx - 6, my - 5, mx + 6, my + 4], fill=rgba(C['a2']))
-    for ddx, ddy in [(-5, -3), (5, -3), (-6, 2), (6, 2)]:
-        px(d, mx + ddx, my + ddy, C['a4'])
-    ret(d, mx - 1, my - 7, mx + 1, my, (100, 112, 96))  # busto
+    d.ellipse([mx - 13, my - 7, mx + 13, my + 7], fill=rgba((176, 172, 164)))
+    d.ellipse([mx - 12, my - 6, mx + 12, my + 6], fill=rgba(C['pa']))
+    d.ellipse([mx - 10, my - 5, mx + 10, my + 5], fill=rgba(C['a1']))
+    d.ellipse([mx - 8, my - 4, mx + 6, my + 2], fill=rgba(C['a2']))
+    for k in range(6):  # jatos em arco ao redor
+        a = k * math.pi / 3
+        jx, jy = mx + 8 * math.cos(a), my + 4 * math.sin(a)
+        d.line([(jx, jy), ((jx + mx) / 2, (jy + my) / 2 - 4), (mx + 3 * math.cos(a), my + 2 * math.sin(a))],
+               fill=rgba(C['a4']))
+    ret(d, mx - 2, my - 3, mx + 2, my + 2, C['pa2'])  # pedestal
+    ret(d, mx - 1, my - 7, mx + 1, my - 3, (100, 112, 96))  # busto
     ret(d, mx - 1, my - 9, mx + 1, my - 8, (84, 96, 80))
-    for ax, ay in [(x0 + 4, y0 + 10), (x1 - 4, y0 + 10), (x0 + 4, y1 - 1), (x1 - 4, y1 - 1),
-                   (mx - 14, y0 + 10), (mx + 14, y0 + 10), (mx - 14, y1 - 1), (mx + 14, y1 - 1)]:
+    for ax, ay in [(x0 + 4, y0 + 10), (x0 + 4, y1 - 1), (x1 - 4, y1 - 1), (x0 + 18, y0 + 10), (x0 + 18, y1 - 1),
+                   (x1 - 18, y1 - 1)]:
         arvore(base, ax, ay, 0)
+    colar(base, m_club_itajubense(), 274, 534, C['preto'])
 
     x0, y0, x1, y1 = ruanova
     ret(d, x0 - 2, y0 - 1, x1 + 2, y1 + 1, C['ci0'])
@@ -1721,6 +1804,8 @@ def main():
     toldos = [(C['vm'], C['br']), (C['a1'], C['br']), (C['g1'], C['am3']), (C['roxo'], C['am3'])]
     for i, xx in enumerate(range(x0, x1 - 8, 12)):
         for lado, yb in ((0, y0 - 2), (1, y1 + 10)):
+            if lado == 0 and i == 0:
+                continue
             s, ds = spr(11, 10)
             ret(ds, 0, 0, 10, 9, C['pa'] if (i + lado) % 2 else (240, 220, 176))
             ret(ds, 0, 0, 10, 0, C['ru2'])
@@ -1738,13 +1823,28 @@ def main():
     ret(d, 0, 604, 72, 604, C['ci2'])
     ret(d, 0, 607, 72, 607, C['ci2'])
     # piso da Praça do Soldado
-    d.rectangle([80, 606, 156, 632], fill=rgba((216, 208, 192)))
-    d.rectangle([80, 606, 156, 606], fill=rgba(C['ci1']))
+    d.rounded_rectangle([81, 603, 124, 636], radius=8, fill=rgba(C['ci0']))
+    d.rounded_rectangle([82, 604, 123, 635], radius=7, fill=rgba((216, 208, 192)))
+    d.rounded_rectangle([85, 607, 120, 632], radius=5, fill=rgba(C['g2']))
+    d.rounded_rectangle([88, 612, 117, 634], radius=4, fill=rgba((216, 208, 192)))
+    # pracinha arredondada ao norte da Praça do Soldado
+    d.rounded_rectangle([79, 566, 111, 595], radius=9, fill=rgba(C['ci0']))
+    d.rounded_rectangle([80, 567, 110, 594], radius=8, fill=rgba((216, 208, 192)))
+    d.rounded_rectangle([83, 570, 107, 591], radius=6, fill=rgba(C['g2']))
+    ret(d, 94, 570, 96, 591, (216, 208, 192))
+    ret(d, 83, 579, 107, 581, (216, 208, 192))
+    d.ellipse([91, 576, 99, 584], fill=rgba((216, 208, 192)))
+    d.ellipse([93, 578, 97, 582], fill=rgba((255, 120, 160)))
+    for tx, ty in [(87, 577), (103, 577), (87, 591), (103, 591)]:
+        arvore(base, tx, ty, 0)
 
     # ----- objetos em ordem de profundidade
     obj = [(y, 'c', x) for x, y in casas] + [(y, 'a', x) for x, y in arvores] + [(y, 'm', x) for x, y in mansoes]
+    obj += [(y, 'p', x) for x, y in [(84, 552), (96, 548), (106, 554), (90, 540)]]  # prédios perto da Rua Nova
     for y, t, x in sorted(obj):
-        if t == 'm':
+        if t == 'p':
+            colar(base, m_predio(x % 4), x, y, C['c0'])
+        elif t == 'm':
             colar(base, m_mansao(random.randrange(4)), x, y, C['c0'])
         elif t == 'c':
             perto_bps = 100 < x < 172 and 236 < y < 520
@@ -1826,7 +1926,7 @@ def main():
 
     PLACAS = [
         ('TREM', 26, 618), ('PRAÇA DO SOLDADO', 208, 618), ('RUA NOVA', 176, 529), ('PRAÇA', 255, 578),
-        ('ALAMEDA', 40, 536), ('COROADOS', 54, 428), ('PRAÇONHA', 196, 410), ('CEMITÉRIO', 288, 322),
+        ('ALAMEDA', 64, 532), ('COROADOS', 64, 438), ('PRAÇONHA', 196, 410), ('CEMITÉRIO', 288, 322),
         ('UNIFEI', 194, 252), ('PINHEIRINHO', 132, 124), ('AGONIA', 206, 124), ('KART', 242, 56),
         ('LAGO', 230, 160), ('PREFEITURA', 314, 190), ('AV. BPS', 160, 436), ('CÂMARA', 214, 456), ('SANTA CASA', 286, 494),
     ]
@@ -1843,7 +1943,7 @@ def main():
         ret(d, bx0 + 1, by0 + 1, bx0 + t.width + 1, by0 + t.height, C['vm2'])
         base.alpha_composite(t, (bx0 + 2, by0 + 1))
 
-    for txt, bx, by_ in [('BAIRRO BPS', 190, 300), ('CENTRO', 172, 506), ('CRUZEIRO', 296, 380), ('VARGINHA', 320, 512)]:
+    for txt, bx, by_ in [('BAIRRO BPS', 190, 300), ('CENTRO', 172, 506), ('CRUZEIRO', 296, 380), ('VARGINHA', 320, 512), ('MORRO CHIC', 38, 486)]:
         t = contorno(texto_img(txt, C['br'], C['preto']), C['preto'])
         base.alpha_composite(t, (bx - t.width // 2, by_))
 

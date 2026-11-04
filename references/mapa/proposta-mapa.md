@@ -109,6 +109,24 @@ Os nomes dos bairros aparecem escritos no chão.
 - **Rua em S:** sobe do centro para o alto do Cruzeiro, passando entre a Câmara e a Santa Casa.
 - **Correção:** o paredão do Cruzeiro encostava no topo da Santa Casa. A borda do morro subiu e o hospital desceu um pouco.
 
+## Revisão geral pelos adesivos do Pedro (04/11/2026)
+
+1. **Hotel Coroados:** fica na encosta e **cobre** a Rua São Judas Tadeu. A rua entra por um portal embaixo e sai por
+   outro em cima. Saiu a ligação leste-oeste que cortava o morro no meio. Do hotel, a rota segue pela rua até a ponta
+   norte e desce para a BPS.
+2. **Pracinha da Unimed:** ocupa o canteiro largo onde o rio some, no lugar do asfalto. O nome da marca não aparece no
+   mapa.
+3. **Morro Chic:** entrou como um morro baixo a oeste do centro. A **Alameda** virou uma rua pequena e curva ligando o
+   Morro Chic ao centro.
+4. **Posto de gasolina:** um postinho no começo da Rua Nova, só desenho, sem placa nem marca. Ao lado ficam alguns
+   prédios.
+5. **Pracinha:** arredondada, ao norte da Praça do Soldado, com árvores, caminhos e um canteiro de flores.
+6. **Praça do Soldado:** arredondada, com a estátua e o helicóptero dentro.
+7. **Praça central:** fonte larga com jatos e o busto, e o **Club Itajubense** (creme, 4 colunas) no canto de cima.
+8. **Lago:** azul como o rio. O rio termina antes da curva para o lago e não se liga a ele.
+9. **Laguinho da UNIFEI:** azul.
+10. **Rua do Cruzeiro:** mais estreita.
+
 ## O que o mapa mostra
 
 - **Formato em pé.** O eixo central de Itajubá é a **Av. BPS**, com o **Rio Sapucaí** correndo no meio dela. A avenida sobe pela
