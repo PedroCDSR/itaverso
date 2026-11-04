@@ -77,7 +77,7 @@ export class Titulo extends Phaser.Scene {
   jogar() {
     novoJogo(this.escolhido);
     this.cameras.main.fadeOut(300);
-    this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start('Fase', { fase: 1 }));
+    this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start('Mapa', { intro: true }));
   }
 
   continuar() {

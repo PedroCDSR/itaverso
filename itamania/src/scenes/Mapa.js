@@ -26,6 +26,10 @@ export class Mapa extends Phaser.Scene {
     super('Mapa');
   }
 
+  init(dados) {
+    this.intro = !!dados?.intro;
+  }
+
   create() {
     tocarMusica('mapa');
     const cam = this.cameras.main;
@@ -65,8 +69,40 @@ export class Mapa extends Phaser.Scene {
     this.input.on('wheel', (p, objs, dx, dy) => (cam.scrollY = Phaser.Math.Clamp(cam.scrollY + dy * 0.5, 0, ALTURA_MAPA - ALTURA)));
     this.input.keyboard?.on('keydown-UP', () => (cam.scrollY = Math.max(0, cam.scrollY - 40)));
     this.input.keyboard?.on('keydown-DOWN', () => (cam.scrollY = Math.min(ALTURA_MAPA - ALTURA, cam.scrollY + 40)));
-    this.input.keyboard?.on('keydown-ENTER', () => this.entrar(Math.min(estado.liberada, 4)));
+    this.input.keyboard?.on('keydown-ENTER', () => this.entrar(Math.min(estado.liberada, 14)));
     cam.fadeIn(300);
+    if (this.intro) this.passeio();
+  }
+
+  // Abertura: a câmera sobe da Rodoviária até a Prefeitura mostrando cada lugar, e volta para a fase 1.
+  async passeio() {
+    const cam = this.cameras.main;
+    this.ocupado = true;
+    const faixa = this.add
+      .text(LARGURA / 2, ALTURA - 46, '', { fontFamily: FONTES.dialogo, fontSize: '18px', color: CORES_CSS.branco, backgroundColor: '#2B2D5CCC', padding: { x: 8, y: 3 }, align: 'center' })
+      .setOrigin(0.5)
+      .setScrollFactor(0)
+      .setDepth(60);
+    const dizer = (t) => faixa.setText(t);
+    const ir = (y, ms) => new Promise((ok) => this.tweens.add({ targets: cam, scrollY: Phaser.Math.Clamp(y - ALTURA / 2, 0, ALTURA_MAPA - ALTURA), duration: ms, ease: 'Sine.inOut', onComplete: ok }));
+    const pausa = (ms) => new Promise((ok) => this.time.delayedCall(ms, ok));
+    dizer('Bem-vind{o|a} a Itajubá!'.replace(/\{([^|]*)\|([^}]*)\}/, (_, a, b) => (heroi() === 'geraldo' ? a : b)));
+    await pausa(1400);
+    dizer('São 14 lugares para conhecer, de baixo para cima.');
+    for (let n = 1; n <= 14; n++) {
+      await ir(PONTOS[n][1], n === 1 ? 500 : 420);
+      const m = this.marcadores[n - 1];
+      this.tweens.add({ targets: [m.c, m.nome], scale: 1.35, duration: 160, yoyo: true });
+      tocarEfeito('moeda', { variar: 0.1, volume: 0.5 });
+      if (n === 14) dizer('Lá no alto, a Prefeitura. Quem sabe onde essa história vai dar?');
+      await pausa(n === 14 ? 1800 : 260);
+    }
+    dizer('A aventura começa na Rodoviária!');
+    await ir(PONTOS[1][1], 1600);
+    await pausa(500);
+    faixa.destroy();
+    this.ocupado = false;
+    this.entrar(1);
   }
 
   // Mapa provisório em pixel art feito com formas: verde da serra, rio, avenidas, quarteirões e bairros.
@@ -152,6 +188,7 @@ export class Mapa extends Phaser.Scene {
   }
 
   entrar(n) {
+    if (this.ocupado) return;
     if (!FASES[n] || n > estado.liberada) {
       tocarEfeito('dano', { volume: 0.4 });
       const [x, y] = PONTOS[n];
