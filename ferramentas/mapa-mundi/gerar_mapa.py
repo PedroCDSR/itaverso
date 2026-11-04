@@ -1269,14 +1269,14 @@ def m_santa_casa():
     """Santa Casa de Itajubá (foto do Pedro, 04/11/2026): prédio alto branco com o letreiro vertical e a cruz de
     hospital, casarão antigo creme com cúpulas e telhado de barro à esquerda, torre fina da capela e o
     estacionamento na frente."""
-    s, d = spr(66, 46)
-    # estacionamento
-    ret(d, 0, 38, 65, 45, (150, 150, 156))
+    s, d = spr(66, 42)
+    # estacionamento (mais curto)
+    ret(d, 0, 38, 65, 41, (150, 150, 156))
     for x in range(2, 64, 5):
-        ret(d, x, 39, x, 44, (220, 220, 220))
+        ret(d, x, 38, x, 41, (220, 220, 220))
     for x, c in [(4, C['br']), (14, C['br']), (24, (60, 64, 80)), (40, C['br']), (50, C['vm']), (60, C['br'])]:
-        ret(d, x - 1, 41, x + 2, 43, c)
-        px(d, x, 41, (120, 160, 200))
+        ret(d, x - 1, 39, x + 2, 40, c)
+        px(d, x, 39, (120, 160, 200))
     # torre fina da capela (esquerda)
     d.polygon([(2, 37), (5, 6), (8, 37)], fill=rgba((236, 230, 214)))
     d.line([(6, 8), (8, 37)], fill=rgba((200, 192, 172)))
@@ -1312,7 +1312,7 @@ def m_santa_casa():
     d.rectangle([47, -6 + 6, 56, 3 + 6], fill=rgba(C['br']))
     ret(d, 51, 1, 52, 8, C['vm'])
     ret(d, 48, 3, 55, 5, C['vm'])
-    return s
+    return s.resize((56, 36), Image.NEAREST)
 
 
 def m_camara():
@@ -1669,7 +1669,7 @@ def main():
         ('kart', m_kart_pista(), (268, 142)),
         ('agonia', m_agonia_santuario(), (210, 98)),
         ('capela', m_capela_gotica(), (294, 290)),
-        ('santacasa', m_santa_casa(), (284, 492)),
+        ('santacasa', m_santa_casa(), (286, 480)),
         ('camara', m_camara(), (214, 500)),
         ('estacao', m_estacao(), (36, 584)),
         ('trem', m_locomotiva(), (40, 606)),
@@ -2033,7 +2033,7 @@ def main():
         ('TREM', 24, 609), ('PRAÇA DO SOLDADO', 100, 612), ('RUA NOVA', 176, 529), ('PRAÇA', 266, 566),
         ('ALAMEDA', 64, 532), ('COROADOS', 64, 438), ('PRAÇONHA', 168, 372), ('CEMITÉRIO', 288, 322),
         ('UNIFEI', 194, 252), ('PINHEIRINHO', 132, 124), ('AGONIA', 206, 124), ('KART', 318, 96),
-        ('LAGO', 264, 201), ('PREFEITURA', 314, 190), ('AV. BPS', 160, 436), ('CÂMARA', 214, 456), ('SANTA CASA', 286, 494),
+        ('LAGO', 264, 201), ('PREFEITURA', 314, 190), ('AV. BPS', 160, 436), ('CÂMARA', 214, 502), ('SANTA CASA', 286, 482),
     ]
     for txt, x, y in PLACAS:
         w = len(txt) * 6 + 10
