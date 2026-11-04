@@ -1471,6 +1471,43 @@ def ponte(d, cx, cy, vao, larg, vertical, deck=(112, 116, 128), faixa=True):
                 ret(d, cx, yy, cx, yy + 1, (240, 232, 200))
 
 
+def m_rodoviaria():
+    """Rodoviária de Itajubá (Praça Dr. José Braz, a mesma da Praça do Soldado): prédio baixo, cobertura comprida
+    sobre as plataformas, colunas e dois ônibus parados (desenho próprio, sem marca). Fase 1: o Geraldo chega."""
+    s, d = spr(64, 42)
+    # prédio do terminal
+    ret(d, 4, 4, 40, 18, (240, 236, 226))
+    ret(d, 34, 4, 40, 18, (206, 200, 188))
+    ret(d, 3, 2, 41, 4, (64, 104, 176))
+    ret(d, 3, 2, 41, 2, (112, 152, 216))
+    for x in range(6, 32, 5):
+        ret(d, x, 7, x + 2, 10, (72, 96, 132))
+        px(d, x, 7, (150, 176, 210))
+    ret(d, 18, 12, 24, 18, (88, 76, 64))
+    # cobertura comprida das plataformas
+    ret(d, 0, 18, 63, 21, (190, 194, 202))
+    ret(d, 0, 18, 63, 18, (226, 228, 234))
+    ret(d, 0, 21, 63, 21, (140, 144, 154))
+    for x in (2, 20, 40, 61):
+        ret(d, x, 22, x, 32, (150, 154, 164))
+    # piso da plataforma com faixa amarela
+    ret(d, 0, 33, 63, 41, (176, 176, 180))
+    ret(d, 0, 33, 63, 33, (236, 200, 64))
+    # dois ônibus parados (vistos de lado)
+    for bx, faixa in ((5, C['a1']), (34, C['vm'])):
+        ret(d, bx, 25, bx + 22, 35, C['br'])
+        ret(d, bx, 25, bx + 22, 25, (210, 214, 222))
+        ret(d, bx + 1, 27, bx + 21, 29, (56, 72, 100))
+        for x in range(bx + 2, bx + 21, 3):
+            px(d, x, 27, (130, 160, 200))
+        ret(d, bx, 32, bx + 22, 33, faixa)
+        ret(d, bx + 20, 30, bx + 22, 34, (56, 72, 100))
+        for wx in (bx + 4, bx + 17):
+            d.ellipse([wx - 2, 34, wx + 2, 38], fill=rgba(C['preto']))
+            px(d, wx, 36, C['ci2'])
+    return s
+
+
 # ---------------------------------------------------------------- mapa (em pé)
 def main():
     base = terreno()
@@ -1671,8 +1708,7 @@ def main():
         ('capela', m_capela_gotica(), (294, 290)),
         ('santacasa', m_santa_casa(), (286, 480)),
         ('camara', m_camara(), (214, 500)),
-        ('estacao', m_estacao(), (36, 584)),
-        ('trem', m_locomotiva(), (40, 606)),
+        ('rodoviaria', m_rodoviaria(), (36, 604)),
         ('soldado', m_estatua_soldado(), (90, 618)),
         ('heli', m_helicoptero(), (112, 620)),
         ('posto', m_posto(), (146, 556)),
@@ -1684,18 +1720,18 @@ def main():
     dl.rectangle([234, 248, 342, 330], fill=255)  # cemitério
     dl.rectangle([146, 320, 186, 370], fill=255)  # Praçonha (beira da BPS)
     dl.rectangle([76, 563, 126, 624], fill=255)   # pracinha e Praça do Soldado
-    dl.rectangle([0, 598, 70, 612], fill=255)     # trilho
+    dl.rectangle([0, 560, 70, 606], fill=255)     # rodoviária
 
     # ----- rota das fases
     N = {
-        'trem': (54, 578), 'soldado': (102, 596), 'ruanova': (176, 568), 'praca': (243, 547),
+        'rodoviaria': (72, 596), 'soldado': (102, 596), 'ruanova': (176, 568), 'praca': (243, 547),
         'alameda': (66, 522), 'coroados': (64, 430), 'pracona': (170, 345), 'cemiterio': (276, 300),
         'unifei': (194, 246), 'pinheirinho': (132, 118), 'agonia': (226, 102), 'kart': (282, 142),
         'lago': (298, 172), 'prefeitura': (328, 182),
         'j1': (144, 522), 'j2': (144, 360), 'j3': (144, 246), 'j5': (176, 522),
     }
     ROTAS = [
-        [N['trem'], (54, 596), N['soldado']],
+        [N['rodoviaria'], N['soldado']],
         [N['soldado'], (144, 596), (144, 568), N['ruanova']],
         [N['ruanova'], (226, 568), (226, 547), N['praca']],
         [N['praca'], (243, 522), N['j1']],
@@ -1898,12 +1934,6 @@ def main():
             ret(ds, 0, 5, 10, 5, a1)
             colar(base, s, xx + 6, yb, C['c0'])
 
-    # ----- trilho do trem
-    ret(d, 0, 603, 72, 608, (120, 96, 72))
-    for xx in range(0, 72, 3):
-        ret(d, xx, 603, xx, 608, C['mad0'])
-    ret(d, 0, 604, 72, 604, C['ci2'])
-    ret(d, 0, 607, 72, 607, C['ci2'])
     # piso da Praça do Soldado
     d.rounded_rectangle([81, 599, 124, 621], radius=8, fill=rgba(C['ci0']))
     d.rounded_rectangle([82, 600, 123, 620], radius=7, fill=rgba((216, 208, 192)))
@@ -2014,7 +2044,7 @@ def main():
     colar(base, Image.fromarray(la), 326, 248)
 
     # ----- pontos de fase
-    ORDEM = ['trem', 'soldado', 'ruanova', 'praca', 'alameda', 'coroados', 'pracona', 'cemiterio', 'unifei',
+    ORDEM = ['rodoviaria', 'soldado', 'ruanova', 'praca', 'alameda', 'coroados', 'pracona', 'cemiterio', 'unifei',
              'pinheirinho', 'agonia', 'kart', 'lago', 'prefeitura']
     d = ImageDraw.Draw(base)
     for nome, (x, y) in N.items():
@@ -2030,7 +2060,7 @@ def main():
         d.rectangle([x - 2, y - 3, x, y - 2], fill=rgba(cor3))
 
     PLACAS = [
-        ('TREM', 24, 609), ('PRAÇA DO SOLDADO', 100, 612), ('RUA NOVA', 176, 529), ('PRAÇA', 266, 566),
+        ('RODOVIÁRIA', 40, 606), ('PRAÇA DO SOLDADO', 150, 618), ('RUA NOVA', 176, 529), ('PRAÇA', 266, 566),
         ('ALAMEDA', 64, 532), ('COROADOS', 64, 438), ('PRAÇONHA', 168, 372), ('CEMITÉRIO', 288, 322),
         ('UNIFEI', 194, 252), ('PINHEIRINHO', 132, 124), ('AGONIA', 206, 124), ('KART', 318, 96),
         ('LAGO', 264, 201), ('PREFEITURA', 314, 190), ('AV. BPS', 160, 436), ('CÂMARA', 214, 502), ('SANTA CASA', 286, 482),

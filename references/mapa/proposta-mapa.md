@@ -176,6 +176,14 @@ Os nomes dos bairros aparecem escritos no chão.
 - **Av. Dr. Jerson Dias:** começa abaixo dos morros e não sai mais do mapa.
 - **Placa do kart:** foi para o lado direito da pista.
 
+## Fase 1: Rodoviária (Pedro, 04/11/2026)
+
+- **A fase 1 é a Rodoviária:** o personagem **Geraldo** chega de ônibus a Itajubá para viver a aventura.
+- **Fica:** na Praça Dr. José Braz, a mesma da Praça do Soldado, como na cidade.
+- **Desenho:** prédio baixo, cobertura comprida com colunas sobre as plataformas, faixa amarela e dois ônibus parados,
+  sem marca.
+- **Saíram:** o trem, a estação e o trilho.
+
 ## O que o mapa mostra
 
 - **Formato em pé.** O eixo central de Itajubá é a **Av. BPS**, com o **Rio Sapucaí** correndo no meio dela. A avenida sobe pela
@@ -203,7 +211,7 @@ Os nomes dos bairros aparecem escritos no chão.
 
 | # | Lugar | Ideia de fase |
 |---|---|---|
-| 1 | Trem | Início: o herói chega de trem. Fase-tutorial |
+| 1 | Rodoviária | Início: o Geraldo chega de ônibus. Fase-tutorial |
 | 2 | Praça do Soldado | Pular no helicóptero e no pedestal |
 | 3 | Rua Nova | Toldos que quicam |
 | 4 | Praça | Fonte com o busto; jatos d'água que levantam o herói |
