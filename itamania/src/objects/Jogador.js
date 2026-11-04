@@ -5,7 +5,7 @@ import { heroi } from '../genero.js';
 // Herói (Geraldo ou Helena). Física herdada do motor do Aladdin:
 // aceleração e freio, pulo variável, coyote time e buffer de pulo de 100 ms, queda mais pesada que a subida.
 //
-// Duas formas (DESIGN.md): 'normal' e 'turbinado' (café com leite: fica maior e aguenta um toque a mais).
+// Duas formas (DESIGN.md): 'normal' (criança, 48 px) e 'grande' (café com leite: 64 px, aguenta um toque a mais).
 // O boné amarelo (fase 3 em diante) usa os mesmos quadros com o boné desenhado (segunda metade da folha).
 export class Jogador extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, x, y, { bone = false, turbinado = false } = {}) {
@@ -16,7 +16,7 @@ export class Jogador extends Phaser.Physics.Arcade.Sprite {
     this.body.setMaxVelocity(1000, J.quedaMaxima);
     this.body.setCollideWorldBounds(true);
     this.bone = bone;
-    this.forma = turbinado ? 'turbinado' : 'normal';
+    this.forma = turbinado ? 'grande' : 'normal';
     this.olhandoDireita = true;
     this.ultimoNoChao = -Infinity;
     this.ultimoPedidoPulo = -Infinity;
@@ -32,7 +32,7 @@ export class Jogador extends Phaser.Physics.Arcade.Sprite {
   }
 
   get turbinado() {
-    return this.forma === 'turbinado';
+    return this.forma === 'grande';
   }
 
   // Troca textura e corpo de colisão mantendo o pé no mesmo lugar.

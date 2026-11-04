@@ -61,7 +61,7 @@ export const JOGADOR = {
   // As duas caixas terminam na última linha do quadro (o pé).
   corpo: {
     normal: { largura: 14, altura: 38, x: 10, y: 10 },
-    turbinado: { largura: 20, altura: 58, x: 15, y: 14 },
+    grande: { largura: 14, altura: 52, x: 10, y: 12 },
   },
   antecipacaoArremessoMs: 60,
   arremessoMs: 190,

@@ -9,7 +9,7 @@ export { ArteTiles, ArteObjetos, ArteHeroi };
 // os novos saem de ferramentas/arte/gerar_cenarios.py.
 export const CENARIO_PNG = [
   'ceu', 'morros', 'casas', 'fonte', 'cafe', 'igreja', 'estatua', 'helicoptero', 'arvore', 'arvore2', 'clube',
-  'coroados', 'unifei', 'posto', 'rodoviaria', 'onibus', 'locomotiva', 'vagao1', 'vagao2', 'casa-joka',
+  'coroados', 'unifei', 'posto', 'rodoviaria', 'onibus', 'locomotiva', 'vagao1', 'casa-joka',
   'loja-sapatos', 'loja-papelaria', 'cesar-burg',
 ];
 

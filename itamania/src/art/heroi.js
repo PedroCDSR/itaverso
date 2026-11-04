@@ -1,7 +1,7 @@
 // Herói do ITAMANIA: gerado por ferramentas/arte/gerar_heroi16.py a partir do desenho do Pedro (16x24).
-// Folhas em public/assets/sprites/heroi-<geraldo|helena>-<normal|turbinado>.png (já ampliadas 2x e 3x).
+// Folhas em public/assets/sprites/heroi-<geraldo|helena>-<normal|grande>.png (ampliadas 2x).
 // Os primeiros NOMES.length quadros são sem boné; os seguintes, os mesmos com o boné amarelo.
-export const TAMANHOS = {"normal": [32, 48]};
+export const TAMANHOS = {"normal": [32, 48], "grande": [32, 64]};
 export const NOMES = ["parado", "piscando", "correndo1", "correndo2", "correndo3", "correndo4", "pulando", "caindo", "arremessando1", "arremessando2", "aterrissando", "dano", "vitoria1", "vitoria2"];
 export const ANIMACOES = {
   parado: { quadros: ["parado", "parado", "parado", "parado", "parado", "parado", "parado", "piscando"], fps: 4, repetir: -1 },

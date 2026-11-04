@@ -3,11 +3,10 @@ import { esperar } from '../util.js';
 import { tocarEfeito } from '../audio/efeitos.js';
 
 // Fase 1, Rodoviária e trem-museu (DESIGN.md). Chegada de ônibus; o trem parado em frente (peça de museu, não anda)
-// é o tutorial: subir na locomotiva e pular entre os vagões. Lá de cima, o helicóptero cruza o céu.
+// é o tutorial: subir na locomotiva e pular para o vagão. Lá de cima, o helicóptero cruza o céu.
 // Sem inimigos e sem itacoins (as itacoins começam na fase 2).
 const LOCO = 40; // coluna da locomotiva (144 px = 9 colunas)
 const V1 = 51; // vagão 1 (120 px = 7,5 colunas)
-const V2 = 61; // vagão 2
 
 const mapa = construir(116, (m) => {
   m.set(11, CHAO - 1, 'P');
@@ -18,10 +17,9 @@ const mapa = construir(116, (m) => {
   m.ret(LOCO, 13, LOCO, 14, 'x');
   m.ret(LOCO + 1, 12, LOCO + 5, 14, 'x');
   m.ret(LOCO + 6, 11, LOCO + 8, 14, 'x');
-  // vagões (teto y 176), com 2 colunas de vão entre eles
+  // vagão (teto y 176), com 2 colunas de vão depois da locomotiva
   m.ret(V1, 11, V1 + 6, 14, 'x');
-  m.ret(V2, 11, V2 + 6, 14, 'x');
-  m.set(V2 + 3, 10, 'G'); // em cima do último vagão: o helicóptero passa
+  m.set(V1 + 4, 10, 'G'); // em cima do vagão: o helicóptero passa
   m.set(76, CHAO - 1, 'K');
   // canteiros baixos para pular no caminho até a saída
   m.ret(84, 13, 86, 14, 'x');
@@ -79,7 +77,6 @@ export const FASE1 = {
     { img: 'arvore2', col: 30, dx: 0 },
     { img: 'locomotiva', col: LOCO, dy: 4, prof: 2 },
     { img: 'vagao1', col: V1, dy: 2, prof: 2 },
-    { img: 'vagao2', col: V2, dy: 2, prof: 2 },
     { img: 'arvore', col: 78 },
     { img: 'arvore2', col: 100 },
   ],

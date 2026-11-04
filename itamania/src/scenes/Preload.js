@@ -22,7 +22,7 @@ export class Preload extends Phaser.Scene {
       this.load.spritesheet(nome, `assets/sprites/${nome}.png`, { frameWidth: w, frameHeight: h });
     }
     for (const chave of Object.keys(HEROIS)) {
-      for (const forma of ['normal']) {
+      for (const forma of ['normal', 'grande']) {
         const [w, h] = ArteHeroi.TAMANHOS[forma];
         this.load.spritesheet(`heroi-${chave}-${forma}`, `assets/sprites/heroi-${chave}-${forma}.png`, { frameWidth: w, frameHeight: h });
       }
@@ -47,7 +47,7 @@ export class Preload extends Phaser.Scene {
     const H = ArteHeroi;
     const n = H.NOMES.length;
     for (const chave of Object.keys(HEROIS)) {
-      for (const forma of ['normal']) {
+      for (const forma of ['normal', 'grande']) {
         for (const [b, desloc] of [['s', 0], ['b', n]]) {
           for (const [nome, a] of Object.entries(H.ANIMACOES)) {
             anim(`${chave}-${forma}-${b}-${nome}`, `heroi-${chave}-${forma}`, a.quadros.map((q) => H.NOMES.indexOf(q) + desloc), a.fps, a.repetir);

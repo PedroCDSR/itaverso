@@ -319,9 +319,9 @@ export class Fase extends Phaser.Scene {
     this.time.addEvent({
       delay: 70,
       repeat: 7,
-      callback: () => j.setForma(n++ % 2 === 0 ? 'turbinado' : 'normal'),
+      callback: () => j.setForma(n++ % 2 === 0 ? 'grande' : 'normal'),
     });
-    this.time.delayedCall(70 * 8 + 10, () => j.setForma('turbinado'));
+    this.time.delayedCall(70 * 8 + 10, () => j.setForma('grande'));
   }
 
   encostouInimigo(i) {
@@ -372,8 +372,8 @@ export class Fase extends Phaser.Scene {
     this.registry.set('paes', estado.paes);
     const j = this.jogador;
     const dir = j.olhandoDireita ? 1 : -1;
-    const alt = j.turbinado ? 40 : 26;
-    const p = this.paesVoando.create(j.x + (j.turbinado ? 18 : 12) * dir, j.y - alt, 'paodequeijo', 0).setDepth(11);
+    const alt = j.turbinado ? 34 : 26;
+    const p = this.paesVoando.create(j.x + 12 * dir, j.y - alt, 'paodequeijo', 0).setDepth(11);
     p.body.setSize(9, 8);
     p.body.setGravityY(PAO.gravidade - J.gravidade);
     p.setBounce(0.45);
@@ -487,7 +487,7 @@ export class Fase extends Phaser.Scene {
     }
     await esperar(this, ITENS.precoBone * 70 + 400);
     const b = this.add.sprite(npc.x, npc.y - 46, 'boneitem', 0).setDepth(20);
-    await new Promise((ok) => this.tweens.add({ targets: b, x: this.jogador.x, y: this.jogador.y - (this.jogador.turbinado ? 66 : 44), duration: 500, ease: 'Sine.inOut', onComplete: ok }));
+    await new Promise((ok) => this.tweens.add({ targets: b, x: this.jogador.x, y: this.jogador.y - (this.jogador.turbinado ? 62 : 44), duration: 500, ease: 'Sine.inOut', onComplete: ok }));
     b.destroy();
     estado.bone = true;
     salvar();
@@ -569,9 +569,10 @@ export class Fase extends Phaser.Scene {
     }
     // NPCs: conversa ao chegar perto (só em x, para ninguém passar pulando por cima sem querer)
     for (const n of this.npcs) {
-      const perto = Math.abs(j.x - n.x) < CONVERSA.distancia && Math.abs(j.y - n.y) < 60;
+      // vale também passando por cima (no toldo ou pulando): a conversa espera o herói cair no chão
+      const perto = Math.abs(j.x - n.x) < CONVERSA.distancia && j.y > n.y - 120 && j.y < n.y + 20;
       if (!perto) n.longe = true;
-      if (perto && n.longe && !n.falou && j.body.blocked.down) {
+      if (perto && n.longe && !n.falou) {
         this.conversar(n);
         return;
       }

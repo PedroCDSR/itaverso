@@ -5,7 +5,7 @@ braço e nos olhos; cabeça, roupa e cores ficam idênticas ao desenho.
 
 Saída (pixels já ampliados, para o Phaser não precisar escalar):
 - public/assets/sprites/heroi-<geraldo|helena>-normal.png     quadros de 32x48 (2x)
-- public/assets/sprites/heroi-<geraldo|helena>-turbinado.png  quadros de 48x72 (3x, café com leite)
+- public/assets/sprites/heroi-<geraldo|helena>-grande.png     quadros de 32x64 (2x, depois do café com leite)
 - src/art/heroi.js (ordem dos quadros e animações) e prévia em ferramentas/arte/previas/heroi.png
 Primeira metade da folha: sem boné. Segunda metade: os mesmos quadros com boné.
 Uso: python3 ferramentas/arte/gerar_heroi16.py   (dentro de itamania/)
@@ -20,13 +20,15 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import heroi_base as B  # noqa: E402
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-L, A = 16, 24
-ESCALAS = {'normal': 2}  # forma grande (café com leite) fica para depois do MVP
+L = 16
+ESC = 2  # ampliação no PNG
+# formas: normal = criança 16x24; grande = depois do café com leite, 16x32 (só existe com boné)
+FORMAS = {'normal': 24, 'grande': 32}
 
 # caracteres de cada herói: camiseta, sombra da camiseta (braço), pele, bermuda
 HEROIS = {
-    'geraldo': dict(bases=(B.GERALDO, B.GERALDO_BONE), c='c', d='d', p='p', s='s'),
-    'helena': dict(bases=(B.HELENA, B.HELENA_BONE), c='C', d='D', p='P', s='S'),
+    'geraldo': dict(bases=(B.GERALDO, B.GERALDO_BONE), grande=B.GERALDO_GRANDE, c='c', d='d', p='p', s='s'),
+    'helena': dict(bases=(B.HELENA, B.HELENA_BONE), grande=B.HELENA_GRANDE, c='C', d='D', p='P', s='S'),
 }
 
 # Pernas (linhas 19 a 23). Letras: s bermuda, p pele, w tênis, v detalhe do tênis, o sola, k contorno.
@@ -40,6 +42,17 @@ PERNAS = {
 }
 
 
+# Pernas do corpo grande (linhas 25 a 31).
+PERNAS_GRANDE = {
+    'corrida1': ['....ksssk.ksssk.', '....ksssk.ksssk.', '...ksssk...ksssk', '...ksssk...ksssk', '..kwwwwk..kwwwwk', '..kwvwwk..kwwvwk', '..kooook..kooook'],
+    'corrida2': ['.....ksssssssk..', '.....ksssksssk..', '....kwwwwksssk..', '....kooooksssk..', '.........kwwwwk.', '.........kwwvwwk', '.........koooook'],
+    'corrida3': ['.....ksssksssk..', '....ksssk.ksssk.', '....ksssk.ksssk.', '...ksssk...ksssk', '..kwwwwk..kwwwwk', '..kwvwwk..kwwvwk', '..kooook..kooook'],
+    'corrida4': ['.....ksssssssk..', '.....ksssksssk..', '.....ksssk.kwwwk', '.....ksssk.koook', '....kwwwwk......', '....kwvwwk......', '....kooook......'],
+    'pulo': ['.....ksssssssk..', '....ksssk.ksssk.', '....kwwwwkkwwwwk', '....kooookkooook', '................', '................', '................'],
+    'queda': ['.....ksssssssk..', '....ksssk.ksssk.', '...ksssk...ksssk', '..kwwwwk..kwwwwk', '..kooook..kooook', '................', '................'],
+}
+
+
 def copia(m):
     return [list(r) for r in m]
 
@@ -49,13 +62,26 @@ def trocar(m, r, c, ch):
 
 
 def pernas(m, nome, h):
-    for i, linha in enumerate(PERNAS[nome]):
+    grande = len(m) == 32
+    tabela, inicio = (PERNAS_GRANDE, 25) if grande else (PERNAS, 19)
+    for i, linha in enumerate(tabela[nome]):
         assert len(linha) == L, (nome, linha)
-        m[19 + i] = [h['s'] if ch == 's' else h['p'] if ch == 'p' else ch for ch in linha]
+        m[inicio + i] = [h['s'] if ch == 's' else h['p'] if ch == 'p' else ch for ch in linha]
 
 
 def braco_frente(m, h):
     """Braço esticado para a frente (arremesso, equilíbrio): some o braço do lado do corpo."""
+    if len(m) == 32:
+        # corpo grande: braço nas colunas 10-11, linhas 14 a 19; contorno da camiseta na coluna 13
+        for r in range(14, 20):
+            for c in (10, 11):
+                m[r][c] = h['c']
+        m[14][14] = 'k'
+        m[16][14] = 'k'
+        m[15][13] = h['d']
+        m[15][14] = h['p']
+        m[15][15] = 'k'
+        return
     for r in (14, 15, 16, 17):
         for c in (9, 10):
             m[r][c] = h['c']
@@ -105,7 +131,8 @@ def quadros(base, h):
     braco_frente(m, h)
     q['arremessando2'] = m
     vazio = ['.'] * L
-    q['aterrissando'] = [vazio[:]] + copia(base[0:19]) + copia(base[20:24])
+    corte = len(base) - 5 if len(base) == 24 else 26
+    q['aterrissando'] = [vazio[:]] + copia(base[0:corte]) + copia(base[corte + 1:])
     m = copia(base)
     pernas(m, 'queda', h)
     olhos_dano(m, h)
@@ -119,7 +146,7 @@ def quadros(base, h):
     piscar(m, h)
     q['vitoria2'] = m
     for nome, m in q.items():
-        assert len(m) == A and all(len(r) == L for r in m), nome
+        assert len(m) == len(base) and all(len(r) == L for r in m), nome
     return q
 
 
@@ -142,7 +169,7 @@ def rgb(h):
 
 
 def imagem(m, esc):
-    img = Image.new('RGBA', (L * esc, A * esc), (0, 0, 0, 0))
+    img = Image.new('RGBA', (L * esc, len(m) * esc), (0, 0, 0, 0))
     px = img.load()
     for y, r in enumerate(m):
         for x, ch in enumerate(r):
@@ -159,21 +186,22 @@ def main():
     pasta = os.path.join(RAIZ, 'public/assets/sprites')
     folhas = []
     for nome, h in HEROIS.items():
-        lista = []
-        for base in h['bases']:
-            q = quadros(base, h)
-            lista += [q[n] for n in NOMES]
-        for forma, esc in ESCALAS.items():
-            folha = Image.new('RGBA', (L * esc * len(lista), A * esc), (0, 0, 0, 0))
+        for forma, alt in FORMAS.items():
+            # o grande só existe com boné: as duas metades da folha usam o mesmo desenho
+            bases = h['bases'] if forma == 'normal' else (h['grande'], h['grande'])
+            lista = []
+            for base in bases:
+                q = quadros(base, h)
+                lista += [q[n] for n in NOMES]
+            folha = Image.new('RGBA', (L * ESC * len(lista), alt * ESC), (0, 0, 0, 0))
             for i, m in enumerate(lista):
-                folha.alpha_composite(imagem(m, esc), (i * L * esc, 0))
+                folha.alpha_composite(imagem(m, ESC), (i * L * ESC, 0))
             folha.save(os.path.join(pasta, f'heroi-{nome}-{forma}.png'), optimize=True)
-            if forma == 'normal':
-                folhas.append(folha)
+            folhas.append(folha)
     js = ['// Herói do ITAMANIA: gerado por ferramentas/arte/gerar_heroi16.py a partir do desenho do Pedro (16x24).',
-          '// Folhas em public/assets/sprites/heroi-<geraldo|helena>-<normal|turbinado>.png (já ampliadas 2x e 3x).',
+          '// Folhas em public/assets/sprites/heroi-<geraldo|helena>-<normal|grande>.png (ampliadas 2x).',
           '// Os primeiros NOMES.length quadros são sem boné; os seguintes, os mesmos com o boné amarelo.',
-          f'export const TAMANHOS = {json.dumps({f: [L * e, A * e] for f, e in ESCALAS.items()})};',
+          f'export const TAMANHOS = {json.dumps({f: [L * ESC, a * ESC] for f, a in FORMAS.items()})};',
           'export const NOMES = ' + json.dumps(NOMES) + ';',
           'export const ANIMACOES = {']
     for n, (qs, fps, rep) in ANIMACOES.items():
@@ -184,9 +212,11 @@ def main():
     prev = os.path.join(RAIZ, 'ferramentas/arte/previas')
     os.makedirs(prev, exist_ok=True)
     larg = max(f.width for f in folhas)
-    tela = Image.new('RGBA', (larg, 48 * len(folhas)), (168, 220, 245, 255))
-    for i, f in enumerate(folhas):
-        tela.alpha_composite(f, (0, i * 48))
+    tela = Image.new('RGBA', (larg, sum(f.height for f in folhas)), (168, 220, 245, 255))
+    y = 0
+    for f in folhas:
+        tela.alpha_composite(f, (0, y))
+        y += f.height
     tela.resize((tela.width * 2, tela.height * 2), Image.NEAREST).save(os.path.join(prev, 'heroi.png'))
     print('ok:', len(NOMES) * 2, 'quadros por folha')
 

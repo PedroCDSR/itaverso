@@ -37,8 +37,7 @@ export const TEXTOS = {
   },
   avisos: {
     semBone: 'Ainda não comprei o boné amarelo!',
-    semPoderes: 'Antes, vou provar o pão de queijo da praça!',
-    cresceu: 'Café com leite! Fiquei {forte|forte}!',
+    semPoderes: 'Antes, vou provar o pão de queijo e o café com leite!',
     encolheu: 'Ufa! O café com leite me protegeu.',
     retorno: 'Ponto de retorno!',
   },

@@ -1,5 +1,7 @@
 import { FASE1 } from './fase1.js';
+import { FASE2 } from './fase2.js';
+import { FASE3 } from './fase3.js';
+import { FASE4 } from './fase4.js';
 
-// MVP (pedido do Pedro, 04/11/2026): só a fase 1 está ligada. As fases 2 a 4 já têm rascunho em
-// fase2.js, fase3.js e fase4.js; para ligar, importe e acrescente aqui. As outras aparecem no mapa como "Em breve".
-export const FASES = { 1: FASE1 };
+// Fases prontas (as outras aparecem no mapa como "Em breve").
+export const FASES = { 1: FASE1, 2: FASE2, 3: FASE3, 4: FASE4 };

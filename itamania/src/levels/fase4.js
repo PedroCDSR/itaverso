@@ -25,6 +25,7 @@ const mapa = construir(190, (m) => {
   // daqui em diante: pombos e capivaras para testar o pão de queijo, copos de café com leite no caminho
   m.set(104, CHAO - 1, 'C');
   m.linha(108, 111, 12, '=');
+  m.set(109, 11, 'c');
   m.set(116, CHAO - 1, 'V');
   m.set(119, CHAO - 1, 'V');
   m.arco(122, 127, 10);
@@ -38,6 +39,7 @@ const mapa = construir(190, (m) => {
   m.set(150, CHAO - 1, 'V');
   m.set(153, CHAO - 1, 'C');
   m.set(156, CHAO - 1, 'K');
+  m.set(160, CHAO - 1, 'c');
   m.set(166, CHAO - 1, 'V');
   m.set(169, CHAO - 1, 'C');
   m.buraco(172, 173);
@@ -87,9 +89,10 @@ export const FASE4 = {
       sprite: 'npc-barista',
       nome: 'Barista',
       falas: [
-        { texto: `Oi! Aqui é o ${nomeVaga('cafe')}, o café mais conhecido da praça.` },
-        { texto: 'Volte outro dia para provar o nosso café com leite!' },
+        { texto: `Um café com leite do ${nomeVaga('cafe')} para dar energia?` },
+        { texto: 'Com ele você cresce e aguenta um esbarrão a mais!' },
       ],
+      acao: 'cafe',
     },
     {
       sprite: 'npc-estudante',
@@ -102,8 +105,8 @@ export const FASE4 = {
     },
   ],
   gatilhos: [],
-  missao: 'Prove o pão de queijo da praça',
-  exigir: () => (estado.temPao ? null : TEXTOS.avisos.semPoderes),
+  missao: 'Prove o pão de queijo e o café com leite da praça',
+  exigir: () => (estado.temPao && estado.temCafe ? null : TEXTOS.avisos.semPoderes),
   mapa,
   curiosidade: {
     texto: 'Theodomiro Santiago fundou em 1913 o Instituto Eletrotécnico e Mecânico de Itajubá, a 10ª escola de engenharia do Brasil. Ele virou IEI (1936), EFEI (1968) e UNIFEI (2002).',
