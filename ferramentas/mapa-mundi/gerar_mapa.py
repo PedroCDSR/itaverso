@@ -1664,7 +1664,7 @@ def main():
     ruanova = (138, 560, 214, 576)  # Rua Nova: rua larga
     MARCOS = [
         ('hotel', m_hotel_coroados_v2(), (64, 420)),
-        ('unifei', m_unifei_v2(), (194, 222)),
+        ('unifei', m_unifei_v2(), (194, 213)),
         ('prefeitura', m_prefeitura_itajuba(), (328, 170)),
         ('kart', m_kart_pista(), (268, 142)),
         ('agonia', m_agonia_santuario(), (210, 98)),
@@ -2033,7 +2033,7 @@ def main():
         ('TREM', 24, 609), ('PRAÇA DO SOLDADO', 100, 612), ('RUA NOVA', 176, 529), ('PRAÇA', 266, 566),
         ('ALAMEDA', 64, 532), ('COROADOS', 64, 438), ('PRAÇONHA', 168, 372), ('CEMITÉRIO', 288, 322),
         ('UNIFEI', 194, 252), ('PINHEIRINHO', 132, 124), ('AGONIA', 206, 124), ('KART', 318, 96),
-        ('LAGO', 230, 160), ('PREFEITURA', 314, 190), ('AV. BPS', 160, 436), ('CÂMARA', 214, 456), ('SANTA CASA', 286, 494),
+        ('LAGO', 264, 201), ('PREFEITURA', 314, 190), ('AV. BPS', 160, 436), ('CÂMARA', 214, 456), ('SANTA CASA', 286, 494),
     ]
     for txt, x, y in PLACAS:
         w = len(txt) * 6 + 10
