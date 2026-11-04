@@ -16,6 +16,10 @@ Tudo que vem de fora do projeto fica registrado aqui (autoria, licença e onde e
 As fontes vêm do repositório oficial `google/fonts` e foram convertidas para woff2, só com o alfabeto latino
 (Latin-1), para ficarem leves. A OFL permite essa conversão.
 
+Na praça, prédios, árvores e palmeiras são peças do Modern Exteriors montadas e repintadas por nós
+(`ferramentas/arte/pecas_praca.py`); concha acústica, busto de perfil, letreiros e tronco das palmeiras-imperiais são
+desenho próprio.
+
 Heróis (Geraldo e Helena) e mapa-múndi: desenhos do Pedro. Na praça vista de cima, os heróis e os moradores ainda
 são personagens do Modern Exteriors (provisório, até existir o desenho do Pedro visto de cima). Demais personagens, cenários, efeitos sonoros e músicas
 (gerados em código): criação original deste projeto. Nenhum arquivo de arte, som ou música de outro jogo é usado.

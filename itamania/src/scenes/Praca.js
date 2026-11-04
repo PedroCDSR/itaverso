@@ -32,7 +32,7 @@ export class Praca extends Phaser.Scene {
     this.saindo = false;
     const mapa = this.make.tilemap({ key: 'praca' });
     const chao = mapa.addTilesetImage('chao', 'limezu-chao');
-    for (const nome of ['asfalto', 'calcada', 'grama', 'agua', 'faixas']) mapa.createLayer(nome, chao, 0, 0).setDepth(0);
+    for (const nome of ['asfalto', 'calcada', 'grama_cheia', 'grama', 'agua', 'faixas']) mapa.createLayer(nome, chao, 0, 0).setDepth(0);
     this.colisao = mapa.createLayer('colisao', chao, 0, 0).setVisible(false);
     this.colisao.setCollisionByExclusion([-1]);
     this.physics.world.setBounds(0, 0, mapa.widthInPixels, mapa.heightInPixels);
@@ -44,11 +44,14 @@ export class Praca extends Phaser.Scene {
       for (const im of col.images) tipoPorGid[im.gid] = im.image.split('/').pop().replace('.png', '');
     }
     this.alvos = [];
+    this.copas = []; // árvores e palmeiras: ficam transparentes quando o herói passa atrás
     for (const o of mapa.getObjectLayer('objetos').objects) {
       const chave = tipoPorGid[o.gid] || o.type;
       const img = this.add.image(o.x, o.y, `limezu-${chave}`).setOrigin(0, 1).setDepth(10 + o.y / 1000);
       const p = props(o);
       if (p.fala) this.alvos.push({ x: o.x + img.width / 2, y: o.y + 2, fala: p.fala });
+      if (/^(arvore|palmeira)/.test(chave)) this.copas.push(img);
+      if (chave === 'jatos') this.tweens.add({ targets: img, alpha: 0.7, duration: 420, yoyo: true, repeat: -1, ease: 'Sine.inOut' });
     }
 
     // pontos do mapa (início, moradores, itacoins, saída)
@@ -175,6 +178,12 @@ export class Praca extends Phaser.Scene {
       }
     });
     this.heroi.setDepth(10 + this.heroi.y / 1000);
+    // copa transparente: o herói está atrás da árvore (mais ao norte que a base) e dentro do desenho dela
+    for (const c of this.copas) {
+      const atras = this.heroi.y < c.y - 4 && this.heroi.y > c.y - c.height && Math.abs(this.heroi.x - (c.x + c.width / 2)) < c.width / 2;
+      const alvo = atras ? PRACA.copaTransparente : 1;
+      if (c.alpha !== alvo) c.setAlpha(Math.abs(c.alpha - alvo) < 0.03 ? alvo : Phaser.Math.Linear(c.alpha, alvo, 0.25));
+    }
 
     if (this.ocupado || this.saindo) {
       this.heroi.body.setVelocity(0, 0);

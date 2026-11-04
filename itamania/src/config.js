@@ -111,6 +111,7 @@ export const PRACA = {
   velocidade: 64, // px/s
   velocidadeNpc: 22,
   alcanceFala: 18, // distância até o ponto à frente do herói para conversar
+  copaTransparente: 0.4, // opacidade da copa quando o herói passa atrás de uma árvore ou palmeira
   // personagens do Modern Exteriors no lugar dos heróis, até existir o desenho do Pedro visto de cima
   heroi: { geraldo: 'scout6', helena: 'scout2' },
   joystick: { zonaMorta: 6, raio: 26, opacidade: 0.4 },

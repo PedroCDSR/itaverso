@@ -1,5 +1,27 @@
 # STATUS · ITAMANIA
 
+## Praça na disposição real (05/11/2026), aprovada pelo Pedro depois de 5 propostas
+
+Ruas pela marcação do Pedro no satélite: asfalto na rua de cima (oeste), nas ruas que sobem e descem, na avenida da
+esquerda e na rua de baixo; o resto é calçadão com o mesmo piso cinza-claro da praça.
+
+- **Praça simétrica:** 4 canteiros com 2 tiles de calçada até a borda, cada um com uma árvore alta e rala e duas
+  palmeiras-imperiais (tronco marrom alto, palmito verde, copa acima dos prédios). Concha acústica e espelho d'água
+  comprido com jatos na faixa oeste; busto pequeno de perfil, dentro da água, na ponta leste do espelho.
+- **Copa transparente:** árvores e palmeiras ficam a 40% quando o herói passa atrás (`PRACA.copaTransparente`).
+- **Quadras cheias** de sobrados ecléticos claros (peças modulares do pacote repintadas, `pecas_praca.sobrado()`).
+  Especiais: torre vermelha com lojas (quarteirão do Subway), Café do Vadinho, Hotel Centenário (rosado), Cesar Burg,
+  Fórum Cível (branco com faixa azul), Club Itajubense girado 90° (pórtico para a praça), Five Stars (bar com telão).
+- **Peças:** `ferramentas/arte/pecas_praca.py` (clube, sobrados, torre, hotel, fórum, Five Stars, concha, busto,
+  jatos, árvore alta, palmeira-imperial), `montar_cafe.py`, `montar_burg.py`. São montagens e repinturas de peças do
+  Modern Exteriors; desenho próprio só onde o pacote não tem: concha, busto de perfil, placas/letreiros, moldura e
+  xadrez do Burg, tronco da palmeira.
+- **Pendências:** OK do Five Stars para o nome no letreiro (sem ele, trocar por "BAR"); o busto de perfil é desenho
+  simples (o Pedro pode desenhar um melhor); letreiro "MARKET"/"STORE" do pacote em alguns prédios.
+- **Teste:** praça, conversa, copa transparente, saída para o mapa, título, pausa e fases 1 a 4 sem erros no console.
+  `dist/` = 2,5 MB.
+
+
 ## Praça com o Modern Exteriors (04/11/2026, noite)
 
 O Pedro achou o estilo do Ninja Adventure antigo demais e comprou o **Modern Exteriors 16x16** (LimeZu). A praça foi

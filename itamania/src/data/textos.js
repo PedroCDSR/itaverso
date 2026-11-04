@@ -84,9 +84,12 @@ export const TEXTOS = {
       fonte: [{ quem: 'heroi', texto: 'Que fonte bonita! Dá vontade de jogar uma moedinha.' }],
       clube: [{ quem: 'Placa', texto: 'Club Itajubense. Bailes e festas desde muito tempo!' }],
       hotel: [{ quem: 'Placa', texto: 'Hotel Centenário.' }],
+      concha: [{ quem: 'heroi', texto: 'Uma concha acústica! Aposto que tem show aqui nas festas da cidade.' }],
+      g5: [{ quem: 'Placa', texto: 'G5 Internet.' }],
+      torre: [{ quem: 'heroi', texto: 'Que prédio alto! E cheio de lojinhas embaixo.' }],
       forum: [{ quem: 'Placa', texto: 'Fórum Cível.' }],
       acai: [{ quem: 'heroi', texto: 'Uma loja de açaí! Depois eu volto aqui.' }],
-      arena: [{ quem: 'heroi', texto: 'Uma arena esportiva bem do lado da praça!' }],
+      arena: [{ quem: 'heroi', texto: 'O Five Stars! O pessoal vem aqui ver os jogos no telão.' }],
       placa: [
         { quem: 'Placa da praça', texto: 'Praça Theodomiro Santiago.' },
         { quem: 'Placa da praça', texto: 'Theodomiro fundou aqui, em 1913, a escola de engenharia que hoje é a UNIFEI.' },
