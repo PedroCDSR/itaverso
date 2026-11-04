@@ -90,6 +90,18 @@
 
 Os nomes dos bairros aparecem escritos no chão.
 
+## Santa Casa, Câmara e prediozinhos (fotos do Pedro, 04/11/2026)
+
+- **Santa Casa** (hospital), embaixo do Cruzeiro:
+  - prédio alto branco com o letreiro vertical e a cruz vermelha de hospital;
+  - casarão antigo creme com cúpulas e telhado de barro à esquerda;
+  - torre fina da capela;
+  - estacionamento com carros na frente.
+- **Câmara** (Câmara Municipal), no centro: prédio quadrado antigo, branco acinzentado, de 2 andares, com janelas em arco,
+  balaustrada, escadaria e palmeiras.
+- **Prediozinhos:** prédios de apartamento ao longo da BPS e no centro, misturados ao casario, como nas fotos.
+- As fotos (de terceiros) foram usadas só como referência e não estão no repositório.
+
 ## O que o mapa mostra
 
 - **Formato em pé.** O eixo central de Itajubá é a **Av. BPS**, com o **Rio Sapucaí** correndo no meio dela. A avenida sobe pela

@@ -1264,6 +1264,99 @@ def m_mansao(v):
     return s
 
 
+def m_santa_casa():
+    """Santa Casa de Itajubá (foto do Pedro, 04/11/2026): prédio alto branco com o letreiro vertical e a cruz de
+    hospital, casarão antigo creme com cúpulas e telhado de barro à esquerda, torre fina da capela e o
+    estacionamento na frente."""
+    s, d = spr(66, 46)
+    # estacionamento
+    ret(d, 0, 38, 65, 45, (150, 150, 156))
+    for x in range(2, 64, 5):
+        ret(d, x, 39, x, 44, (220, 220, 220))
+    for x, c in [(4, C['br']), (14, C['br']), (24, (60, 64, 80)), (40, C['br']), (50, C['vm']), (60, C['br'])]:
+        ret(d, x - 1, 41, x + 2, 43, c)
+        px(d, x, 41, (120, 160, 200))
+    # torre fina da capela (esquerda)
+    d.polygon([(2, 37), (5, 6), (8, 37)], fill=rgba((236, 230, 214)))
+    d.line([(6, 8), (8, 37)], fill=rgba((200, 192, 172)))
+    ret(d, 5, 2, 5, 6, C['ci0'])
+    ret(d, 4, 3, 6, 3, C['ci0'])
+    # casarão antigo creme com cúpulas
+    ret(d, 9, 20, 38, 37, (236, 216, 164))
+    ret(d, 32, 20, 38, 37, (212, 188, 136))
+    ret(d, 9, 17, 38, 20, (168, 84, 60))
+    ret(d, 9, 17, 38, 17, (200, 112, 84))
+    for x0 in (11, 30):
+        d.ellipse([x0, 11, x0 + 7, 19], fill=rgba((112, 128, 140)))
+        ret(d, x0, 15, x0 + 7, 19, (112, 128, 140))
+        px(d, x0 + 2, 13, (160, 176, 188))
+        ret(d, x0 + 3, 9, x0 + 4, 11, (112, 128, 140))
+    for y in (23, 30):
+        for x in range(11, 37, 4):
+            ret(d, x, y, x + 1, y + 3, (64, 104, 140))
+            px(d, x, y, (236, 236, 240))
+    ret(d, 9, 35, 38, 37, (120, 168, 196))
+    # prédio alto branco do hospital
+    ret(d, 40, 2, 63, 37, (246, 246, 244))
+    ret(d, 58, 2, 63, 37, (208, 210, 214))
+    ret(d, 39, 0, 64, 2, (176, 180, 188))
+    for y in range(6, 34, 4):
+        for x in range(48, 63, 3):
+            ret(d, x, y, x + 1, y + 1, (56, 64, 84))
+    for y in range(6, 32, 3):  # letreiro vertical
+        ret(d, 42, y, 43, y + 1, (40, 40, 48))
+    ret(d, 46, 32, 56, 37, (64, 168, 140))
+    # cruz de hospital
+    ret(d, 49, -1 + 1, 54, 0 + 1, C['br'])
+    d.rectangle([47, -6 + 6, 56, 3 + 6], fill=rgba(C['br']))
+    ret(d, 51, 1, 52, 8, C['vm'])
+    ret(d, 48, 3, 55, 5, C['vm'])
+    return s
+
+
+def m_camara():
+    """Câmara Municipal (foto do Pedro, 04/11/2026): prédio quadrado antigo, branco acinzentado, 2 andares,
+    janelas em arco em cima, balaustrada no alto, escadaria na frente e palmeiras."""
+    s, d = spr(36, 30)
+    br, br2, br3 = (232, 234, 236), (196, 200, 206), (150, 156, 166)
+    ret(d, 4, 4, 31, 25, br)
+    ret(d, 26, 4, 31, 25, br2)
+    ret(d, 3, 2, 32, 4, br2)
+    for x in range(4, 32, 2):
+        px(d, x, 1, br3)
+    ret(d, 3, 1, 32, 1, br3)
+    ret(d, 4, 14, 31, 15, br3)
+    for x in (7, 12, 17, 22, 27):
+        d.ellipse([x - 1, 6, x + 1, 9], fill=rgba((72, 80, 96)))
+        ret(d, x - 1, 8, x + 1, 12, (72, 80, 96))
+        ret(d, x - 1, 17, x + 1, 22, (72, 80, 96))
+        px(d, x, 18, (140, 156, 176))
+    ret(d, 14, 19, 20, 25, (88, 76, 64))
+    for k, y in enumerate(range(25, 30)):
+        ret(d, 12 - k, y, 22 + k, y, (176, 172, 164) if y % 2 else (140, 136, 128))
+    for x in (1, 34):
+        ret(d, x, 18, x, 29, C['mad1'])
+        for dx, dy in ((-2, -1), (2, -1), (-1, -2), (1, -2)):
+            d.line([(x, 18), (x + dx, 18 + dy)], fill=rgba(C['g1']))
+    return s
+
+
+def m_predio(v):
+    """Prediozinho de apartamentos (como os da BPS e do centro)."""
+    h = [16, 20, 24, 18][v % 4]
+    s, d = spr(10, h)
+    cor, cor2 = [((244, 244, 240), (204, 206, 210)), ((240, 228, 176), (206, 190, 136)),
+                 ((236, 236, 240), (196, 198, 208)), ((248, 240, 228), (210, 200, 186))][v % 4]
+    ret(d, 0, 1, 9, h - 1, cor)
+    ret(d, 7, 1, 9, h - 1, cor2)
+    ret(d, 0, 0, 9, 1, (150, 156, 166))
+    for y in range(3, h - 3, 3):
+        for x in (1, 4):
+            ret(d, x, y, x + 1, y, (64, 80, 108))
+    ret(d, 3, h - 3, 5, h - 1, (88, 76, 64))
+    return s
+
+
 # ---------------------------------------------------------------- mapa (em pé)
 def main():
     base = terreno()
@@ -1384,6 +1477,8 @@ def main():
         ('agonia', m_agonia_santuario(), (210, 98)),
         ('capela', m_capela_gotica(), (294, 290)),
         ('coreto', m_coreto(), (196, 392)),
+        ('santacasa', m_santa_casa(), (280, 486)),
+        ('camara', m_camara(), (214, 500)),
         ('estacao', m_estacao(), (36, 584)),
         ('trem', m_locomotiva(), (40, 606)),
         ('soldado', m_estatua_soldado(), (98, 624)),
@@ -1629,7 +1724,12 @@ def main():
         if t == 'm':
             colar(base, m_mansao(random.randrange(4)), x, y, C['c0'])
         elif t == 'c':
-            casa(base, x, y, random.randrange(12))
+            perto_bps = 100 < x < 172 and 236 < y < 520
+            centro = y > 440 and x < 290
+            if (perto_bps and random.random() < 0.3) or (centro and random.random() < 0.18):
+                colar(base, m_predio(random.randrange(4)), x, y, C['c0'])
+            else:
+                casa(base, x, y, random.randrange(12))
         else:
             arvore(base, x, y, 0)
 
@@ -1705,7 +1805,7 @@ def main():
         ('TREM', 26, 618), ('PRAÇA DO SOLDADO', 208, 618), ('RUA NOVA', 176, 529), ('PRAÇA', 255, 578),
         ('ALAMEDA', 40, 536), ('COROADOS', 54, 428), ('PRAÇONHA', 196, 410), ('CEMITÉRIO', 288, 322),
         ('UNIFEI', 194, 252), ('PINHEIRINHO', 132, 124), ('AGONIA', 206, 124), ('KART', 242, 56),
-        ('LAGO', 230, 160), ('PREFEITURA', 314, 190), ('AV. BPS', 160, 470),
+        ('LAGO', 230, 160), ('PREFEITURA', 314, 190), ('AV. BPS', 160, 436), ('CÂMARA', 214, 456), ('SANTA CASA', 282, 488),
     ]
     for txt, x, y in PLACAS:
         w = len(txt) * 6 + 10
@@ -1720,7 +1820,7 @@ def main():
         ret(d, bx0 + 1, by0 + 1, bx0 + t.width + 1, by0 + t.height, C['vm2'])
         base.alpha_composite(t, (bx0 + 2, by0 + 1))
 
-    for txt, bx, by_ in [('BAIRRO BPS', 190, 300), ('CENTRO', 196, 500), ('CRUZEIRO', 288, 392), ('VARGINHA', 314, 470)]:
+    for txt, bx, by_ in [('BAIRRO BPS', 190, 300), ('CENTRO', 172, 506), ('CRUZEIRO', 288, 392), ('VARGINHA', 318, 504)]:
         t = contorno(texto_img(txt, C['br'], C['preto']), C['preto'])
         base.alpha_composite(t, (bx - t.width // 2, by_))
 
