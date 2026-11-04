@@ -17,15 +17,14 @@ const mapa = construir(190, (m) => {
   m.linha(FONTE + 1, FONTE + 9, 14, '-');
   m.set(FONTE + 12, CHAO - 1, 'N'); // guia ao lado do busto
   m.set(BURG + 6, CHAO - 1, 'N'); // atendente do Cesar Burg
-  m.linha(BURG, BURG + 10, 9, '-'); // toldo
-  m.moedas(BURG + 1, BURG + 9, 8, 2);
+  m.linha(BURG, BURG + 10, 11, '-'); // toldo (dá para subir)
+  m.moedas(BURG + 1, BURG + 9, 10, 2);
   m.set(CAFE + 6, CHAO - 1, 'N'); // barista do Café do Vadinho
   m.set(CAFE + 16, CHAO - 1, 'N'); // estudante da UNIFEI
   m.set(98, CHAO - 1, 'K');
   // daqui em diante: pombos e capivaras para testar o pão de queijo, copos de café com leite no caminho
   m.set(104, CHAO - 1, 'C');
   m.linha(108, 111, 12, '=');
-  m.set(109, 11, 'c');
   m.set(116, CHAO - 1, 'V');
   m.set(119, CHAO - 1, 'V');
   m.arco(122, 127, 10);
@@ -39,7 +38,6 @@ const mapa = construir(190, (m) => {
   m.set(150, CHAO - 1, 'V');
   m.set(153, CHAO - 1, 'C');
   m.set(156, CHAO - 1, 'K');
-  m.set(160, CHAO - 1, 'c');
   m.set(166, CHAO - 1, 'V');
   m.set(169, CHAO - 1, 'C');
   m.buraco(172, 173);
@@ -89,10 +87,9 @@ export const FASE4 = {
       sprite: 'npc-barista',
       nome: 'Barista',
       falas: [
-        { texto: `Um café com leite do ${nomeVaga('cafe')} para dar energia?` },
-        { texto: 'Com ele você fica maior e aguenta um esbarrão a mais!' },
+        { texto: `Oi! Aqui é o ${nomeVaga('cafe')}, o café mais conhecido da praça.` },
+        { texto: 'Volte outro dia para provar o nosso café com leite!' },
       ],
-      acao: 'cafe',
     },
     {
       sprite: 'npc-estudante',
@@ -105,8 +102,8 @@ export const FASE4 = {
     },
   ],
   gatilhos: [],
-  missao: 'Prove o pão de queijo e o café com leite da praça',
-  exigir: () => (estado.temPao && estado.temCafe ? null : TEXTOS.avisos.semPoderes),
+  missao: 'Prove o pão de queijo da praça',
+  exigir: () => (estado.temPao ? null : TEXTOS.avisos.semPoderes),
   mapa,
   curiosidade: {
     texto: 'Theodomiro Santiago fundou em 1913 o Instituto Eletrotécnico e Mecânico de Itajubá, a 10ª escola de engenharia do Brasil. Ele virou IEI (1936), EFEI (1968) e UNIFEI (2002).',

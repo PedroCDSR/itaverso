@@ -30,7 +30,7 @@ export class Mapa extends Phaser.Scene {
     tocarMusica('mapa');
     const cam = this.cameras.main;
     cam.setBounds(0, 0, LARGURA, ALTURA_MAPA);
-    if (this.textures.exists('mapa-mundi') && this.textures.get('mapa-mundi').key !== '__MISSING') {
+    if (this.textures.exists('mapa-mundi')) {
       this.add.image(0, 0, 'mapa-mundi').setOrigin(0);
     } else {
       this.desenharMapa();
@@ -51,7 +51,7 @@ export class Mapa extends Phaser.Scene {
     this.add.text(12, 10, TEXTOS.mapa.titulo, { fontFamily: FONTES.titulo, fontSize: '10px', color: CORES_CSS.amarelo }).setScrollFactor(0).setDepth(51);
     this.add.text(LARGURA / 2 + 10, 15, TEXTOS.mapa.dica, { fontFamily: FONTES.dialogo, fontSize: '14px', color: CORES_CSS.branco }).setOrigin(0.5).setScrollFactor(0).setDepth(51);
     new BotaoSom(this, LARGURA - 20, 15);
-    const b = new Botao(this, 52, ALTURA - 18, 'INÍCIO', () => this.scene.start('Titulo'), { largura: 84, altura: 20, tamanhoFonte: '7px' });
+    const b = new Botao(this, 52, ALTURA - 18, 'MENU', () => this.scene.start('Titulo'), { largura: 84, altura: 20, tamanhoFonte: '7px' });
     b.setDepth(52);
 
     // arrastar para rolar

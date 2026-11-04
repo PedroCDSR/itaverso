@@ -1,4 +1,5 @@
-"""Gera o herói do ITAMANIA (Geraldo e Helena, criança) com o renderizador de volumes (modelo.py).
+"""(Herói antigo, substituído por gerar_heroi16.py; este arquivo hoje gera só os NPCs.)
+Gera o herói do ITAMANIA (Geraldo e Helena, criança) com o renderizador de volumes (modelo.py).
 
 Design próprio (DESIGN.md, "Personagens"): criança recém-chegada a Itajubá, com mochila e tênis. Mesmo corpo e
 mesmas animações para os dois; mudam o cabelo e as cores da roupa. O boné amarelo só aparece da fase 3 em diante,
@@ -407,36 +408,7 @@ def main():
     pasta = os.path.join(raiz, 'public/assets/sprites')
     os.makedirs(pasta, exist_ok=True)
     gerar_npcs(pasta)
-    folhas = []
-    for nome, h in HEROIS.items():
-        for tam, s in TAMANHOS.items():
-            qs, pal = gerar_folha(h, s)
-            img = png(qs, pal, os.path.join(pasta, f'heroi-{nome}-{tam}.png'))
-            ocup = [y for y, l in enumerate(qs[0]) if any(c != '.' for c in l)]
-            print(f'{nome} {tam}: altura {ocup[-1] - ocup[0] + 1} px, {len(qs)} quadros')
-            folhas.append(img)
-    # módulo JS com a ordem dos quadros e as animações
-    js = ['// Herói do ITAMANIA: gerado por ferramentas/arte/gerar_heroi.py (não editar à mão).',
-          '// Folhas PNG em public/assets/sprites/heroi-<geraldo|helena>-<normal|turbinado>.png, quadros de 48x64.',
-          '// Os primeiros NOMES.length quadros são sem boné; os seguintes, os mesmos com o boné amarelo.',
-          f'export const LARGURA = {L};', f'export const ALTURA = {A};',
-          'export const NOMES = ' + json.dumps(NOMES) + ';',
-          'export const ANIMACOES = {']
-    for n, (qs, fps, rep) in ANIMACOES.items():
-        js.append(f'  {n}: {{ quadros: {json.dumps(qs)}, fps: {fps}, repetir: {rep} }},')
-    js.append('};')
-    with open(os.path.join(raiz, 'src/art/heroi.js'), 'w', encoding='utf-8') as f:
-        f.write('\n'.join(js) + '\n')
-    # prévia: 4 linhas (geraldo normal, geraldo turbinado, helena normal, helena turbinado), ampliada 3x
-    from PIL import Image
-    prev = os.path.join(raiz, 'ferramentas/arte/previas')
-    os.makedirs(prev, exist_ok=True)
-    larg = max(f.width for f in folhas)
-    tela = Image.new('RGBA', (larg, A * len(folhas)), (120, 140, 220, 255))
-    for i, f in enumerate(folhas):
-        tela.alpha_composite(f, (0, i * A))
-    tela = tela.resize((tela.width * 3, tela.height * 3), Image.NEAREST)
-    tela.save(os.path.join(prev, 'heroi.png'))
+    # o herói agora vem do desenho do Pedro: ver gerar_heroi16.py
 
 
 if __name__ == '__main__':

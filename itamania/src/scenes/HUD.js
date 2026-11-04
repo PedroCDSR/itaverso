@@ -46,7 +46,7 @@ export class HUD extends Phaser.Scene {
     this.iconePao.setVisible(comPao);
     this.txtPaes.setVisible(comPao).setText(`x${paes ?? 0}`);
     const base = 17 + reg.get('vidaMax') * 13;
-    this.fundo.width = comPao ? this.xPao + 34 : comMoedas ? base + 50 : base;
+    this.fundo.setSize(comPao ? this.xPao + 34 : comMoedas ? base + 50 : base, 22);
     if (comMoedas && reg.get('itacoins') > this.antes.itacoins) this.pulo(this.iconeMoeda);
     if (comPao && paes > (this.antes.paes ?? 0)) this.pulo(this.iconePao);
     this.antes = { itacoins: reg.get('itacoins'), paes };

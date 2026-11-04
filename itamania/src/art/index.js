@@ -32,3 +32,7 @@ export const SPRITES_PNG = {
   'npc-barista': [48, 64],
   'npc-estudante': [48, 64],
 };
+
+// Mapa-múndi pronto (pixel art em pé, 480 px de largura) em public/assets/mapa.png. Mude para true quando o arquivo
+// existir; enquanto for false, o mapa é desenhado em código (scenes/Mapa.js). Evita um pedido 404.
+export const TEM_MAPA = false;

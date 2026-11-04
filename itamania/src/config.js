@@ -57,10 +57,11 @@ export const JOGADOR = {
   atordoadoMs: 280,
   coracoes: 3,
   invencivelMs: 1100,
-  // corpo de colisão dentro do quadro 48x64 (pé na linha 63)
+  // corpo de colisão dentro do quadro (desenho do Pedro, 16x24 ampliado: normal 32x48, turbinado 48x72).
+  // As duas caixas terminam na última linha do quadro (o pé).
   corpo: {
-    normal: { largura: 16, altura: 36, x: 16, y: 28 },
-    turbinado: { largura: 18, altura: 44, x: 15, y: 20 },
+    normal: { largura: 14, altura: 38, x: 10, y: 10 },
+    turbinado: { largura: 20, altura: 58, x: 15, y: 14 },
   },
   antecipacaoArremessoMs: 60,
   arremessoMs: 190,

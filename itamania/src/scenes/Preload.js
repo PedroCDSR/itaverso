@@ -1,6 +1,6 @@
 import * as Phaser from 'phaser';
 import { TILE } from '../config.js';
-import { CENARIO_PNG, SPRITES_PNG, ArteTiles, ArteObjetos, ArteHeroi } from '../art/index.js';
+import { CENARIO_PNG, SPRITES_PNG, TEM_MAPA, ArteTiles, ArteObjetos, ArteHeroi } from '../art/index.js';
 import { texturaDeQuadros } from '../art/matriz.js';
 import { HEROIS, escolherHeroi } from '../genero.js';
 import { carregar, estado } from '../estado.js';
@@ -22,17 +22,12 @@ export class Preload extends Phaser.Scene {
       this.load.spritesheet(nome, `assets/sprites/${nome}.png`, { frameWidth: w, frameHeight: h });
     }
     for (const chave of Object.keys(HEROIS)) {
-      for (const forma of ['normal', 'turbinado']) {
-        this.load.spritesheet(`heroi-${chave}-${forma}`, `assets/sprites/heroi-${chave}-${forma}.png`, {
-          frameWidth: ArteHeroi.LARGURA,
-          frameHeight: ArteHeroi.ALTURA,
-        });
+      for (const forma of ['normal']) {
+        const [w, h] = ArteHeroi.TAMANHOS[forma];
+        this.load.spritesheet(`heroi-${chave}-${forma}`, `assets/sprites/heroi-${chave}-${forma}.png`, { frameWidth: w, frameHeight: h });
       }
     }
-    this.load.image('mapa-mundi', 'assets/mapa.png'); // opcional: o mapa pronto do Pedro (sem ele, o mapa é desenhado)
-    this.load.on('loaderror', (arq) => {
-      if (arq.key !== 'mapa-mundi') console.warn('Não carregou', arq.key);
-    });
+    if (TEM_MAPA) this.load.image('mapa-mundi', 'assets/mapa.png'); // o mapa pronto do Pedro
   }
 
   create() {
@@ -52,7 +47,7 @@ export class Preload extends Phaser.Scene {
     const H = ArteHeroi;
     const n = H.NOMES.length;
     for (const chave of Object.keys(HEROIS)) {
-      for (const forma of ['normal', 'turbinado']) {
+      for (const forma of ['normal']) {
         for (const [b, desloc] of [['s', 0], ['b', n]]) {
           for (const [nome, a] of Object.entries(H.ANIMACOES)) {
             anim(`${chave}-${forma}-${b}-${nome}`, `heroi-${chave}-${forma}`, a.quadros.map((q) => H.NOMES.indexOf(q) + desloc), a.fps, a.repetir);

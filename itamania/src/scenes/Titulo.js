@@ -39,11 +39,11 @@ export class Titulo extends Phaser.Scene {
     this.cartoes = {};
     Object.keys(HEROIS).forEach((chave, i) => {
       const x = LARGURA / 2 + (i === 0 ? -62 : 62);
-      const fundo = this.add.rectangle(x, 150, 104, 100, CORES.roxo, 0.55).setStrokeStyle(3, CORES.branco);
-      const s = this.add.sprite(x, 192, `heroi-${chave}-normal`, 0).setOrigin(0.5, 1).setScale(2);
+      const fundo = this.add.rectangle(x, 152, 104, 104, CORES.roxo, 0.55).setStrokeStyle(3, CORES.branco);
+      const s = this.add.sprite(x, 198, `heroi-${chave}-normal`, 0).setOrigin(0.5, 1).setScale(2);
       s.play(`${chave}-normal-s-parado`);
       const nome = this.add
-        .text(x, 113, HEROIS[chave].nome.toUpperCase(), { fontFamily: FONTES.titulo, fontSize: '9px', color: CORES_CSS.branco })
+        .text(x, 109, HEROIS[chave].nome.toUpperCase(), { fontFamily: FONTES.titulo, fontSize: '9px', color: CORES_CSS.branco })
         .setOrigin(0.5);
       fundo.setInteractive({ useHandCursor: true }).on('pointerup', () => this.escolher(chave));
       this.cartoes[chave] = { fundo, s, nome };

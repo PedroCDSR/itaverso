@@ -27,7 +27,7 @@ export class Fim extends Phaser.Scene {
       .setOrigin(0.5)
       .setShadow(1, 1, CORES_CSS.roxo, 0, false, true);
     new Botao(this, LARGURA / 2 - 70, 226, TEXTOS.botoes.mapa, () => this.scene.start('Mapa'), { largura: 120, altura: 26, cor: 'amarelo' });
-    new Botao(this, LARGURA / 2 + 70, 226, 'INÍCIO', () => this.scene.start('Titulo'), { largura: 120, altura: 26 });
+    new Botao(this, LARGURA / 2 + 70, 226, 'MENU', () => this.scene.start('Titulo'), { largura: 120, altura: 26 });
   }
 
   update(t, d) {
