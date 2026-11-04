@@ -56,6 +56,16 @@
 - **Av. Dr. Jerson Dias:** passa a leste do lago e do kart e encontra a BPS. A Prefeitura fica do outro lado da avenida.
 - **Removido:** a cachoeira inventada ao lado do lago, porque não existe ali.
 
+## UNIFEI e Pinheirinho (04/11/2026)
+
+- **UNIFEI** (fotos e satélite do Pedro):
+  - prédio principal branco, com a fachada de vidro escuro no centro e a faixa azul curva com o nome;
+  - letras brancas gigantes "UNIFEI" no gramado da frente;
+  - prédios baixos brancos do campus, laguinho a oeste e campo de esportes;
+  - o campus fica ao norte da Av. BPS.
+- **Pinheirinho:** é conhecido pelas maiores casas da cidade. No mapa virou o bairro das mansões, com casas grandes,
+  piscina, gramado e muro, além das araucárias.
+
 ## O que o mapa mostra
 
 - **Formato em pé.** O eixo central de Itajubá é a **Av. BPS**, com o **Rio Sapucaí** correndo no meio dela. A avenida sobe pela

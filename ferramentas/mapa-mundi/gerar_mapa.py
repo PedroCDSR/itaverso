@@ -1199,6 +1199,71 @@ def lago_parque(base, dl):
     dl.rectangle([246, 104, 294, 202], fill=255)
 
 
+def m_unifei_v2():
+    """UNIFEI (fotos e satélite do Pedro, 04/11/2026): prédio principal branco com a fachada de vidro escuro
+    no centro e a faixa azul curva com o nome; letras brancas gigantes no gramado da frente; prédios baixos
+    brancos do campus, laguinho a oeste e campo de esportes."""
+    s, d = spr(92, 60)
+    d.rounded_rectangle([0, 4, 91, 59], radius=6, fill=rgba(C['g3']))
+    d.rounded_rectangle([2, 6, 89, 57], radius=5, fill=rgba(C['g2']))
+    # laguinho do campus (oeste)
+    d.ellipse([4, 10, 18, 30], fill=rgba((56, 140, 116)))
+    d.ellipse([6, 12, 14, 22], fill=rgba((84, 168, 136)))
+    # prédios baixos do campus (telhado cinza claro)
+    for x0, y0, w, h in [(22, 8, 16, 7), (22, 18, 16, 7), (72, 8, 16, 8), (72, 20, 9, 7), (83, 20, 6, 7)]:
+        ret(d, x0, y0, x0 + w, y0 + h, (236, 236, 232))
+        ret(d, x0, y0, x0 + w, y0 + 2, (200, 204, 208))
+        ret(d, x0, y0 + h, x0 + w, y0 + h, (168, 172, 180))
+        for x in range(x0 + 2, x0 + w - 1, 3):
+            px(d, x, y0 + 4, (72, 88, 120))
+    # campo de esportes
+    ret(d, 72, 31, 89, 43, (72, 168, 72))
+    d.rectangle([73, 32, 88, 42], outline=rgba(C['br']))
+    ret(d, 80, 32, 80, 42, C['br'])
+    # prédio principal: alas brancas e centro de vidro com a faixa azul
+    ret(d, 40, 6, 70, 40, (246, 246, 244))
+    ret(d, 64, 6, 70, 40, (210, 212, 216))
+    for y in range(10, 38, 5):
+        for x in (42, 45, 61, 64, 67):
+            ret(d, x, y, x + 1, y + 1, (40, 48, 64))
+    ret(d, 49, 6, 59, 40, (40, 56, 80))
+    for y in range(9, 40, 3):
+        ret(d, 49, y, 59, y, (72, 96, 132))
+    for x in (51, 54, 57):
+        ret(d, x, 9, x, 40, (28, 40, 60))
+    ret(d, 50, 10, 53, 20, (96, 128, 168))
+    d.rounded_rectangle([47, 2, 61, 8], radius=2, fill=rgba((40, 80, 200)))
+    ret(d, 48, 2, 60, 3, (88, 128, 232))
+    for x in range(49, 60, 2):
+        px(d, x, 5, C['br'])
+    # letras gigantes brancas no gramado
+    t = texto_img('UNIFEI', (250, 250, 250), (150, 156, 164))
+    s.alpha_composite(t, (27, 43))
+    return s
+
+
+def m_mansao(v):
+    """Mansão do Pinheirinho: casa grande, piscina, gramado e muro."""
+    s, d = spr(20, 16)
+    ret(d, 0, 3, 19, 15, (176, 168, 152))
+    ret(d, 1, 4, 18, 14, C['g2'])
+    teto = [(196, 92, 60), (120, 124, 136), (176, 72, 52), (88, 92, 104)][v % 4]
+    parede = [(246, 238, 220), (236, 236, 232), (240, 224, 196), (224, 228, 236)][v % 4]
+    x0 = 1 if v % 2 else 7
+    ret(d, x0, 1, x0 + 11, 9, parede)
+    ret(d, x0, 0, x0 + 11, 3, teto)
+    ret(d, x0, 0, x0 + 11, 0, tuple(min(255, c + 40) for c in teto))
+    ret(d, x0 + 6, 0, x0 + 6, 3, tuple(max(0, c - 40) for c in teto))
+    for x in range(x0 + 1, x0 + 11, 3):
+        ret(d, x, 5, x + 1, 6, (64, 96, 140))
+    ret(d, x0 + 5, 7, x0 + 6, 9, C['mad0'])
+    px_ = 13 if v % 2 else 1
+    ret(d, px_, 10, px_ + 5, 13, C['br'])
+    ret(d, px_ + 1, 11, px_ + 4, 12, (72, 184, 232))
+    px(d, px_ + 1, 11, (200, 240, 255))
+    return s
+
+
 # ---------------------------------------------------------------- mapa (em pé)
 def main():
     base = terreno()
@@ -1293,7 +1358,7 @@ def main():
     dz.polygon([(98, 250), (150, 236), (232, 248), (236, 300), (222, 380), (346, 380), (346, 632), (14, 632),
                 (14, 560), (40, 556), (100, 520)], fill=255)
     dz.polygon([(98, 236), (98, 182), (154, 182), (240, 210), (240, 240)], fill=255)
-    dz.ellipse([86, 84, 178, 136], fill=255)      # Pinheirinho
+    dz.ellipse([70, 80, 190, 168], fill=255)      # Pinheirinho (bairro das mansões)
     dz.rectangle([304, 196, 346, 230], fill=255)  # bairro da Prefeitura
     zona_a = (np.array(zona) > 0) & (relevo == 0)
     # morros pequenos podem ter casas no Pinheirinho
@@ -1304,7 +1369,7 @@ def main():
     ruanova = (138, 560, 214, 576)  # Rua Nova: rua larga
     MARCOS = [
         ('hotel', m_hotel_coroados(), (59, 418)),
-        ('unifei', m_unifei_campus(), (186, 214)),
+        ('unifei', m_unifei_v2(), (194, 222)),
         ('prefeitura', m_prefeitura_itajuba(), (328, 170)),
         ('kart', m_kart_pista(), (270, 104)),
         ('agonia', m_agonia_santuario(), (210, 98)),
@@ -1328,7 +1393,7 @@ def main():
     N = {
         'trem': (54, 578), 'soldado': (114, 604), 'ruanova': (176, 568), 'praca': (255, 545),
         'alameda': (76, 522), 'coroados': (92, 376), 'pracona': (196, 404), 'cemiterio': (276, 300),
-        'unifei': (186, 246), 'pinheirinho': (132, 118), 'agonia': (226, 102), 'kart': (284, 104),
+        'unifei': (194, 246), 'pinheirinho': (132, 118), 'agonia': (226, 102), 'kart': (284, 104),
         'lago': (298, 150), 'prefeitura': (328, 182),
         'j1': (144, 522), 'j2': (144, 360), 'j3': (144, 246), 'j4': (226, 404),
     }
@@ -1385,13 +1450,14 @@ def main():
                     continue
                 ocup[y - 6:y + 1, x - 4:x + 5] = True
                 casas.append((x, y))
-    # Pinheirinho: casinhas soltas no morro
-    for _ in range(3000):
-        x, y = random.randrange(86, 178), random.randrange(90, 150)
-        if not zona_a[y, x] or ocup[y - 7:y + 1, x - 5:x + 6].any():
+    # Pinheirinho: bairro das mansões (as maiores casas da cidade), com piscina
+    mansoes = []
+    for _ in range(4000):
+        x, y = random.randrange(80, 186), random.randrange(94, 168)
+        if not zona_a[y - 8, x] or ocup[y - 15:y + 1, x - 10:x + 11].any():
             continue
-        ocup[y - 7:y + 1, x - 5:x + 6] = True
-        casas.append((x, y))
+        ocup[y - 15:y + 1, x - 10:x + 11] = True
+        mansoes.append((x, y))
 
     arvores = []
     livre_np = np.array(livre) > 0
@@ -1516,9 +1582,11 @@ def main():
     d.rectangle([80, 606, 156, 606], fill=rgba(C['ci1']))
 
     # ----- objetos em ordem de profundidade
-    obj = [(y, 'c', x) for x, y in casas] + [(y, 'a', x) for x, y in arvores]
+    obj = [(y, 'c', x) for x, y in casas] + [(y, 'a', x) for x, y in arvores] + [(y, 'm', x) for x, y in mansoes]
     for y, t, x in sorted(obj):
-        if t == 'c':
+        if t == 'm':
+            colar(base, m_mansao(random.randrange(4)), x, y, C['c0'])
+        elif t == 'c':
             casa(base, x, y, random.randrange(12))
         else:
             arvore(base, x, y, 0)
@@ -1594,7 +1662,7 @@ def main():
     PLACAS = [
         ('TREM', 26, 618), ('PRAÇA DO SOLDADO', 208, 618), ('RUA NOVA', 176, 529), ('PRAÇA', 255, 578),
         ('ALAMEDA', 40, 536), ('COROADOS', 64, 428), ('PRAÇONA', 196, 410), ('CEMITÉRIO', 286, 320),
-        ('UNIFEI', 186, 252), ('PINHEIRINHO', 132, 124), ('AGONIA', 206, 124), ('KART', 242, 56),
+        ('UNIFEI', 194, 252), ('PINHEIRINHO', 132, 124), ('AGONIA', 206, 124), ('KART', 242, 56),
         ('LAGO', 230, 160), ('PREFEITURA', 314, 190), ('AV. BPS', 160, 470),
     ]
     for txt, x, y in PLACAS:
