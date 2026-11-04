@@ -36,3 +36,11 @@ Licença do ZzFX:
 > WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
 > COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 > OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+## Sunny Land
+
+Terreno, céu, camada distante de vegetação, árvores, arbustos, plataformas, placa e gambá: **Sunny Land**,
+Luis Zuno (ansimuz), https://ansimuz.itch.io/sunny-land-pixel-game-art. Licença **CC0**, confirmada no PDF incluído
+no pacote, preservado em `referencias/licenciados/sunny-land-licenca.pdf`. Só os PNGs usados estão em
+`public/assets/sunnyland/`. Não usamos o código do exemplo Phaser nem a música do pacote. A capivara continua
+sendo a arte original da proposta aprovada; não é a raposa do Sunny Land.

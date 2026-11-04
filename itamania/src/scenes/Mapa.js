@@ -6,9 +6,9 @@ import { Botao } from '../ui/Botao.js';
 import { BotaoSom } from '../ui/BotaoSom.js';
 import { MapaHtml } from '../ui/mapaHtml.js';
 import { estado } from '../estado.js';
-import { heroi } from '../genero.js';
 import { tocarMusica } from '../audio/musica.js';
 import { tocarEfeito } from '../audio/efeitos.js';
+import { MICROMUNDOS } from '../data/micromundos.js';
 
 // Mapa-múndi em pé (arte do Pedro em alta resolução: public/assets/mapa-hd.png, 1080x1920; original em
 // referencias/). O mapa fica numa camada HTML (ui/mapaHtml.js) que rola só na vertical: arrastar, roda do mouse
@@ -41,11 +41,11 @@ export class Mapa extends Phaser.Scene {
     this.atual = Phaser.Math.Clamp(this.intro ? 1 : estado.ultimaNoMapa || estado.liberada, 1, 14);
 
     // sprite escondido: só roda a animação; a camada HTML copia o quadro atual
-    this.heroi = this.add.sprite(-100, -100, `heroi-${heroi()}-normal`, 0).setVisible(false);
+    this.heroi = this.add.sprite(-100, -100, 'capivara-exploradora', 8).setVisible(false);
     this.animHeroi('parado');
 
     const aneis = [];
-    for (let n = 1; n <= 14; n++) if (FASES[n] && n <= estado.liberada) aneis.push(n);
+    for (let n = 1; n <= 14; n++) if (MICROMUNDOS[n - 1].exploracao || (FASES[n] && n <= estado.liberada)) aneis.push(n);
     this.mapa = new MapaHtml(this, {
       imagem: 'assets/mapa-hd.png',
       moedas: MOEDAS,
@@ -81,7 +81,7 @@ export class Mapa extends Phaser.Scene {
   }
 
   animHeroi(nome) {
-    this.heroi.play(`${heroi()}-normal-${estado.bone ? 'b' : 's'}-${nome}`, true);
+    this.heroi.play(`exploradora-${nome === 'correndo' ? 'andar' : 'parado'}-direita`, true);
   }
 
   // Painel fixo embaixo: PRAÇA, número e nome do lugar, JOGAR e som.
@@ -97,10 +97,12 @@ export class Mapa extends Phaser.Scene {
 
   atualizarPainel() {
     const n = this.atual;
-    const jogavel = FASES[n] && n <= estado.liberada;
-    this.txtNumero.setText(`FASE ${n}${estado.feitas.includes(n) ? ' · FEITA' : ''}`);
+    const exploracao = MICROMUNDOS[n - 1].exploracao;
+    const jogavel = exploracao || (FASES[n] && n <= estado.liberada);
+    this.txtNumero.setText(`${exploracao ? 'LOCAL' : 'FASE'} ${n}${estado.feitas.includes(n) ? ' · FEITA' : ''}`);
     this.txtNome.setText(NOMES_FASES[n] + (FASES[n] ? (jogavel ? '' : ' (termine a anterior)') : ' · em breve'));
     this.botaoJogar.setVisible(!!jogavel && !this.ocupado);
+    this.botaoJogar.setRotulo(exploracao ? TEXTOS.missao.explorar : TEXTOS.botoes.jogar);
   }
 
   tocarPonto(n) {
@@ -136,6 +138,11 @@ export class Mapa extends Phaser.Scene {
   jogar() {
     const n = this.atual;
     if (this.ocupado || this.andando) return;
+    if (MICROMUNDOS[n - 1].exploracao) {
+      this.ocupado = true;
+      this.sair(() => this.scene.start(MICROMUNDOS[n - 1].exploracao), 350);
+      return;
+    }
     if (!FASES[n] || n > estado.liberada) {
       tocarEfeito('dano', { volume: 0.4 });
       this.tweens.add({ targets: this.pos, x: this.pos.x + 6, duration: 50, yoyo: true, repeat: 2 });

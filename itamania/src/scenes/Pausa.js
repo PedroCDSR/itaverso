@@ -34,12 +34,17 @@ export class Pausa extends Phaser.Scene {
       alternarSom();
       som.setRotulo(this.rotuloSom());
     }, opc);
-    if (this.cena === 'Fase') {
+    if (this.cena === 'Missao') {
+      new Botao(this, LARGURA / 2, 164, TEXTOS.missao.voltar, () => {
+        this.scene.get('Missao').abandonar();
+        this.scene.stop();
+      }, opc);
+    } else if (this.cena === 'Fase') {
       new Botao(this, LARGURA / 2, 164, TEXTOS.botoes.recomecar, () => this.trocar('Fase', { fase: this.registry.get('fase') }), opc);
     } else {
       new Botao(this, LARGURA / 2, 164, TEXTOS.botoes.menu, () => this.trocar('Titulo'), opc);
     }
-    new Botao(this, LARGURA / 2, 198, TEXTOS.botoes.mapa, () => this.trocar('Mapa'), opc);
+    if (this.cena !== 'Missao') new Botao(this, LARGURA / 2, 198, TEXTOS.botoes.mapa, () => this.trocar('Mapa'), opc);
     this.input.keyboard?.on('keydown-ESC', voltar);
     this.input.keyboard?.on('keydown-P', voltar);
   }

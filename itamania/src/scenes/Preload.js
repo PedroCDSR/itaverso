@@ -5,6 +5,7 @@ import { texturaDeQuadros } from '../art/matriz.js';
 import { HEROIS, escolherHeroi } from '../genero.js';
 import { carregar, estado } from '../estado.js';
 import { FASES } from '../levels/index.js';
+import { recuperarMissaoInterrompida } from '../systems/encontros.js';
 
 import { OBJETOS_PRACA, PERSONAGENS_PRACA } from '../data/pracaArte.js';
 
@@ -33,6 +34,10 @@ export class Preload extends Phaser.Scene {
     this.load.tilemapTiledJSON('praca', 'assets/mapas/praca.tmj');
     this.load.image('limezu-chao', 'assets/limezu/chao.png');
     this.load.image('capivara-exploradora', 'assets/sprites/capivara-exploradora.webp');
+    for (const nome of ['terreno', 'ceu', 'montanhas', 'arvore', 'arbusto', 'plataforma', 'placa']) {
+      this.load.image(`sunny-${nome}`, `assets/sunnyland/${nome}.png`);
+    }
+    this.load.spritesheet('sunny-gamba', 'assets/sunnyland/gamba.png', { frameWidth: 36, frameHeight: 28 });
     for (const o of OBJETOS_PRACA) this.load.image(`limezu-${o}`, `assets/limezu/objetos/${o}.png`);
     for (const c of PERSONAGENS_PRACA) {
       this.load.spritesheet(`limezu-${c}`, `assets/limezu/personagens/${c}.png`, { frameWidth: 16, frameHeight: 32 });
@@ -85,6 +90,7 @@ export class Preload extends Phaser.Scene {
       });
     }
     anim('itacoin-girar', 'itacoin', [0, 1, 2, 3], 8);
+    anim('gamba-andar', 'sunny-gamba', [0, 1, 2, 3, 4, 5], 9);
     anim('cafe-vapor', 'cafecomleite', [0, 1], 3);
     anim('heli-voar', 'heliceu', [0, 1], 16);
     anim('pombo-andar', 'pombo', [0, 1], 5);
@@ -96,6 +102,7 @@ export class Preload extends Phaser.Scene {
     anim('capivara-dormir', 'capivara', [4, 5], 1.5);
 
     carregar();
+    const interrompida = recuperarMissaoInterrompida();
     const q = new URLSearchParams(window.location.search);
     if (q.get('heroi')) {
       escolherHeroi(q.get('heroi'));
@@ -107,7 +114,9 @@ export class Preload extends Phaser.Scene {
       estado.paes = Math.max(estado.paes, 5);
     }
     const fase = Number(q.get('fase'));
-    if (FASES[fase]) {
+    if (interrompida || estado.retornoExploracao) {
+      this.scene.start('Praca');
+    } else if (FASES[fase]) {
       estado.liberada = Math.max(estado.liberada, fase);
       if (fase > 3) estado.bone = true;
       this.scene.start('Fase', { fase });

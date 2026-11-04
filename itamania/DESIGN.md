@@ -16,6 +16,18 @@ A protagonista passa a ser uma **capivara exploradora**, quadrúpede, caramelo, 
 plataforma e da progressão antiga de Geraldo/Helena será feita nas próximas entregas; o roteiro abaixo permanece
 como referência dessas fases, sem apresentá-las como já convertidas.
 
+## Exploração e missões (direção do Pedro, 04/11/2026)
+
+O jogo principal passa a ser exploração top-down, com capivara, NPCs e descobertas. Os 14 pontos do mapa serão
+micromundos que compartilham sistemas. Encontros no estilo Pokémon iniciam missões laterais com estética Sunny
+Land, sem batalha de turnos. Praça e comércios são seguros; encontros comuns ficam em zonas explícitas e têm
+proteção por distância/tempo. Há encontros especiais por interação e eventos de história.
+
+A praça valida o ciclo completo: exploração → encontro → travessia ou fuga → retorno ao mesmo ponto na vitória,
+com prêmio e progresso salvo; derrota retorna a um ponto seguro, sem apagar descobertas. Recarga recupera a
+exploração. Implementação, regras e comandos em [MISSOES.md](MISSOES.md). Os demais micromundos ainda não foram
+construídos. O roteiro de 14 fases abaixo é referência da versão anterior, não uma lista de mapas já disponíveis.
+
 ## Visão geral
 
 - Roda no navegador do celular, é curto e **não tem game over**: cada fase tem ponto de retorno.

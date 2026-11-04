@@ -16,6 +16,7 @@ export class PracaUI extends Phaser.Scene {
   create() {
     this.estado = { dx: 0, dy: 0, falarApertou: false };
     this.antesFalar = false;
+    this.add.text(10, 40, TEXTOS.missao.dicaPraca, { fontFamily: FONTES.dialogo, fontSize: '12px', color: '#244633', backgroundColor: '#fff2cc' });
     this.base = null; // onde o dedo do joystick encostou
     this.toque = this.sys.game.device.input.touch;
     const j = PRACA.joystick;

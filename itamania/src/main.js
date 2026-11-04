@@ -11,6 +11,8 @@ import { Fim } from './scenes/Fim.js';
 import { Pausa } from './scenes/Pausa.js';
 import { Praca } from './scenes/Praca.js';
 import { PracaUI } from './scenes/PracaUI.js';
+import { Encontro } from './scenes/Encontro.js';
+import { Missao } from './scenes/Missao.js';
 import { ligarPausaGlobal } from './ui/pausaGlobal.js';
 import { iniciarAvisoGirar } from './ui/AvisoGirar.js';
 import { iniciarPausaFoco } from './ui/PausaFoco.js';
@@ -31,7 +33,7 @@ const config = {
   input: { activePointers: 4, touch: { target: container } },
   audio: { noAudio: true }, // som todo em código (src/audio/), com um AudioContext só
   physics: { default: 'arcade', arcade: { gravity: { x: 0, y: JOGADOR.gravidade }, debug: false } },
-  scene: [Boot, Preload, Titulo, Praca, PracaUI, Mapa, Fase, HUD, Cartao, Fim, Pausa],
+  scene: [Boot, Preload, Titulo, Praca, PracaUI, Encontro, Missao, Mapa, Fase, HUD, Cartao, Fim, Pausa],
 };
 
 async function iniciar() {

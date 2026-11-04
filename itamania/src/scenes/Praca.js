@@ -8,6 +8,8 @@ import { Dialogo } from '../ui/Dialogo.js';
 import { tocarEfeito } from '../audio/efeitos.js';
 import { tocarMusica, pararMusica } from '../audio/musica.js';
 import { abrirPausa } from '../fluxo.js';
+import { REGIAO_PRACA } from '../data/micromundos.js';
+import { SistemaEncontros, iniciarMissao } from '../systems/encontros.js';
 
 // Praça Theodomiro Santiago andável, vista de cima (o começo do Centro explorável).
 // Mapa no formato do Tiled (public/assets/mapas/praca.tmj, gerado por ferramentas/mapas/gerar_praca.py e editável no
@@ -60,12 +62,21 @@ export class Praca extends Phaser.Scene {
 
     // Capivara exploradora: a colisão fica nas patas para caminhar atrás dos objetos.
     this.chaveHeroi = 'exploradora';
-    this.heroi = this.physics.add.sprite(inicio.x, inicio.y, 'capivara-exploradora', 12);
+    const retorno = estado.retornoExploracao;
+    const posicao = retorno || inicio;
+    this.heroi = this.physics.add.sprite(posicao.x, posicao.y, 'capivara-exploradora', 12);
     this.heroi.setOrigin(0.5, 1).setDisplaySize(32, 32).setCollideWorldBounds(true);
     const lado = this.heroi.frame.width;
     this.heroi.body.setSize(lado * 0.5, lado * 0.2).setOffset(lado * 0.25, lado * 0.73);
-    this.direcao = 'cima';
+    this.direcao = retorno?.direcao || 'cima';
     this.physics.add.collider(this.heroi, this.colisao);
+    estado.retornoExploracao = null;
+    salvar();
+    this.encontros = new SistemaEncontros(REGIAO_PRACA, this.time.now, this.heroi);
+    const especial = REGIAO_PRACA.encontros.find((e) => e.tipo === 'especial');
+    this.add.sprite(especial.x, especial.y, 'sunny-gamba', 0).setOrigin(0.5, 1).setDepth(10 + especial.y / 1000).play('gamba-andar');
+    this.add.text(especial.x, especial.y - 32, TEXTOS.missao.sinal, { fontFamily: 'sans-serif', fontSize: '14px', color: '#a44b2a', backgroundColor: '#fff2cc' }).setOrigin(0.5).setDepth(20);
+    this.alvos.push({ x: especial.x, y: especial.y - 4, encontro: especial });
 
     // moradores
     this.npcs = this.physics.add.group({ immovable: true });
@@ -115,7 +126,10 @@ export class Praca extends Phaser.Scene {
     this.input.keyboard?.on('keydown-ESC', () => abrirPausa(this));
     this.input.keyboard?.on('keydown-P', () => abrirPausa(this));
 
-    if (!estado.viuPraca) {
+    if (retorno) {
+      const mensagem = retorno.interrompida ? TEXTOS.missao.interrompida : retorno.venceu ? TEXTOS.missao.retornoVitoria : TEXTOS.missao.retornoSeguro;
+      this.time.delayedCall(450, () => this.falar([{ quem: 'heroi', texto: mensagem }]));
+    } else if (!estado.viuPraca) {
       estado.viuPraca = true;
       salvar();
       this.time.delayedCall(500, () => this.falar(TEXTOS.praca.chegada));
@@ -165,6 +179,8 @@ export class Praca extends Phaser.Scene {
   }
 
   update(t, delta) {
+    const encontro = this.encontros.atualizar(this.heroi, t, this.ocupado || this.saindo);
+    if (encontro) { this.iniciarEncontro(encontro); return; }
     // personagens do pacote: animação de acordo com a direção e se está andando
     this.npcs.getChildren().forEach((s) => {
       s.setDepth(10 + s.y / 1000);
@@ -224,6 +240,7 @@ export class Praca extends Phaser.Scene {
   }
 
   async conversar(alvo) {
+    if (alvo.encontro) { this.iniciarEncontro(alvo.encontro); return; }
     if (alvo.npc) {
       const s = alvo.npc;
       this.conversando = s;
@@ -237,6 +254,15 @@ export class Praca extends Phaser.Scene {
     await this.falar(TEXTOS.praca.falas[alvo.fala] || []);
     if (alvo.npc?.dados.anda) this.tweens.getTweensOf(alvo.npc).forEach((tw) => tw.resume());
     this.conversando = null;
+  }
+
+  iniciarEncontro(encontro) {
+    if (this.ocupado || this.saindo) return;
+    const sessao = iniciarMissao(REGIAO_PRACA, encontro, this.heroi, this.direcao);
+    if (!sessao) return;
+    this.saindo = true;
+    this.heroi.body.setVelocity(0);
+    this.scene.start('Encontro', { sessao });
   }
 
   async falar(caixas) {

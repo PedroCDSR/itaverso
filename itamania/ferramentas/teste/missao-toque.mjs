@@ -1,0 +1,42 @@
+import { createRequire } from 'node:module';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+const { chromium } = createRequire(import.meta.url)('playwright');
+const url = process.argv[2] || 'http://localhost:5181/';
+const pasta = process.argv[3] || 'capturas';
+fs.mkdirSync(pasta, { recursive: true });
+const browser = await chromium.launch({ args: ['--use-angle=swiftshader'] });
+try {
+  const page = await browser.newPage({ viewport: { width: 844, height: 390 }, isMobile: true, hasTouch: true });
+  const erros = [];
+  page.on('pageerror', (e) => erros.push(e.message));
+  page.on('console', (m) => { if (m.type() === 'error') erros.push(m.text()); });
+  await page.addInitScript(() => localStorage.setItem('itamania-progresso-v1', JSON.stringify({ heroi: 'geraldo', viuPraca: true })));
+  await page.goto(`${url}?cena=Praca`);
+  await page.waitForFunction(() => window.praca?.heroi?.active);
+  await page.waitForTimeout(500);
+  await page.evaluate(() => { praca.heroi.body.reset(848, 596); praca.direcao = 'cima'; });
+  await page.waitForTimeout(200);
+  const canvas = await page.locator('canvas').boundingBox();
+  const ponto = (x, y, id = 0) => ({ x: canvas.x + x / 480 * canvas.width, y: canvas.y + y / 270 * canvas.height, id });
+  const cdp = await page.context().newCDPSession(page);
+  const b = await page.evaluate(() => ({ x: praca.ui.botao.x, y: praca.ui.botao.y }));
+  await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [ponto(b.x, b.y)] });
+  await page.waitForTimeout(180);
+  await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+  await page.waitForFunction(() => jogo.scene.isActive('Missao') && window.missao?.jogador?.active);
+  await page.waitForTimeout(550);
+  const botoes = await page.evaluate(() => {
+    const b = missao.entrada.toque.botoes;
+    return { dir: { x: b.direita.x, y: b.direita.y }, pulo: { x: b.pular.x, y: b.pular.y }, paoVisivel: b.maca.visible, y: missao.jogador.y };
+  });
+  assert.equal(botoes.paoVisivel, false);
+  await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [ponto(botoes.dir.x, botoes.dir.y, 0), ponto(botoes.pulo.x, botoes.pulo.y, 1)] });
+  await page.waitForTimeout(300);
+  assert(await page.evaluate((y) => missao.jogador.x > 100 && missao.jogador.y < y - 30, botoes.y));
+  await page.screenshot({ path: `${pasta}/missao-multitoque.png` });
+  await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+  await page.waitForTimeout(600);
+  assert.deepEqual(erros, []);
+  console.log('PASS: FALAR no toque inicia o encontro; correr e pular com dois dedos funcionam; zero erros.');
+} finally { await browser.close(); }

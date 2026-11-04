@@ -27,6 +27,13 @@ Capivara exploradora (proposta 1), caramelo, mochila verde e lenço amarelo. A v
 com ela na praça. O roteiro e os sprites humanos nas fases de plataforma ainda aguardam adaptação; as regras
 abaixo sobre Geraldo/Helena descrevem essa implementação anterior.
 
+## Direção de exploração e encontros
+
+O jogo principal é exploração top-down com missões laterais. A praça tem encontros especial e comum, travessia,
+fuga e retorno persistente. Especificação implementada e comandos em `itamania/MISSOES.md`.
+**Publicação desta entrega está suspensa por pedido do Pedro:** só commit local, sem push/deploy até autorização;
+não presumir que uma branch chamada dev evita créditos ou muda o contexto de produção no Netlify.
+
 ## 2. A história em uma página
 
 **Geraldo ou Helena** (homenagem aos avós do Pedro), escolhidos na tela inicial: uma criança que acabou de chegar a

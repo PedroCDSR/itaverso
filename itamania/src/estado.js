@@ -5,6 +5,8 @@ const CHAVE = 'itamania-progresso-v1';
 
 const NOVO = () => ({
   heroi: 'geraldo',
+  encontros: { concluidas: {}, visitas: {}, historias: {}, pendente: null },
+  retornoExploracao: null,
   liberada: 1, // maior fase que dá para jogar no mapa
   feitas: [], // fases já terminadas
   itacoins: 0,

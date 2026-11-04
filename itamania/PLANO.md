@@ -1,3 +1,11 @@
+# Entrega atual: encontros e missões Sunny Land
+
+Pedido do Pedro (04/11/2026): converter o desafio da praça para o estilo Sunny Land e validar o ciclo de encontros
+com capivara. Implementação e critérios em [MISSOES.md](MISSOES.md). Branch local `missao-praca-sunnyland`.
+Nenhum push/deploy: aguardar autorização do Pedro devido aos créditos e ao contexto do Netlify.
+
+---
+
 # PLANO · ITAMANIA etapa 2 (madrugada de 04 para 05/11/2026)
 
 Pedido do Pedro (04/11/2026, com a imagem `referencias/herois-grandes.png`):

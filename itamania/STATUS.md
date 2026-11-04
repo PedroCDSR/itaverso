@@ -1,5 +1,32 @@
 # STATUS · ITAMANIA
 
+## Encontros e missões Sunny Land na praça (04/11/2026)
+
+**Entrega local, sem push e sem deploy**, conforme pedido do Pedro sobre créditos do Netlify. Branch
+`missao-praca-sunnyland`. A branch remota que aciona o site não foi atualizada nesta entrega.
+
+- Praça continua top-down com Modern Exteriors. Gambá Travesso opcional à direita, perto da saída sudeste;
+  aproximar e usar FALAR/espaço inicia a travessia. Há uma zona comum só na rua lateral: distância mínima de
+  160 px, proteção de 30 s e chance de 25% por 48 px nessa zona. Diálogos, centro da praça e comércios ficam seguros.
+- Encontro com anúncio e cortina de pixels, cerca de 2 s. Capivara entra na vista lateral, com terreno, árvores,
+  plataformas e gambás do Sunny Land (CC0), morros e marcos da praça do próprio projeto. Sem código do exemplo.
+- Travessia e fuga compartilham física: pulo variável, coyote/buffer, partículas, inimigos, moedas e dois pontos de
+  retorno. Na fuga, um gambá persegue. Três fôlegos; cair/encostar volta ao último ponto, sem fôlego volta à praça.
+- Vitória: retorno às coordenadas/direção do encontro, recompensa e missão salva. Repetições rendem menos.
+  Derrota/abandono preserva descobertas e saldo da exploração. Recarga em encontro/missão recupera o ponto de origem;
+  recompensa consumida uma única vez, inclusive se recarregar na tela de resultado.
+- Configuração compartilhada para os 14 nomes originais do mapa. Apenas a praça tem micromundo pronto. Encontros
+  de história têm ID estável e não se repetem após vitória; tentativa após derrota é permitida.
+- Ponto 4 do mapa abre a praça sem precisar terminar as fases antigas. Marcador no mapa é a capivara. Fases antigas
+  permanecem acessíveis pelos atalhos de depuração; o teste atual do ciclo é `missao.mjs`, não o roteiro linear antigo.
+- Validação: 6 testes de regras passaram; robô concluiu travessia e fuga com 3/3 fôlegos e 16 moedas em cada,
+  verificou retorno exato, derrota, pausa e recuperação. Regressão da praça passou; FALAR e correr/pular com dois
+  dedos passaram no Chromium mobile. Zero erros no console. Teste de entrada pelo mapa passou.
+- Build: **2.675.678 bytes (2,68 MB)**. Avisos anteriores de fontes no Vite permanecem; fontes carregam no navegador.
+- Especificação, comandos e limites: [MISSOES.md](MISSOES.md). Prévia visual em
+  `ferramentas/arte/previas/missao-praca-sunnyland.png`. Teste físico em celulares ainda é necessário.
+
+
 ## Capivara exploradora na praça (04/11/2026)
 
 - Protagonista aprovada pelo Pedro: proposta 1, capivara quadrúpede caramelo, mochila verde e lenço amarelo.
