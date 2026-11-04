@@ -3,11 +3,5 @@ dist/
 .DS_Store
 *.log
 .netlify/
-# ROMs e arquivos de pesquisa nunca entram no repositório
-*.sfc
-*.smc
-*.zip
 __pycache__/
-
-# capturas da jogada automática (ferramentas/teste/jogar.mjs)
 capturas/
