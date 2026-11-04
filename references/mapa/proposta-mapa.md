@@ -66,6 +66,21 @@
 - **Pinheirinho:** é conhecido pelas maiores casas da cidade. No mapa virou o bairro das mansões, com casas grandes,
   piscina, gramado e muro, além das araucárias.
 
+## BPS e Praçonha (04/11/2026)
+
+- **Av. BPS** (Av. Benedito Pereira dos Santos): sobe do centro, perto da Magazine Luiza, de sul para norte. Logo abaixo da
+  UNIFEI vira para leste e segue até o Parque da Cidade (lago), com o canteiro no meio. "BPS" é também o nome do
+  bairro, que fica dos dois lados da avenida. O Centro fica a leste.
+- **Mudanças no mapa:**
+  - o morro do Coroados foi um pouco para oeste, para caber casas do bairro BPS também do lado oeste da avenida;
+  - "BAIRRO BPS" e "CENTRO" estão escritos no chão;
+  - a praça no meio do bairro é a **Praçonha**, o apelido local. Ela é quadrada, cheia de plantas, com bancos, flores e
+    o coreto.
+- **Referência à maconha:** o Pedro sugeriu, mas ficou de fora porque o público inclui crianças e o projeto pode ir para
+  a Prefeitura. Se ele confirmar depois de pesar isso, entra.
+- **Dúvida:** no satélite, o canteiro da BPS parece um córrego, e o Rio Sapucaí passa mais ao sul, perto de São Vicente.
+  Confirmar se o rio do canteiro deve continuar com o nome "Rio Sapucaí".
+
 ## O que o mapa mostra
 
 - **Formato em pé.** O eixo central de Itajubá é a **Av. BPS**, com o **Rio Sapucaí** correndo no meio dela. A avenida sobe pela
@@ -78,7 +93,7 @@
   - **Praça:** um quadrado com árvores nos cantos, caminhos em cruz e a fonte com o busto no meio.
 - **Alameda:** um morro com a rua subindo.
 - **Coroados:** rua no alto do morro, com o hotel no meio (ver acima).
-- **Praçona:** praça com coreto.
+- **Praçonha:** praça verde no meio do bairro BPS, com coreto.
 - **Cemitério:** no alto do morro, numa área mais sombria em roxo, com cruzes, lápides, cerca, árvores secas, morcegos,
   lua e uma capelinha gótica com vitral roxo. É assustador de brincadeira, nada que dê medo de verdade.
 - **Na parte de cima:**
@@ -99,7 +114,7 @@
 | 4 | Praça | Fonte com o busto; jatos d'água que levantam o herói |
 | 5 | Alameda | Subida do morro |
 | 6 | Coroados | Rua no alto do morro até o hotel; fase vertical |
-| 7 | Praçona | Coreto |
+| 7 | Praçonha | Praça verde com coreto |
 | 8 | Cemitério | "Casa assombrada" leve: morcegos, a capelinha gótica e caminhos que mudam. Ponto vermelho = saída secreta |
 | 9 | UNIFEI | Laboratório e roda-d'água; plataformas que giram |
 | 10 | Pinheirinho | Telhados e araucárias |
@@ -120,7 +135,7 @@
 
 ## A confirmar com o Pedro
 
-1. **Fotos:** estação/trem, Praçona, a Praça (é a do Theodomiro?) e Rua Nova.
+1. **Fotos:** estação/trem, Praçonha, a Praça (é a do Theodomiro?) e Rua Nova.
 2. **Prefeitura:** o caderno diz "cadastrar pessoas". Se o jogo for coletar dados, isso precisa ser decidido antes,
    porque a regra 5 do projeto proíbe coletar dados pessoais.
 3. **Figurões:** onde entram? Pessoas vivas só com o OK delas.
