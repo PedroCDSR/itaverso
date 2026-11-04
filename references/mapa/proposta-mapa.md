@@ -127,6 +127,17 @@ Os nomes dos bairros aparecem escritos no chão.
 9. **Laguinho da UNIFEI:** azul.
 10. **Rua do Cruzeiro:** mais estreita.
 
+## Praça central, pracinha da Unimed e rio (satélite do Pedro, 04/11/2026)
+
+- **Praça Theodomiro Santiago:**
+  - chão cinza com quatro maciços de árvores grandes, como no satélite;
+  - na clareira, a fonte é quase um espelho d'água: retângulo azul raso;
+  - o Club Itajubense fica no canto.
+- **Pracinha da Unimed:** quadrada, sem cantos arredondados.
+- **Av. BPS:** acaba na pracinha. Abaixo dela, até a Praça do Soldado, há quarteirões com casas e prédios no lugar do
+  asfalto largo.
+- **Rio Sapucaí:** tem árvores nas duas margens ao longo de todo o trecho com água.
+
 ## O que o mapa mostra
 
 - **Formato em pé.** O eixo central de Itajubá é a **Av. BPS**, com o **Rio Sapucaí** correndo no meio dela. A avenida sobe pela
