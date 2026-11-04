@@ -182,7 +182,8 @@ Os nomes dos bairros aparecem escritos no chão.
 - **Fica:** na Praça Dr. José Braz, a mesma da Praça do Soldado, como na cidade.
 - **Desenho:** prédio baixo, cobertura comprida com colunas sobre as plataformas, faixa amarela e dois ônibus parados,
   sem marca.
-- **Saíram:** o trem, a estação e o trilho.
+- **Saíram:** a estação e o trilho do canto esquerdo. O **trem** voltou só como decoração, num trilho no canto de baixo à
+  direita, entre a Varginha e o Rio Sapucaí, vindo dos morros.
 
 ## O que o mapa mostra
 

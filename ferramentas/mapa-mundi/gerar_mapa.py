@@ -1709,6 +1709,7 @@ def main():
         ('santacasa', m_santa_casa(), (286, 480)),
         ('camara', m_camara(), (214, 500)),
         ('rodoviaria', m_rodoviaria(), (36, 604)),
+        ('trem', m_locomotiva(), (290, 619)),
         ('soldado', m_estatua_soldado(), (90, 618)),
         ('heli', m_helicoptero(), (112, 620)),
         ('posto', m_posto(), (146, 556)),
@@ -1721,6 +1722,7 @@ def main():
     dl.rectangle([146, 320, 186, 370], fill=255)  # Praçonha (beira da BPS)
     dl.rectangle([76, 563, 126, 624], fill=255)   # pracinha e Praça do Soldado
     dl.rectangle([0, 560, 70, 606], fill=255)     # rodoviária
+    dl.rectangle([206, 608, 360, 622], fill=255)  # trilho do trem (decoração)
 
     # ----- rota das fases
     N = {
@@ -1934,6 +1936,12 @@ def main():
             ret(ds, 0, 5, 10, 5, a1)
             colar(base, s, xx + 6, yb, C['c0'])
 
+    # trilho do trem (só decoração), entre a Varginha e o rio, vindo dos morros da direita
+    ret(d, 208, 615, 360, 620, (120, 96, 72))
+    for xx in range(208, 360, 3):
+        ret(d, xx, 615, xx, 620, C['mad0'])
+    ret(d, 208, 616, 360, 616, C['ci2'])
+    ret(d, 208, 619, 360, 619, C['ci2'])
     # piso da Praça do Soldado
     d.rounded_rectangle([81, 599, 124, 621], radius=8, fill=rgba(C['ci0']))
     d.rounded_rectangle([82, 600, 123, 620], radius=7, fill=rgba((216, 208, 192)))
@@ -2083,7 +2091,7 @@ def main():
         base.alpha_composite(t, (bx - t.width // 2, by_))
 
     t = texto_img('RIO SAPUCAÍ', C['a4'], C['a0'])
-    base.alpha_composite(t, (262, 619))
+    base.alpha_composite(t, (226, 622))
     tv = t.rotate(90, expand=True)
     base.alpha_composite(tv, (119, 270))
 
