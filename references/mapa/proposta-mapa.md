@@ -102,6 +102,13 @@ Os nomes dos bairros aparecem escritos no chão.
 - **Prediozinhos:** prédios de apartamento ao longo da BPS e no centro, misturados ao casario, como nas fotos.
 - As fotos (de terceiros) foram usadas só como referência e não estão no repositório.
 
+## Rio, rua do Cruzeiro e Santa Casa (Pedro, 04/11/2026)
+
+- **Rio Sapucaí:** corre no meio da BPS só do lago até a altura do centro. Ali ele entra por baixo de uma ponte de concreto
+  e segue coberto pelo asfalto. Daí para baixo, a avenida tem só a faixa dupla amarela no meio.
+- **Rua em S:** sobe do centro para o alto do Cruzeiro, passando entre a Câmara e a Santa Casa.
+- **Correção:** o paredão do Cruzeiro encostava no topo da Santa Casa. A borda do morro subiu e o hospital desceu um pouco.
+
 ## O que o mapa mostra
 
 - **Formato em pé.** O eixo central de Itajubá é a **Av. BPS**, com o **Rio Sapucaí** correndo no meio dela. A avenida sobe pela

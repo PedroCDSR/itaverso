@@ -1397,7 +1397,7 @@ def main():
     planalto(morros, 14, 232, 92, 494, 12, raio=16)   # Coroados: crista comprida norte-sul
     planalto(morros, 20, 500, 98, 540, 10, raio=12)   # Alameda: morro com a rua
     planalto(morros, 178, 74, 242, 110, 12, raio=14)   # Agonia
-    planalto(morros, 222, 250, 346, 424, 14, raio=18)  # Cruzeiro: bairro alto, no morro
+    planalto(morros, 222, 250, 346, 408, 14, raio=18)  # Cruzeiro: bairro alto, no morro
     base.alpha_composite(morros)
     esc = camada()
     planalto(esc, 236, 252, 340, 320, 8, escuro=True, raio=14)   # cemitério, no alto do Cruzeiro
@@ -1417,15 +1417,27 @@ def main():
         ret(d, 298, y, 298, y + 2, (236, 228, 200))
     dl.line(jerson, fill=255, width=15)
     eixo = [(124, H + 10), (124, 520), (124, 236), (128, 230), (262, 230), (268, 224), (268, 196)]
+    # o Rio Sapucaí corre no meio da BPS só daqui (y 470) até o lago; abaixo disso ele passa por baixo de uma
+    # ponte e segue coberto pelo asfalto (informação do Pedro, 04/11/2026)
+    FIM_RIO = 470
+    eixo_rio = [(124, FIM_RIO)] + eixo[2:]
     linha_grossa(d, eixo, 24, C['ci0'])
     linha_grossa(d, eixo, 22, (112, 116, 128))
-    linha_grossa(d, eixo, 12, C['g1'])  # canteiro gramado na beira do rio
-    linha_grossa(d, eixo, 9, C['a0'])
-    linha_grossa(d, eixo, 7, C['a1'])
-    linha_grossa(d, eixo, 3, C['a2'])
+    linha_grossa(d, eixo_rio, 12, C['g1'])  # canteiro gramado na beira do rio
+    linha_grossa(d, eixo_rio, 9, C['a0'])
+    linha_grossa(d, eixo_rio, 7, C['a1'])
+    linha_grossa(d, eixo_rio, 3, C['a2'])
+    # ponte de concreto onde o rio entra embaixo do asfalto
+    ret(d, 117, FIM_RIO - 1, 131, FIM_RIO + 6, C['ci0'])
+    ret(d, 118, FIM_RIO, 130, FIM_RIO + 5, (196, 196, 200))
+    ret(d, 118, FIM_RIO, 130, FIM_RIO, (228, 228, 232))
+    ret(d, 119, FIM_RIO - 3, 129, FIM_RIO - 1, (20, 40, 72))
+    # canteiro central da avenida coberta: faixa dupla amarela
+    ret(d, 123, FIM_RIO + 7, 123, H, (232, 192, 64))
+    ret(d, 125, FIM_RIO + 7, 125, H, (232, 192, 64))
     dl.line(eixo, fill=255, width=26)
     rio_mask = Image.new('L', (W, H), 0)
-    ImageDraw.Draw(rio_mask).line(eixo, fill=255, width=9)
+    ImageDraw.Draw(rio_mask).line(eixo_rio, fill=255, width=9)
     rio_a = np.array(rio_mask) > 0
     # faixas da pista e brilhos na água
     for (x0, y0), (x1, y1) in zip(eixo, eixo[1:]):
@@ -1437,11 +1449,17 @@ def main():
             if k % 8 < 3:
                 for lado in (-8.5, 8.5):
                     d.point((round(x + nx * lado), round(y + ny * lado)), fill=rgba((236, 228, 200)))
+            if y >= FIM_RIO - 3:
+                continue
             if random.random() < 0.08:
                 d.point((round(x + nx * random.choice((-2, 1))), round(y + ny * random.choice((-2, 1)))),
                         fill=rgba(C['a3']))
             if random.random() < 0.02:
                 d.point((round(x), round(y)), fill=rgba(C['a4']))
+
+    # rua em S que sobe do centro para o Cruzeiro, entre a Câmara e a Santa Casa
+    rua_s = catmull([(176, 516), (226, 512), (240, 492), (236, 466), (232, 440), (242, 418), (262, 402)], 8)
+    dl.line(rua_s, fill=255, width=13)
 
     # ----- marcos fixos
     lago_parque(base, dl)
@@ -1457,7 +1475,7 @@ def main():
     zona_a = (np.array(zona) > 0) & (relevo == 0)
     # casas também no alto do Cruzeiro (abaixo do cemitério)
     cruz_m = Image.new('L', (W, H), 0)
-    ImageDraw.Draw(cruz_m).rounded_rectangle([228, 334, 340, 420], radius=12, fill=255)
+    ImageDraw.Draw(cruz_m).rounded_rectangle([228, 334, 340, 404], radius=12, fill=255)
     zona_a |= np.array(cruz_m) > 0
     # Varginha: bairro baixo, com mais árvores entre as casas
     varginha = np.zeros((H, W), bool)
@@ -1477,7 +1495,7 @@ def main():
         ('agonia', m_agonia_santuario(), (210, 98)),
         ('capela', m_capela_gotica(), (294, 290)),
         ('coreto', m_coreto(), (196, 392)),
-        ('santacasa', m_santa_casa(), (280, 486)),
+        ('santacasa', m_santa_casa(), (284, 492)),
         ('camara', m_camara(), (214, 500)),
         ('estacao', m_estacao(), (36, 584)),
         ('trem', m_locomotiva(), (40, 606)),
@@ -1592,6 +1610,11 @@ def main():
         arvores.append((x, y))
 
     # ----- caminhos
+    linha_grossa(d, rua_s, 11, C['ci0'])
+    linha_grossa(d, rua_s, 9, (112, 116, 128))
+    for i in range(0, len(rua_s), 3):
+        x, y = rua_s[i]
+        d.point((round(x), round(y)), fill=rgba((236, 228, 200)))
     rua_coroados = [(66, 548), (64, 500), (64, 240), (70, 224), (96, 214), (118, 226)]
     linha_grossa(d, rua_coroados, 13, C['ci0'])
     linha_grossa(d, rua_coroados, 11, (112, 116, 128))
@@ -1805,7 +1828,7 @@ def main():
         ('TREM', 26, 618), ('PRAÇA DO SOLDADO', 208, 618), ('RUA NOVA', 176, 529), ('PRAÇA', 255, 578),
         ('ALAMEDA', 40, 536), ('COROADOS', 54, 428), ('PRAÇONHA', 196, 410), ('CEMITÉRIO', 288, 322),
         ('UNIFEI', 194, 252), ('PINHEIRINHO', 132, 124), ('AGONIA', 206, 124), ('KART', 242, 56),
-        ('LAGO', 230, 160), ('PREFEITURA', 314, 190), ('AV. BPS', 160, 436), ('CÂMARA', 214, 456), ('SANTA CASA', 282, 488),
+        ('LAGO', 230, 160), ('PREFEITURA', 314, 190), ('AV. BPS', 160, 436), ('CÂMARA', 214, 456), ('SANTA CASA', 286, 494),
     ]
     for txt, x, y in PLACAS:
         w = len(txt) * 6 + 10
@@ -1820,13 +1843,13 @@ def main():
         ret(d, bx0 + 1, by0 + 1, bx0 + t.width + 1, by0 + t.height, C['vm2'])
         base.alpha_composite(t, (bx0 + 2, by0 + 1))
 
-    for txt, bx, by_ in [('BAIRRO BPS', 190, 300), ('CENTRO', 172, 506), ('CRUZEIRO', 288, 392), ('VARGINHA', 318, 504)]:
+    for txt, bx, by_ in [('BAIRRO BPS', 190, 300), ('CENTRO', 172, 506), ('CRUZEIRO', 296, 380), ('VARGINHA', 320, 512)]:
         t = contorno(texto_img(txt, C['br'], C['preto']), C['preto'])
         base.alpha_composite(t, (bx - t.width // 2, by_))
 
     t = texto_img('RIO SAPUCAÍ', C['a4'], C['a0'])
     tv = t.rotate(90, expand=True)
-    base.alpha_composite(tv, (119, 410))
+    base.alpha_composite(tv, (119, 370))
 
     tit = titulo_colorido('ITAMANIA', 3)
     base.alpha_composite(tit, (W // 2 - tit.width // 2, 6))
