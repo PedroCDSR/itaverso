@@ -1,5 +1,16 @@
 # STATUS · ITAMANIA
 
+## Desenvolvimento separado da produção (04/11/2026)
+
+- Pedro habilitou `dev-itamania` em Branch deploys, preservando a Production branch anterior.
+- Implementação `07870c7` publicada em https://dev-itamania--itamania.netlify.app.
+- API: deploy `6aeb9b849cda3de80c1f1ca0`, `context: branch-deploy`, branch `dev-itamania`, estado `ready`.
+- Navegador no endereço de dev: entrada na praça, encontro, missão e controles sem erros no console.
+- Produção preservada: mesmo deploy `6aeb895dc85828b8df510494`, mesmo commit `d6c6539`.
+- Branch deploy é gratuito pela publicação nos planos por créditos; tráfego e requisições continuam medidos.
+- A restrição de publicação local da seção anterior abaixo descreve a fase de montagem, já concluída.
+
+
 ## Encontros e missões Sunny Land na praça (04/11/2026)
 
 **Entrega local, sem push e sem deploy**, conforme pedido do Pedro sobre créditos do Netlify. Branch

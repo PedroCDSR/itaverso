@@ -31,8 +31,10 @@ abaixo sobre Geraldo/Helena descrevem essa implementação anterior.
 
 O jogo principal é exploração top-down com missões laterais. A praça tem encontros especial e comum, travessia,
 fuga e retorno persistente. Especificação implementada e comandos em `itamania/MISSOES.md`.
-**Publicação desta entrega está suspensa por pedido do Pedro:** só commit local, sem push/deploy até autorização;
-não presumir que uma branch chamada dev evita créditos ou muda o contexto de produção no Netlify.
+**Publicação de desenvolvimento configurada e verificada pelo Pedro em 04/11/2026:** usar somente a branch
+`dev-itamania`, contexto Netlify `branch-deploy`, em `https://dev-itamania--itamania.netlify.app`. Produção continua
+na branch `claude/busy-hamilton-cxbmdi`. Não enviar alterações a essa branch sem pedido explícito de produção.
+Branch deploy custa 0 créditos pela publicação nos planos por créditos; banda e requisições continuam medidas.
 
 ## 2. A história em uma página
 
@@ -78,10 +80,11 @@ A tabela completa das fases, as curiosidades com fonte e as "vagas" (lugares e p
 - **Autonomia (pedido do Pedro, 04/11/2026):** tomar as decisões técnicas e artísticas, testar no Chromium com
   Playwright e registrar no `STATUS.md`. Só perguntar o que só o Pedro resolve (autorizações, fotos, compra de assets,
   mudança de história).
-- **Branches:** o Netlify (projeto `itamania`, diretório base `itamania`) publica a branch `claude/busy-hamilton-cxbmdi`.
-  Trabalhe na branch da sessão e só leve para a `claude/busy-hamilton-cxbmdi` o que estiver testado (cada deploy gasta
-  créditos do plano gratuito). A `main` não é tocada sem o Pedro pedir. Commit e push ao fim de cada parte. Não abrir
-  PR sem o Pedro pedir.
+- **Branches:** Netlify `itamania`, base `itamania`: produção = `claude/busy-hamilton-cxbmdi`; desenvolvimento =
+  `dev-itamania` (branch deploy). Trabalhe na branch da sessão e envie somente o que estiver testado para
+  `dev-itamania`, dentro do escopo autorizado pelo Pedro. Não fazer push/merge em produção ou `main` sem pedido
+  explícito. Depois de publicar em dev, confirmar na API `context: branch-deploy`, a branch e o SHA, e verificar
+  que `published_deploy` da produção permaneceu intacto. Não abrir PR sem o Pedro pedir.
 - Autor dos commits: `Pedro Rocha <65837046+PedroCDSR@users.noreply.github.com>` (`git config` sem `--global`).
 - Comandos, dentro de `itamania/`: `npm install`, `npm run dev`, `npm run build`. Atalhos: `?fase=1` a `?fase=4` e
   `?heroi=helena`.

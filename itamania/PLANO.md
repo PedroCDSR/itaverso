@@ -2,7 +2,8 @@
 
 Pedido do Pedro (04/11/2026): converter o desafio da praça para o estilo Sunny Land e validar o ciclo de encontros
 com capivara. Implementação e critérios em [MISSOES.md](MISSOES.md). Branch local `missao-praca-sunnyland`.
-Nenhum push/deploy: aguardar autorização do Pedro devido aos créditos e ao contexto do Netlify.
+Montagem foi local. Depois da configuração confirmada pelo Pedro, publicada somente em `dev-itamania`,
+contexto `branch-deploy`, sem alterar produção. Ver MISSOES.md para o destino correto das próximas entregas.
 
 ---
 

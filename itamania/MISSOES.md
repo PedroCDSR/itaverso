@@ -1,9 +1,13 @@
 # Encontros e missões da praça
 
-Esta entrega fica **local**, na branch `missao-praca-sunnyland`, até o Pedro autorizar um deploy. Não fazer push
-para `claude/busy-hamilton-cxbmdi`: essa branch aciona o site Netlify `itamania`, e o nome da branch não garante
-um deploy gratuito nem um endereço separado de desenvolvimento. Antes de publicar, confirmar o contexto de dev
-no Netlify e o consumo de créditos do plano. Não publicar em `main`.
+Entrega publicada em **desenvolvimento** após o Pedro habilitar o branch deploy e confirmar a configuração:
+https://dev-itamania--itamania.netlify.app. API verificada: contexto `branch-deploy`, branch `dev-itamania`,
+commit da implementação `07870c7f31e1d91960887c43083338c0eb16fde9`, estado `ready`. A produção continuou no
+commit `d6c65394f0919508ee094c2317132f55b129ec51`, deploy `6aeb895dc85828b8df510494`.
+
+Próximas entregas autorizadas vão apenas para `dev-itamania`. Nunca fazer push em `claude/busy-hamilton-cxbmdi`
+(produção) ou `main` sem pedido explícito. Nos planos por créditos, branch deploys e Deploy Previews custam
+0 créditos pela publicação; banda e requisições também contam em dev. Plano e saldo da conta não foram lidos.
 
 ## Jogar localmente
 
