@@ -9,6 +9,13 @@ de 16 bits.
 Responda sempre em português do Brasil, simples e direto. Não use travessões nos textos (nem no jogo, nem nas
 respostas).
 
+## Direção atual aprovada pelo Pedro (04/11/2026)
+
+A protagonista passa a ser uma **capivara exploradora**, quadrúpede, caramelo, com mochila verde e lenço amarelo
+(proposta visual 1). Esta entrega de desenvolvimento permite explorar a praça com ela. A adaptação das fases de
+plataforma e da progressão antiga de Geraldo/Helena será feita nas próximas entregas; o roteiro abaixo permanece
+como referência dessas fases, sem apresentá-las como já convertidas.
+
 ## Visão geral
 
 - Roda no navegador do celular, é curto e **não tem game over**: cada fase tem ponto de retorno.

@@ -5,12 +5,9 @@ import { Botao } from '../ui/Botao.js';
 import { BotaoSom } from '../ui/BotaoSom.js';
 import { fundoCidade } from '../ui/fundoCidade.js';
 import { tocarMusica } from '../audio/musica.js';
-import { tocarEfeito } from '../audio/efeitos.js';
-import { estado, novoJogo, temProgresso } from '../estado.js';
-import { HEROIS } from '../genero.js';
+import { estado } from '../estado.js';
 
-// Tela inicial: nome do jogo e a escolha entre Geraldo e Helena (homenagem aos avós do autor).
-// Cada partida é só a história de quem foi escolhido.
+// Entrada da versão de desenvolvimento: capivara exploradora e acesso direto à praça.
 export class Titulo extends Phaser.Scene {
   constructor() {
     super('Titulo');
@@ -26,41 +23,31 @@ export class Titulo extends Phaser.Scene {
       .setOrigin(0.5)
       .setShadow(1, 1, CORES_CSS.roxo, 0, false, true);
     this.add
-      .text(LARGURA / 2, 82, TEXTOS.escolha, { fontFamily: FONTES.titulo, fontSize: '8px', color: CORES_CSS.branco })
+      .text(LARGURA / 2, 82, TEXTOS.praca.chamada, { fontFamily: FONTES.titulo, fontSize: '8px', color: CORES_CSS.branco })
       .setOrigin(0.5)
       .setShadow(1, 1, CORES_CSS.roxo, 0, false, true);
 
-    // cartões dos dois heróis
+    // A praça de desenvolvimento começa com a capivara escolhida pelo Pedro.
     this.escolhido = estado.heroi || 'geraldo';
-    this.cartoes = {};
-    Object.keys(HEROIS).forEach((chave, i) => {
-      const x = LARGURA / 2 + (i === 0 ? -62 : 62);
-      const fundo = this.add.rectangle(x, 151, 104, 116, CORES.roxo, 0.55).setStrokeStyle(3, CORES.branco);
-      const s = this.add.sprite(x, 189, `heroi-${chave}-normal`, 0).setOrigin(0.5, 1).setScale(2);
-      s.play(`${chave}-normal-s-parado`);
-      const nome = this.add
-        .text(x, 200, HEROIS[chave].nome.toUpperCase(), { fontFamily: FONTES.titulo, fontSize: '9px', color: CORES_CSS.branco })
-        .setOrigin(0.5);
-      fundo.setInteractive({ useHandCursor: true }).on('pointerup', () => this.escolher(chave));
-      this.cartoes[chave] = { fundo, s, nome };
+    this.add.rectangle(LARGURA / 2, 151, 250, 116, CORES.roxo, 0.65).setStrokeStyle(2, CORES.amarelo);
+    this.add.sprite(LARGURA / 2, 178, 'capivara-exploradora', 0)
+      .setOrigin(0.5, 1).setDisplaySize(76, 76).play('exploradora-parado-baixo');
+    this.add.text(LARGURA / 2, 190, TEXTOS.praca.personagem, {
+      fontFamily: FONTES.titulo, fontSize: '8px', color: CORES_CSS.amarelo,
+    }).setOrigin(0.5);
+    this.add.text(LARGURA / 2, 204, TEXTOS.praca.apresentacao, {
+      fontFamily: FONTES.dialogo, fontSize: '13px', color: CORES_CSS.branco,
+    }).setOrigin(0.5);
+    new Botao(this, LARGURA / 2, 234, TEXTOS.praca.explorar, () => this.continuar(), {
+      largura: 250, altura: 28, cor: 'amarelo', tamanhoFonte: '9px',
     });
-    this.escolher(this.escolhido, true);
-
-    if (temProgresso()) {
-      new Botao(this, LARGURA / 2 - 72, 234, TEXTOS.botoes.continuar, () => this.continuar(), { largura: 130, altura: 26, cor: 'amarelo' });
-      new Botao(this, LARGURA / 2 + 72, 234, TEXTOS.botoes.novo, () => this.jogar(), { largura: 130, altura: 26 });
-    } else {
-      new Botao(this, LARGURA / 2, 234, TEXTOS.botoes.jogar, () => this.jogar(), { largura: 150, altura: 28, cor: 'amarelo', tamanhoFonte: '10px' });
-    }
     new BotaoSom(this, LARGURA - 20, 20);
     // crédito obrigatório da licença do Modern Exteriors (arte da praça)
     this.add.rectangle(0, ALTURA - 14, LARGURA, 14, CORES.roxo, 0.75).setOrigin(0);
     this.add
       .text(LARGURA / 2, ALTURA - 8, TEXTOS.creditos, { fontFamily: FONTES.dialogo, fontSize: '12px', color: CORES_CSS.branco })
       .setOrigin(0.5);
-    this.input.keyboard?.on('keydown-LEFT', () => this.escolher('geraldo'));
-    this.input.keyboard?.on('keydown-RIGHT', () => this.escolher('helena'));
-    this.input.keyboard?.on('keydown-ENTER', () => this.jogar());
+    this.input.keyboard?.on('keydown-ENTER', () => this.continuar());
     this.cameras.main.fadeIn(300);
   }
 
@@ -98,23 +85,6 @@ export class Titulo extends Phaser.Scene {
       grupo.add(t);
     });
     return grupo;
-  }
-
-  escolher(chave, silencioso = false) {
-    this.escolhido = chave;
-    for (const [k, c] of Object.entries(this.cartoes)) {
-      const sel = k === chave;
-      c.fundo.setStrokeStyle(3, sel ? CORES.amarelo : CORES.branco).setFillStyle(CORES.roxo, sel ? 0.8 : 0.4);
-      c.nome.setColor(sel ? CORES_CSS.amarelo : CORES_CSS.branco);
-      c.s.play(`${k}-normal-s-${sel ? 'vitoria' : 'parado'}`, true);
-    }
-    if (!silencioso) tocarEfeito('botao');
-  }
-
-  jogar() {
-    novoJogo(this.escolhido);
-    this.cameras.main.fadeOut(300);
-    this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start('Praca'));
   }
 
   continuar() {

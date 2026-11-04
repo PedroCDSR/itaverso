@@ -55,8 +55,13 @@ export const TEXTOS = {
   },
   // Praça andável (Centro explorável, vista de cima). Falas por chave (a mesma do mapa praca.tmj, propriedade "fala").
   praca: {
+    nomeHeroi: 'Capivara exploradora',
+    explorar: 'EXPLORAR A PRAÇA',
+    apresentacao: 'Mochila pronta. Itajubá me espera!',
+    chamada: 'Conheça os cantinhos da cidade',
+    personagem: 'CAPIVARA EXPLORADORA',
     botao: 'FALAR',
-    chegada: [{ quem: 'heroi', texto: 'Cheguei em Itajubá! Vou dar uma volta na praça para conhecer a cidade.' }],
+    chegada: [{ quem: 'heroi', texto: 'Mochila e lenço prontos! Vou conhecer a praça, conversar e procurar itacoins.' }],
     dicaToque: 'Arraste o dedo à esquerda para andar. FALAR conversa.',
     dicaTeclado: 'Setas para andar. Espaço para conversar.',
     falas: {

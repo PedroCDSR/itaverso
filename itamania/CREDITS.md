@@ -20,8 +20,7 @@ Na praça, prédios, árvores e palmeiras são peças do Modern Exteriors montad
 (`ferramentas/arte/pecas_praca.py`); concha acústica, busto de perfil, letreiros e tronco das palmeiras-imperiais são
 desenho próprio.
 
-Heróis (Geraldo e Helena) e mapa-múndi: desenhos do Pedro. Na praça vista de cima, os heróis e os moradores ainda
-são personagens do Modern Exteriors (provisório, até existir o desenho do Pedro visto de cima). Demais personagens, cenários, efeitos sonoros e músicas
+Heróis (Geraldo e Helena) e mapa-múndi: desenhos do Pedro. Na praça vista de cima, a protagonista é a capivara exploradora escolhida pelo Pedro: arte original gerada com OpenAI Image Generation em 04/11/2026, mochila verde e lenço amarelo, quatro direções de caminhada. Os moradores usam personagens do Modern Exteriors. Demais personagens, cenários, efeitos sonoros e músicas
 (gerados em código): criação original deste projeto. Nenhum arquivo de arte, som ou música de outro jogo é usado.
 
 Licença do ZzFX:

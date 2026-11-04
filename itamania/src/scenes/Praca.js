@@ -3,7 +3,7 @@ import { CORES_CSS, PRACA } from '../config.js';
 import { TEXTOS } from '../data/textos.js';
 import { nomeVaga } from '../data/vagas.js';
 import { estado, salvar } from '../estado.js';
-import { heroi, nomeHeroi, g } from '../genero.js';
+import { g } from '../genero.js';
 import { Dialogo } from '../ui/Dialogo.js';
 import { tocarEfeito } from '../audio/efeitos.js';
 import { tocarMusica, pararMusica } from '../audio/musica.js';
@@ -58,11 +58,12 @@ export class Praca extends Phaser.Scene {
     const pontos = mapa.getObjectLayer('pontos').objects.map((o) => ({ tipo: o.type, x: o.x, y: o.y, ...props(o) }));
     const inicio = pontos.find((p) => p.tipo === 'inicio');
 
-    // herói (personagem do pacote no lugar do desenho do Pedro, até existir a versão vista de cima)
-    this.chaveHeroi = PRACA.heroi[heroi()];
-    this.heroi = this.physics.add.sprite(inicio.x, inicio.y, `limezu-${this.chaveHeroi}`, 6);
-    this.heroi.setOrigin(0.5, 1).setCollideWorldBounds(true);
-    this.heroi.body.setSize(10, 6).setOffset(3, 26);
+    // Capivara exploradora: a colisão fica nas patas para caminhar atrás dos objetos.
+    this.chaveHeroi = 'exploradora';
+    this.heroi = this.physics.add.sprite(inicio.x, inicio.y, 'capivara-exploradora', 12);
+    this.heroi.setOrigin(0.5, 1).setDisplaySize(32, 32).setCollideWorldBounds(true);
+    const lado = this.heroi.frame.width;
+    this.heroi.body.setSize(lado * 0.5, lado * 0.2).setOffset(lado * 0.25, lado * 0.73);
     this.direcao = 'cima';
     this.physics.add.collider(this.heroi, this.colisao);
 
@@ -242,7 +243,7 @@ export class Praca extends Phaser.Scene {
     if (!caixas.length) return;
     this.ocupado = true;
     const lista = caixas.map((c) => ({
-      nome: c.quem === 'heroi' ? nomeHeroi() : c.quem || '',
+      nome: c.quem === 'heroi' ? TEXTOS.praca.nomeHeroi : c.quem || '',
       cor: c.quem === 'heroi' ? CORES_CSS.azul : CORES_CSS.laranja,
       texto: texto(c.texto),
     }));

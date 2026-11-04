@@ -1,5 +1,16 @@
 # STATUS · ITAMANIA
 
+## Capivara exploradora na praça (04/11/2026)
+
+- Protagonista aprovada pelo Pedro: proposta 1, capivara quadrúpede caramelo, mochila verde e lenço amarelo.
+- Tela inicial com EXPLORAR A PRAÇA, sem apagar progresso existente. Folha original com 16 quadros (quatro direções), WebP de 406.682 bytes.
+- Praça: caminhada, colisão nas patas, moedas persistentes, conversas e pausa; moradores e mapa preservados.
+- Teste reproduzível: `ferramentas/teste/praca.mjs`, com Playwright externo. Título, quatro direções, moeda persistente, conversa, colisão, pausa e joystick de toque em 844x390: todos passaram, zero erros no console.
+- Robô das fases 1 a 4: 25,2 / 25,6 / 30,5 / 34,7 s, todas concluídas, zero erros. As fases ainda usam os heróis humanos anteriores e aguardam a adaptação da protagonista, conforme DESIGN.md.
+- Build: 2.616.476 bytes (2,62 MB). Avisos existentes de resolução das fontes no build; fontes servidas e carregadas no teste de navegador.
+- Nenhuma dependência nova no jogo. Sunny Land e Rex Plugins não foram integrados nesta entrega.
+
+
 ## Praça na disposição real (05/11/2026), aprovada pelo Pedro depois de 5 propostas
 
 Ruas pela marcação do Pedro no satélite: asfalto na rua de cima (oeste), nas ruas que sobem e descem, na avenida da

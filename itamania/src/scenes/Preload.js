@@ -32,6 +32,7 @@ export class Preload extends Phaser.Scene {
     // Praça andável: mapa do Tiled e arte do Modern Exteriors (LimeZu); balões do Ninja Adventure (CC0)
     this.load.tilemapTiledJSON('praca', 'assets/mapas/praca.tmj');
     this.load.image('limezu-chao', 'assets/limezu/chao.png');
+    this.load.image('capivara-exploradora', 'assets/sprites/capivara-exploradora.webp');
     for (const o of OBJETOS_PRACA) this.load.image(`limezu-${o}`, `assets/limezu/objetos/${o}.png`);
     for (const c of PERSONAGENS_PRACA) {
       this.load.spritesheet(`limezu-${c}`, `assets/limezu/personagens/${c}.png`, { frameWidth: 16, frameHeight: 32 });
@@ -53,6 +54,15 @@ export class Preload extends Phaser.Scene {
 
     const anim = (key, textura, frames, frameRate, repeat = -1) =>
       this.anims.create({ key, frames: frames.map((frame) => ({ key: textura, frame })), frameRate, repeat });
+
+    // Folha original com quatro direções e quatro passos. Os quadros mantêm a mesma escala.
+    const capivara = this.textures.get('capivara-exploradora');
+    const lado = Math.floor(capivara.source[0].width / 4);
+    ['baixo', 'esquerda', 'direita', 'cima'].forEach((dir, linha) => {
+      for (let coluna = 0; coluna < 4; coluna++) capivara.add(linha * 4 + coluna, 0, coluna * lado, linha * lado, lado, lado);
+      anim(`exploradora-parado-${dir}`, 'capivara-exploradora', [linha * 4], 1);
+      anim(`exploradora-andar-${dir}`, 'capivara-exploradora', [0, 1, 2, 3].map((c) => linha * 4 + c), 8);
+    });
 
     // herói: uma animação por herói × forma × boné (sem boné = quadros 0..n-1; com boné = n..2n-1)
     const H = ArteHeroi;

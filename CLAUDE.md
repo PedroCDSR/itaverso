@@ -21,6 +21,12 @@ de 16 bits. Projeto do Pedro (pedrocdsr).
 - Público inclui crianças. Tom leve, carinhoso, sem nada assustador de verdade.
 - Lado educativo: cada fase termina com um **cartão de curiosidade** real sobre a cidade (uma frase, uns 5 segundos).
 
+## Protagonista atual (decisão do Pedro, 04/11/2026)
+
+Capivara exploradora (proposta 1), caramelo, mochila verde e lenço amarelo. A versão de desenvolvimento começa
+com ela na praça. O roteiro e os sprites humanos nas fases de plataforma ainda aguardam adaptação; as regras
+abaixo sobre Geraldo/Helena descrevem essa implementação anterior.
+
 ## 2. A história em uma página
 
 **Geraldo ou Helena** (homenagem aos avós do Pedro), escolhidos na tela inicial: uma criança que acabou de chegar a
