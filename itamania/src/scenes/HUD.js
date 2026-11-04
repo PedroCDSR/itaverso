@@ -24,7 +24,7 @@ export class HUD extends Phaser.Scene {
     this.xPao = x + 48;
     this.iconePao = this.add.image(this.xPao, 17, 'paodequeijo', 0);
     this.txtPaes = sombra(this.add.text(this.xPao + 9, 13, '', estilo));
-    new BotaoPausa(this, LARGURA - 56, 20, () => abrirPausa(this.scene.get('Fase')));
+    new BotaoPausa(this, LARGURA - 56, 20, () => abrirPausa(this));
     this.botaoSom = new BotaoSom(this, LARGURA - 20, 20);
     this.events.on('resume', () => this.botaoSom.desenhar());
     this.antes = { itacoins: reg.get('itacoins'), paes: reg.get('paes') };

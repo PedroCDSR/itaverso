@@ -90,6 +90,7 @@ export class Fase extends Phaser.Scene {
     this.input.keyboard?.on('keydown-P', () => this.pausar());
 
     this.registry.set({
+      cenaJogo: 'Fase',
       vida: J.coracoes,
       vidaMax: J.coracoes,
       itacoins: estado.itacoins,

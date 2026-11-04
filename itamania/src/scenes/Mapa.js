@@ -1,6 +1,6 @@
 import * as Phaser from 'phaser';
 import { LARGURA, ALTURA, CORES, CORES_CSS, FONTES } from '../config.js';
-import { NOMES_FASES } from '../data/textos.js';
+import { NOMES_FASES, TEXTOS } from '../data/textos.js';
 import { FASES } from '../levels/index.js';
 import { Botao } from '../ui/Botao.js';
 import { BotaoSom } from '../ui/BotaoSom.js';
@@ -14,7 +14,7 @@ import { tocarEfeito } from '../audio/efeitos.js';
 // referencias/). O mapa fica numa camada HTML (ui/mapaHtml.js) que rola só na vertical: arrastar, roda do mouse
 // e setas para cima e para baixo. Sem passeio automático: abre mostrando a Rodoviária. O herói fica numa moeda;
 // tocar noutra moeda faz ele andar até lá (setas para os lados também). O painel do Phaser embaixo mostra o
-// número e o nome do lugar, JOGAR, MENU e o som.
+// número e o nome do lugar, JOGAR, PRAÇA (volta ao centro explorável) e o som.
 const RODAPE = 46; // altura do painel em px do jogo (a camada do mapa ocupa o resto do canvas)
 const ALTURA_HEROI = 66; // em px do desenho original
 // Moedas dos 14 lugares no desenho original (1080 x 1920).
@@ -84,11 +84,11 @@ export class Mapa extends Phaser.Scene {
     this.heroi.play(`${heroi()}-normal-${estado.bone ? 'b' : 's'}-${nome}`, true);
   }
 
-  // Painel fixo embaixo: MENU, número e nome do lugar, JOGAR e som.
+  // Painel fixo embaixo: PRAÇA, número e nome do lugar, JOGAR e som.
   criarPainel() {
     const y = ALTURA - RODAPE / 2;
     this.add.rectangle(LARGURA / 2, y, LARGURA - 8, RODAPE - 6, CORES.roxo).setStrokeStyle(2, CORES.amarelo);
-    new Botao(this, 36, y, 'MENU', () => this.voltarMenu(), { largura: 56, altura: 22, tamanhoFonte: '7px' });
+    new Botao(this, 36, y, TEXTOS.botoes.praca, () => this.voltarMenu(), { largura: 56, altura: 22, tamanhoFonte: '7px' });
     this.txtNumero = this.add.text(76, y - 13, '', { fontFamily: FONTES.titulo, fontSize: '7px', color: CORES_CSS.amarelo });
     this.txtNome = this.add.text(76, y - 4, '', { fontFamily: FONTES.dialogo, fontSize: '16px', color: CORES_CSS.branco });
     this.botaoJogar = new Botao(this, LARGURA - 92, y, 'JOGAR', () => this.jogar(), { largura: 96, altura: 26, cor: 'amarelo', tamanhoFonte: '9px' });
@@ -151,7 +151,7 @@ export class Mapa extends Phaser.Scene {
   voltarMenu() {
     if (this.ocupado) return;
     this.ocupado = true;
-    this.sair(() => this.scene.start('Titulo'), 300);
+    this.sair(() => this.scene.start('Praca'), 300); // o mapa volta para a praça (o centro explorável)
   }
 
   sair(depois, ms) {

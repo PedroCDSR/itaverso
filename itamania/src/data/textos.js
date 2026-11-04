@@ -13,6 +13,8 @@ export const TEXTOS = {
     pular: 'PULAR',
     maca: 'PÃO', // botão de arremesso (o nome da chave vem do motor original)
     mapa: 'MAPA',
+    menu: 'MENU',
+    praca: 'PRAÇA',
     recomecar: 'RECOMEÇAR FASE',
     som: 'SOM',
     voltar: 'VOLTAR',
@@ -49,6 +51,47 @@ export const TEXTOS = {
     paoToque: 'Toque em PÃO para jogar um pão de queijo',
     paoTeclado: 'X ou J para jogar um pão de queijo',
     pisar: 'Pule em cima para ele ir embora!',
+  },
+  // Praça andável (Centro explorável, vista de cima). Falas por chave (a mesma do mapa praca.tmj, propriedade "fala").
+  praca: {
+    botao: 'FALAR',
+    chegada: [{ quem: 'heroi', texto: 'Cheguei em Itajubá! Vou dar uma volta na praça para conhecer a cidade.' }],
+    dicaToque: 'Arraste o dedo à esquerda para andar. FALAR conversa.',
+    dicaTeclado: 'Setas para andar. Espaço para conversar.',
+    falas: {
+      guia: [
+        { quem: 'Guia da praça', texto: 'Bem-vind{o|a} à Praça Theodomiro Santiago, o coração do centro!' },
+        { quem: 'Guia da praça', texto: 'A estátua da fonte lembra quem fundou a escola de engenharia daqui.' },
+        { quem: 'heroi', texto: 'Uma escola de engenharia? Quero saber mais!' },
+      ],
+      vovo: [
+        { quem: 'Dona Cida', texto: 'Ai, que delícia sentar aqui na sombra e ver a fonte.' },
+        { quem: 'Dona Cida', texto: 'Já provou o pão de queijo da praça? É o melhor da cidade!' },
+      ],
+      barista: [
+        { quem: 'Barista', texto: 'Oi! Aqui é o {cafe}. O café com leite sai quentinho!' },
+        { quem: 'Barista', texto: 'Volte depois, que vou te contar um segredo dele.' },
+      ],
+      atendente: [
+        { quem: 'Atendente', texto: 'Bem-vind{o|a} ao {lanchonete}! O cheiro de pão de queijo chega longe, né?' },
+      ],
+      estudante: [
+        { quem: 'Estudante', texto: 'Eu estudo engenharia na UNIFEI.' },
+        { quem: 'Estudante', texto: 'Muita gente de lá vai trabalhar na fábrica de helicópteros!' },
+        { quem: 'heroi', texto: 'Helicóptero feito aqui? Que demais!' },
+      ],
+      fonte: [
+        { quem: 'Placa da fonte', texto: 'Theodomiro Santiago fundou aqui, em 1913, uma escola de engenharia.' },
+        { quem: 'Placa da fonte', texto: 'Hoje ela se chama UNIFEI.' },
+      ],
+      clube: [{ quem: 'Placa', texto: 'Club Itajubense.' }],
+      cafe: [{ quem: 'Placa', texto: '{cafe}.' }],
+      burg: [{ quem: 'Placa', texto: '{lanchonete}.' }],
+      placaSaida: [{ quem: 'Placa', texto: 'Para baixo: Rua Nova e o mapa da cidade.' }],
+      gato: [{ quem: 'heroi', texto: 'Um gatinho! Ele nem liga para mim.' }],
+    },
+    saida: 'Ir para o mapa da cidade?',
+    moedas: 'Achei uma itacoin!',
   },
   final: {
     obrigado: 'Continua em breve!',

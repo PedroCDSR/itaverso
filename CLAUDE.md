@@ -100,6 +100,10 @@ A arte que dá vida ao jogo vem de mão humana; o Claude integra, anima, ajusta 
 - Fases são dados (`src/levels/faseN.js`: mapa em texto, cenário, lugares, NPCs, missão, curiosidade) lidos pela cena
   genérica `src/scenes/Fase.js`. Legenda dos mapas no topo de `src/levels/leitor.js`.
 - Diálogo em HTML nítido (`src/ui/Dialogo.js`), no máximo 2 linhas por caixa.
+- **Centro explorável (vista de cima):** o jogo começa na Praça (`src/scenes/Praca.js` + controles em `PracaUI.js`).
+  Mapa no formato do Tiled em `public/assets/mapas/praca.tmj`, gerado por `ferramentas/mapas/gerar_praca.py` (pode ser
+  editado no Tiled; se for editado à mão, não rodar o gerador por cima). Arte do pacote Ninja Adventure (CC0) em
+  `public/assets/ninja/`. Câmera com zoom 2 (`PRACA` em `config.js`).
 
 ## 7. Estrutura do repositório
 

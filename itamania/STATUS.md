@@ -1,5 +1,32 @@
 # STATUS · ITAMANIA
 
+## Praça andável (04/11/2026, tarde)
+
+Pedido do Pedro: reformular o começo com o Centro explorável, vista de cima, usando pacotes prontos (nada de arte
+feita do zero). Fluxo novo: Título → **Praça** (andável) → saída do sul → mapa das fases. O botão do mapa que era
+MENU virou PRAÇA (volta ao centro).
+
+- **Arte:** pacote Ninja Adventure (Pixel-boy e AAA, CC0), baixado do itch.io com a rede liberada pelo Pedro. Só os
+  arquivos usados foram copiados para `public/assets/ninja/` (~300 KB). Licença em `referencias/licenciados/`.
+- **Mapa:** `public/assets/mapas/praca.tmj`, formato do **Tiled** (abre e edita no Tiled). Gerado por
+  `ferramentas/mapas/gerar_praca.py`, que monta as bordas da grama, dos caminhos e da água a partir dos tiles do
+  pacote. Prévia em `ferramentas/arte/previas/praca-mapa.png`. Camadas: chão, água, objetos, cima (copas por cima do
+  herói), colisão (invisível) e pontos (início, moradores, placas, itacoins, saída).
+- **Praça (pelo mapa do Pedro e o satélite):** moldura de caminho, 4 gramados com árvores nos cantos (no mapa do Pedro
+  são palmeiras; o pacote não tem), caminhos em cruz, fonte no meio com uma estátua no lugar do busto, bancos. Na rua
+  de cima: Club Itajubense, Café do Vadinho e Cesar Burg (lojas do pacote com placa), casas. Ruas de terra em volta
+  (o pacote não tem asfalto nem calçada).
+- **Personagens:** Geraldo = "Boy" e Helena = "Princess" do pacote (provisório, até o Pedro desenhar a versão vista
+  de cima). Moradores: guia, Dona Cida no banco, barista, atendente, estudante que passeia, gato. Balão "..." em quem
+  ainda não falou, "!" quando dá para conversar.
+- **Controles:** toque = joystick que nasce onde o dedo encosta na metade esquerda + botão FALAR; teclado = setas ou
+  WASD + espaço, Enter, X ou J. Pausa (Esc ou botão) com CONTINUAR, SOM, MENU e MAPA.
+- **Itacoins:** 14 espalhadas; as pegas ficam salvas (`estado.moedasPraca`).
+- **Teste (Chromium):** do Título à praça, conversa com o guia, placas, itacoin, pausa, saída para o mapa, joystick de
+  toque no iPhone 13 deitado; capturas antigas (título, mapa, fases 1 a 4) sem erros no console. `dist/` = 2,3 MB.
+- **Limites do pacote:** estilo de vila japonesa (telhados, lojas), sem asfalto, sem palmeira, estátua genérica. Se a
+  ideia vingar, o passo seguinte é o Modern Exteriors (LimeZu, pago), mais parecido com uma cidade moderna.
+
 ## Onde está (05/11/2026, madrugada)
 
 Fluxo: Título (escolha Geraldo ou Helena, ITAMANIA colorido) → mapa do Pedro em alta resolução (rola para cima e

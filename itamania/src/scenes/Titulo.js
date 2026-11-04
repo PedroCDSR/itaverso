@@ -109,12 +109,12 @@ export class Titulo extends Phaser.Scene {
   jogar() {
     novoJogo(this.escolhido);
     this.cameras.main.fadeOut(300);
-    this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start('Mapa', { intro: true }));
+    this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start('Praca'));
   }
 
   continuar() {
     estado.heroi = this.escolhido;
-    this.scene.start('Mapa');
+    this.scene.start('Praca');
   }
 
   update(t, delta) {

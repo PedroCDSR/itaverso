@@ -11,14 +11,21 @@ export class Pausa extends Phaser.Scene {
     super('Pausa');
   }
 
+  init(dados) {
+    this.cena = dados?.cena || 'Fase';
+  }
+
   create() {
-    this.scene.pause('Fase');
+    const extras = this.cena === 'Praca' ? ['PracaUI'] : [];
+    this.scene.pause(this.cena);
     this.scene.pause('HUD');
+    extras.forEach((c) => this.scene.pause(c));
     this.add.rectangle(0, 0, LARGURA, ALTURA, CORES.roxo, 0.75).setOrigin(0);
     this.add.text(LARGURA / 2, 52, TEXTOS.pausa.titulo, { fontFamily: FONTES.titulo, fontSize: '16px', color: CORES_CSS.amarelo }).setOrigin(0.5);
     const voltar = () => {
-      this.scene.resume('Fase');
+      this.scene.resume(this.cena);
       this.scene.resume('HUD');
+      extras.forEach((c) => this.scene.resume(c));
       this.scene.stop();
     };
     const opc = { largura: 200, altura: 26 };
@@ -27,7 +34,11 @@ export class Pausa extends Phaser.Scene {
       alternarSom();
       som.setRotulo(this.rotuloSom());
     }, opc);
-    new Botao(this, LARGURA / 2, 164, TEXTOS.botoes.recomecar, () => this.trocar('Fase', { fase: this.registry.get('fase') }), opc);
+    if (this.cena === 'Fase') {
+      new Botao(this, LARGURA / 2, 164, TEXTOS.botoes.recomecar, () => this.trocar('Fase', { fase: this.registry.get('fase') }), opc);
+    } else {
+      new Botao(this, LARGURA / 2, 164, TEXTOS.botoes.menu, () => this.trocar('Titulo'), opc);
+    }
     new Botao(this, LARGURA / 2, 198, TEXTOS.botoes.mapa, () => this.trocar('Mapa'), opc);
     this.input.keyboard?.on('keydown-ESC', voltar);
     this.input.keyboard?.on('keydown-P', voltar);
@@ -40,7 +51,7 @@ export class Pausa extends Phaser.Scene {
   trocar(cena, dados) {
     pararMusica(0.2);
     this.scene.stop('HUD');
-    this.scene.stop('Fase');
+    this.scene.stop(this.cena);
     this.scene.start(cena, dados);
   }
 }
