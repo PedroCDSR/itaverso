@@ -1167,8 +1167,9 @@ def m_kart_pista():
 def lago_parque(base, dl):
     """Lago do Parque Municipal (satélite): comprido de norte a sul, mais largo em cima, água esverdeada,
     calçada em volta e chafariz no meio da parte de cima."""
-    pts = [(252, 108), (286, 106), (292, 116), (290, 140), (284, 160), (280, 184), (272, 200), (260, 200),
-           (254, 186), (252, 160), (248, 132)]
+    # metade do tamanho de antes (pedido do Pedro), para o kart caber abaixo dos morros
+    pts = [(254, 150), (284, 148), (290, 155), (288, 168), (283, 180), (279, 192), (272, 200), (261, 200),
+           (256, 192), (254, 178), (251, 163)]
     d = ImageDraw.Draw(base)
     d.polygon(pts, fill=rgba((200, 196, 184)))
     m = Image.new('L', (W, H), 0)
@@ -1188,15 +1189,15 @@ def lago_parque(base, dl):
         base.paste(Image.fromarray(ba))
     d = ImageDraw.Draw(base)
     d.polygon(pts, outline=rgba((120, 116, 104)))
-    d.ellipse([258, 116, 272, 130], fill=rgba(C['a3']))
-    for x, y in [(262, 150), (274, 140), (266, 176), (276, 160), (258, 136)]:
+    d.ellipse([260, 154, 272, 162], fill=rgba(C['a3']))
+    for x, y in [(262, 176), (275, 168), (266, 190), (279, 178), (258, 170)]:
         ret(d, x, y, x + 2, y, C['a4'])
     # chafariz
     for dx, dy in ((0, -4), (-1, -3), (1, -3), (-2, -1), (2, -1), (0, -2)):
-        px(d, 268 + dx, 126 + dy, C['br'])
-    d.ellipse([265, 125, 271, 128], fill=rgba(C['a4']))
+        px(d, 268 + dx, 160 + dy, C['br'])
+    d.ellipse([265, 159, 271, 162], fill=rgba(C['a4']))
     dl.polygon(pts, fill=255)
-    dl.rectangle([246, 104, 294, 202], fill=255)
+    dl.rectangle([248, 146, 292, 202], fill=255)
 
 
 def m_unifei_v2():
@@ -1523,10 +1524,10 @@ def main():
 
     # ----- Av. BPS: eixo central da cidade, com o rio correndo no meio, até o lago
     # Av. Dr. Jerson Dias: corre de norte a sul a leste do lago e do kart e encontra a BPS
-    jerson = [(298, 30), (298, 222)]
+    jerson = [(298, 84), (298, 222)]
     linha_grossa(d, jerson, 13, C['ci0'])
     linha_grossa(d, jerson, 11, (112, 116, 128))
-    for y in range(34, 220, 8):
+    for y in range(90, 220, 8):
         ret(d, 298, y, 298, y + 2, (236, 228, 200))
     dl.line(jerson, fill=255, width=15)
     eixo = [(124, 514), (124, 236), (128, 230), (282, 230)]
@@ -1665,7 +1666,7 @@ def main():
         ('hotel', m_hotel_coroados_v2(), (64, 420)),
         ('unifei', m_unifei_v2(), (194, 222)),
         ('prefeitura', m_prefeitura_itajuba(), (328, 170)),
-        ('kart', m_kart_pista(), (270, 104)),
+        ('kart', m_kart_pista(), (268, 142)),
         ('agonia', m_agonia_santuario(), (210, 98)),
         ('capela', m_capela_gotica(), (294, 290)),
         ('santacasa', m_santa_casa(), (284, 492)),
@@ -1689,8 +1690,8 @@ def main():
     N = {
         'trem': (54, 578), 'soldado': (102, 596), 'ruanova': (176, 568), 'praca': (243, 547),
         'alameda': (66, 522), 'coroados': (64, 430), 'pracona': (170, 345), 'cemiterio': (276, 300),
-        'unifei': (194, 246), 'pinheirinho': (132, 118), 'agonia': (226, 102), 'kart': (284, 104),
-        'lago': (298, 150), 'prefeitura': (328, 182),
+        'unifei': (194, 246), 'pinheirinho': (132, 118), 'agonia': (226, 102), 'kart': (282, 142),
+        'lago': (298, 172), 'prefeitura': (328, 182),
         'j1': (144, 522), 'j2': (144, 360), 'j3': (144, 246), 'j5': (176, 522),
     }
     ROTAS = [
@@ -1709,8 +1710,8 @@ def main():
         [N['j2'], N['j3']],
         [N['j3'], (144, 168), (132, 160), N['pinheirinho']],
         [N['pinheirinho'], (166, 118), (182, 102), N['agonia']],
-        [N['agonia'], (244, 102), (244, 106), (284, 106), N['kart']],
-        [N['kart'], (298, 104), N['lago']],
+        [N['agonia'], (240, 102), (240, 142), N['kart']],
+        [N['kart'], (298, 142), N['lago']],
         [N['lago'], (298, 182), N['prefeitura']],
     ]
     for r in ROTAS:
@@ -2031,7 +2032,7 @@ def main():
     PLACAS = [
         ('TREM', 24, 609), ('PRAÇA DO SOLDADO', 100, 612), ('RUA NOVA', 176, 529), ('PRAÇA', 266, 566),
         ('ALAMEDA', 64, 532), ('COROADOS', 64, 438), ('PRAÇONHA', 168, 372), ('CEMITÉRIO', 288, 322),
-        ('UNIFEI', 194, 252), ('PINHEIRINHO', 132, 124), ('AGONIA', 206, 124), ('KART', 242, 56),
+        ('UNIFEI', 194, 252), ('PINHEIRINHO', 132, 124), ('AGONIA', 206, 124), ('KART', 318, 96),
         ('LAGO', 230, 160), ('PREFEITURA', 314, 190), ('AV. BPS', 160, 436), ('CÂMARA', 214, 456), ('SANTA CASA', 286, 494),
     ]
     for txt, x, y in PLACAS:

@@ -169,6 +169,13 @@ Os nomes dos bairros aparecem escritos no chão.
 - **Rotatória:** a curva entre o fim da BPS e a avenida da Prefeitura virou uma rotatória com canteiro verde e flores no
   meio.
 
+## Região do lago e do kart (Pedro, 04/11/2026)
+
+- **Lago:** ficou com metade do tamanho, com a mesma forma (mais largo em cima), o chafariz e a calçada.
+- **Kart:** desceu para o espaço que sobrou, entre a Agonia e a avenida, e não encosta mais nos morros do fundo.
+- **Av. Dr. Jerson Dias:** começa abaixo dos morros e não sai mais do mapa.
+- **Placa do kart:** foi para o lado direito da pista.
+
 ## O que o mapa mostra
 
 - **Formato em pé.** O eixo central de Itajubá é a **Av. BPS**, com o **Rio Sapucaí** correndo no meio dela. A avenida sobe pela
