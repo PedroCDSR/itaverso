@@ -1,25 +1,25 @@
 import * as Phaser from 'phaser';
 import { LARGURA, ALTURA, CORES, CORES_CSS, FONTES } from '../config.js';
-import { TEXTOS, NOMES_FASES } from '../data/textos.js';
+import { NOMES_FASES } from '../data/textos.js';
 import { FASES } from '../levels/index.js';
 import { Botao } from '../ui/Botao.js';
 import { BotaoSom } from '../ui/BotaoSom.js';
 import { estado } from '../estado.js';
-import { heroi } from '../genero.js';
+import { heroi, g } from '../genero.js';
 import { tocarMusica } from '../audio/musica.js';
 import { tocarEfeito } from '../audio/efeitos.js';
 
-// Mapa-múndi em pé, de baixo para cima (DESIGN.md). O mapa pronto do Pedro entra em public/assets/mapa.png
-// (480 px de largura); sem ele, este mapa é desenhado em código (provisório) com o Rio Sapucaí, a Av. BPS e os
-// bairros. Arrastar sobe e desce; tocar numa fase liberada entra nela.
-const ALTURA_MAPA = 1040;
-
-// Posição de cada fase no mapa (x, y), da 1 (embaixo) à 14 (em cima).
-const PONTOS = [
+// Mapa-múndi em pé (arte do Pedro: public/assets/mapa.png, 480 x 853; original em referencias/).
+// O herói fica numa das moedas do mapa. Setas (ou tocar numa moeda) andam até a fase vizinha; o painel de baixo
+// mostra o nome do lugar e o botão JOGAR. A câmera acompanha o herói; dá para arrastar para olhar o mapa.
+const ESCALA = 480 / 1080;
+// Moedas dos 14 lugares no desenho original (1080 x 1920).
+const MOEDAS = [
   null,
-  [120, 980], [250, 915], [360, 850], [250, 780], [110, 715], [190, 640], [330, 580],
-  [400, 500], [270, 430], [120, 360], [210, 280], [350, 215], [230, 140], [240, 64],
+  [218, 1787], [308, 1787], [528, 1702], [730, 1640], [198, 1566], [193, 1290], [511, 1035],
+  [828, 898], [583, 738], [397, 354], [679, 305], [847, 426], [895, 515], [985, 546],
 ];
+const PONTOS = MOEDAS.map((p) => (p ? [Math.round(p[0] * ESCALA), Math.round(p[1] * ESCALA)] : null));
 
 export class Mapa extends Phaser.Scene {
   constructor() {
@@ -28,191 +28,179 @@ export class Mapa extends Phaser.Scene {
 
   init(dados) {
     this.intro = !!dados?.intro;
+    this.ocupado = false;
+    this.andando = false;
+    this.pularPasseio = false;
   }
 
   create() {
     tocarMusica('mapa');
+    const fundo = this.add.image(0, 0, 'mapa-mundi').setOrigin(0);
+    this.alturaMapa = fundo.height;
     const cam = this.cameras.main;
-    cam.setBounds(0, 0, LARGURA, ALTURA_MAPA);
-    if (this.textures.exists('mapa-mundi')) {
-      this.add.image(0, 0, 'mapa-mundi').setOrigin(0);
-    } else {
-      this.desenharMapa();
+    cam.setBounds(0, 0, LARGURA, this.alturaMapa);
+
+    // anel que pulsa nas fases jogáveis
+    for (let n = 1; n <= 14; n++) {
+      const [x, y] = PONTOS[n];
+      if (FASES[n] && n <= estado.liberada) {
+        const anel = this.add.circle(x, y, 9).setStrokeStyle(2, CORES.amarelo).setDepth(5);
+        this.tweens.add({ targets: anel, scale: 1.6, alpha: 0, duration: 900, repeat: -1 });
+      }
+      const zona = this.add.zone(x, y - 6, 34, 34).setInteractive({ useHandCursor: true }).setDepth(6);
+      zona.on('pointerup', () => !this.arrastou && this.tocarPonto(n));
     }
-    this.desenharCaminho();
-    this.marcadores = [];
-    for (let n = 1; n <= 14; n++) this.criarMarcador(n);
 
-    // herói em cima da última fase liberada
-    const alvo = Math.min(estado.liberada, 14);
-    const [hx, hy] = PONTOS[alvo];
-    this.heroi = this.add.sprite(hx, hy - 8, `heroi-${heroi()}-normal`, 0).setOrigin(0.5, 1).setDepth(20);
-    this.heroi.play(`${heroi()}-normal-${estado.bone ? 'b' : 's'}-parado`);
-    cam.scrollY = Phaser.Math.Clamp(hy - ALTURA / 2 - 20, 0, ALTURA_MAPA - ALTURA);
+    // herói em cima da fase atual
+    this.atual = Phaser.Math.Clamp(this.intro ? 1 : estado.ultimaNoMapa || estado.liberada, 1, 14);
+    const [hx, hy] = PONTOS[this.atual];
+    this.heroi = this.add.sprite(hx, hy + 2, `heroi-${heroi()}-normal`, 0).setOrigin(0.5, 1).setDepth(20);
+    this.animHeroi('parado');
+    cam.startFollow(this.heroi, true, 0.12, 0.12, 0, -20);
 
-    // cabeçalho fixo
-    this.add.rectangle(0, 0, LARGURA, 30, CORES.roxo, 0.8).setOrigin(0).setScrollFactor(0).setDepth(50);
-    this.add.text(12, 10, TEXTOS.mapa.titulo, { fontFamily: FONTES.titulo, fontSize: '10px', color: CORES_CSS.amarelo }).setScrollFactor(0).setDepth(51);
-    this.add.text(LARGURA / 2 + 10, 15, TEXTOS.mapa.dica, { fontFamily: FONTES.dialogo, fontSize: '14px', color: CORES_CSS.branco }).setOrigin(0.5).setScrollFactor(0).setDepth(51);
-    new BotaoSom(this, LARGURA - 20, 15);
-    const b = new Botao(this, 52, ALTURA - 18, 'MENU', () => this.scene.start('Titulo'), { largura: 84, altura: 20, tamanhoFonte: '7px' });
-    b.setDepth(52);
+    this.criarPainel();
+    new BotaoSom(this, LARGURA - 20, 20);
 
-    // arrastar para rolar
-    this.input.on('pointermove', (p) => {
-      if (!p.isDown) return;
-      const dy = p.prevPosition.y - p.position.y;
-      cam.scrollY = Phaser.Math.Clamp(cam.scrollY + dy, 0, ALTURA_MAPA - ALTURA);
-      if (Math.abs(p.position.y - p.downY) > 6) this.arrastou = true;
-    });
+    // arrastar solta a câmera do herói (andar de novo volta a seguir)
     this.input.on('pointerdown', () => (this.arrastou = false));
-    this.input.on('wheel', (p, objs, dx, dy) => (cam.scrollY = Phaser.Math.Clamp(cam.scrollY + dy * 0.5, 0, ALTURA_MAPA - ALTURA)));
-    this.input.keyboard?.on('keydown-UP', () => (cam.scrollY = Math.max(0, cam.scrollY - 40)));
-    this.input.keyboard?.on('keydown-DOWN', () => (cam.scrollY = Math.min(ALTURA_MAPA - ALTURA, cam.scrollY + 40)));
-    this.input.keyboard?.on('keydown-ENTER', () => this.entrar(Math.min(estado.liberada, 14)));
+    this.input.on('pointermove', (p) => {
+      if (!p.isDown || this.ocupado) return;
+      if (Math.abs(p.position.y - p.downY) > 8) {
+        this.arrastou = true;
+        cam.stopFollow();
+        cam.scrollY = Phaser.Math.Clamp(cam.scrollY + (p.prevPosition.y - p.position.y), 0, this.alturaMapa - ALTURA);
+      }
+    });
+    this.input.on('wheel', (p, o, dx, dy) => {
+      cam.stopFollow();
+      cam.scrollY = Phaser.Math.Clamp(cam.scrollY + dy * 0.5, 0, this.alturaMapa - ALTURA);
+    });
+    const kb = this.input.keyboard;
+    kb?.on('keydown-RIGHT', () => this.andarPara(this.atual + 1));
+    kb?.on('keydown-UP', () => this.andarPara(this.atual + 1));
+    kb?.on('keydown-LEFT', () => this.andarPara(this.atual - 1));
+    kb?.on('keydown-DOWN', () => this.andarPara(this.atual - 1));
+    kb?.on('keydown-ENTER', () => this.jogar());
+    kb?.on('keydown-SPACE', () => this.jogar());
     cam.fadeIn(300);
+    this.atualizarPainel();
     if (this.intro) this.passeio();
   }
 
-  // Abertura: a câmera sobe da Rodoviária até a Prefeitura mostrando cada lugar, e volta para a fase 1.
-  async passeio() {
-    const cam = this.cameras.main;
-    this.ocupado = true;
-    const faixa = this.add
-      .text(LARGURA / 2, ALTURA - 46, '', { fontFamily: FONTES.dialogo, fontSize: '18px', color: CORES_CSS.branco, backgroundColor: '#2B2D5CCC', padding: { x: 8, y: 3 }, align: 'center' })
-      .setOrigin(0.5)
-      .setScrollFactor(0)
-      .setDepth(60);
-    const dizer = (t) => faixa.setText(t);
-    const ir = (y, ms) => new Promise((ok) => this.tweens.add({ targets: cam, scrollY: Phaser.Math.Clamp(y - ALTURA / 2, 0, ALTURA_MAPA - ALTURA), duration: ms, ease: 'Sine.inOut', onComplete: ok }));
-    const pausa = (ms) => new Promise((ok) => this.time.delayedCall(ms, ok));
-    dizer('Bem-vind{o|a} a Itajubá!'.replace(/\{([^|]*)\|([^}]*)\}/, (_, a, b) => (heroi() === 'geraldo' ? a : b)));
-    await pausa(1400);
-    dizer('São 14 lugares para conhecer, de baixo para cima.');
-    for (let n = 1; n <= 14; n++) {
-      await ir(PONTOS[n][1], n === 1 ? 500 : 420);
-      const m = this.marcadores[n - 1];
-      this.tweens.add({ targets: [m.c, m.nome], scale: 1.35, duration: 160, yoyo: true });
-      tocarEfeito('moeda', { variar: 0.1, volume: 0.5 });
-      if (n === 14) dizer('Lá no alto, a Prefeitura. Quem sabe onde essa história vai dar?');
-      await pausa(n === 14 ? 1800 : 260);
-    }
-    dizer('A aventura começa na Rodoviária!');
-    await ir(PONTOS[1][1], 1600);
-    await pausa(500);
-    faixa.destroy();
-    this.ocupado = false;
-    this.entrar(1);
+  animHeroi(nome) {
+    this.heroi.play(`${heroi()}-normal-${estado.bone ? 'b' : 's'}-${nome}`, true);
   }
 
-  // Mapa provisório em pixel art feito com formas: verde da serra, rio, avenidas, quarteirões e bairros.
-  desenharMapa() {
-    const g = this.add.graphics();
-    g.fillStyle(0x7cc85a).fillRect(0, 0, LARGURA, ALTURA_MAPA);
-    // morros da Mantiqueira nas bordas
-    const rnd = new Phaser.Math.RandomDataGenerator(['itajuba']);
-    for (let i = 0; i < 60; i++) {
-      const x = rnd.pick([rnd.between(-20, 70), rnd.between(410, 500)]);
-      const y = rnd.between(0, ALTURA_MAPA);
-      const r = rnd.between(18, 40);
-      g.fillStyle(0x4f9c44).fillCircle(x, y, r);
-      g.fillStyle(0x68b04e).fillCircle(x - r * 0.25, y - r * 0.25, r * 0.6);
-    }
-    // quarteirões com casinhas
-    for (let y = 30; y < ALTURA_MAPA - 20; y += 34) {
-      for (let x = 80; x < 400; x += 38) {
-        if (rnd.frac() < 0.35) continue;
-        g.fillStyle(0xe8dcc4).fillRect(x, y, 30, 24);
-        for (let k = 0; k < 3; k++) {
-          const cx = x + 3 + k * 9;
-          g.fillStyle(rnd.pick([0xf3e3c3, 0xefc2c9, 0xcfe0e8, 0xf6d7a8])).fillRect(cx, y + 9, 7, 8);
-          g.fillStyle(0xc9623e).fillRect(cx - 1, y + 6, 9, 4);
-        }
-      }
-    }
-    // Rio Sapucaí: serpenteia de baixo para cima, com a Av. BPS dos dois lados
-    const pts = [];
-    for (let y = ALTURA_MAPA + 10; y >= -10; y -= 20) pts.push(new Phaser.Math.Vector2(300 + Math.sin(y / 120) * 70, y));
-    const rio = new Phaser.Curves.Spline(pts);
-    g.lineStyle(26, 0xd8d0c0).strokePoints(rio.getPoints(120));
-    g.lineStyle(16, 0x3d8fd8).strokePoints(rio.getPoints(120));
-    g.lineStyle(4, 0x8fd0f2).strokePoints(rio.getPoints(120).map((p) => new Phaser.Math.Vector2(p.x - 4, p.y)));
-    // 7 pontes da Av. BPS
-    for (let i = 0; i < 7; i++) {
-      const y = 140 + i * 120;
-      const x = 300 + Math.sin(y / 120) * 70;
-      g.fillStyle(0xbab2b4).fillRect(x - 20, y - 3, 40, 6);
-      g.fillStyle(0x948a96).fillRect(x - 20, y + 3, 40, 2);
-    }
-    const rotulo = (x, y, t) =>
-      this.add.text(x, y, t, { fontFamily: FONTES.titulo, fontSize: '7px', color: CORES_CSS.branco }).setOrigin(0.5).setShadow(1, 1, '#2B2D5C', 0, false, true);
-    rotulo(300, 1020, 'RIO SAPUCAÍ');
-    rotulo(170, 830, 'CENTRO');
-    rotulo(390, 650, 'BPS');
-    rotulo(330, 470, 'AV. BPS');
-    rotulo(140, 560, 'VARGINHA');
-    rotulo(180, 330, 'CRUZEIRO');
+  // Painel fixo embaixo: setas, nome do lugar e JOGAR.
+  criarPainel() {
+    const y = ALTURA - 26;
+    this.add.rectangle(LARGURA / 2, y, LARGURA - 16, 40, CORES.roxo, 0.9).setScrollFactor(0).setDepth(50).setStrokeStyle(2, CORES.amarelo);
+    this.txtNumero = this.add.text(54, y - 12, '', { fontFamily: FONTES.titulo, fontSize: '7px', color: CORES_CSS.amarelo }).setScrollFactor(0).setDepth(51);
+    this.txtNome = this.add.text(54, y - 2, '', { fontFamily: FONTES.dialogo, fontSize: '16px', color: CORES_CSS.branco }).setScrollFactor(0).setDepth(51);
+    const seta = (x, dir) => {
+      const s = this.add.container(x, y).setScrollFactor(0).setDepth(51);
+      s.add(this.add.circle(0, 0, 14, CORES.azul).setStrokeStyle(2, CORES.branco));
+      s.add(dir < 0 ? this.add.triangle(-1, 0, 8, 0, 8, 12, 0, 6, CORES.branco) : this.add.triangle(1, 0, 0, 0, 0, 12, 8, 6, CORES.branco));
+      s.setSize(36, 36).setInteractive({ useHandCursor: true });
+      s.on('pointerup', () => this.andarPara(this.atual + dir));
+      return s;
+    };
+    this.setaVoltar = seta(28, -1);
+    this.setaIr = seta(LARGURA - 146, 1);
+    this.botaoJogar = new Botao(this, LARGURA - 72, y, 'JOGAR', () => this.jogar(), { largura: 96, altura: 26, cor: 'amarelo', tamanhoFonte: '9px' });
+    this.botaoJogar.setDepth(52);
+    new Botao(this, 40, 20, 'MENU', () => this.scene.start('Titulo'), { largura: 64, altura: 20, tamanhoFonte: '7px' }).setDepth(52);
   }
 
-  desenharCaminho() {
-    const g = this.add.graphics().setDepth(5);
-    for (let n = 1; n < 14; n++) {
-      const [x0, y0] = PONTOS[n];
-      const [x1, y1] = PONTOS[n + 1];
-      const passos = Math.floor(Phaser.Math.Distance.Between(x0, y0, x1, y1) / 8);
-      for (let i = 1; i < passos; i++) {
-        const t = i / passos;
-        g.fillStyle(n < estado.liberada ? 0xffd43a : 0xffffff, n < estado.liberada ? 1 : 0.6).fillRect(x0 + (x1 - x0) * t - 1.5, y0 + (y1 - y0) * t - 1.5, 3, 3);
-      }
+  atualizarPainel() {
+    const n = this.atual;
+    const jogavel = FASES[n] && n <= estado.liberada;
+    this.txtNumero.setText(`FASE ${n}${estado.feitas.includes(n) ? ' · FEITA' : ''}`);
+    this.txtNome.setText(NOMES_FASES[n] + (FASES[n] ? (jogavel ? '' : ' (termine a anterior)') : ' · em breve'));
+    this.botaoJogar.setVisible(!!jogavel && !this.ocupado);
+    this.setaVoltar.setAlpha(n > 1 ? 1 : 0.35);
+    this.setaIr.setAlpha(n < 14 ? 1 : 0.35);
+  }
+
+  tocarPonto(n) {
+    if (n === this.atual) this.jogar();
+    else this.andarPara(n);
+  }
+
+  // Anda pelas moedas até a fase n, passando pelas do meio.
+  async andarPara(n) {
+    if (this.ocupado || this.andando || n < 1 || n > 14 || n === this.atual) return;
+    this.andando = true;
+    this.cameras.main.startFollow(this.heroi, true, 0.12, 0.12, 0, -20);
+    const passo = n > this.atual ? 1 : -1;
+    this.animHeroi('correndo');
+    while (this.atual !== n) {
+      const prox = this.atual + passo;
+      const [x, y] = PONTOS[prox];
+      this.heroi.setFlipX(x < this.heroi.x);
+      const dist = Phaser.Math.Distance.Between(this.heroi.x, this.heroi.y, x, y + 2);
+      await new Promise((ok) => this.tweens.add({ targets: this.heroi, x, y: y + 2, duration: Math.max(140, dist * 3.2), onComplete: ok }));
+      this.atual = prox;
+      tocarEfeito('moeda', { variar: 0.1, volume: 0.4 });
+      this.atualizarPainel();
     }
+    this.animHeroi('parado');
+    estado.ultimaNoMapa = this.atual;
+    this.andando = false;
   }
 
-  criarMarcador(n) {
-    const [x, y] = PONTOS[n];
-    const feita = estado.feitas.includes(n);
-    const liberada = n <= estado.liberada;
-    const existe = !!FASES[n];
-    const cor = feita ? CORES.amarelo : liberada && existe ? CORES.laranja : 0x9a9ab8;
-    const c = this.add.container(x, y).setDepth(10);
-    c.add(this.add.circle(1, 2, 13, 0x000000, 0.3));
-    c.add(this.add.circle(0, 0, 13, cor).setStrokeStyle(2, CORES.roxo));
-    c.add(this.add.text(0, 1, String(n), { fontFamily: FONTES.titulo, fontSize: '9px', color: CORES_CSS.roxo }).setOrigin(0.5));
-    const nome = this.add
-      .text(x, y + 20, NOMES_FASES[n], { fontFamily: FONTES.dialogo, fontSize: '13px', color: CORES_CSS.branco, backgroundColor: '#2B2D5CAA', padding: { x: 3, y: 0 } })
-      .setOrigin(0.5)
-      .setDepth(11);
-    if (liberada && existe && !feita) this.tweens.add({ targets: c, scale: 1.15, duration: 500, yoyo: true, repeat: -1 });
-    const zona = this.add.zone(x, y, 40, 40).setInteractive({ useHandCursor: true }).setDepth(12);
-    zona.on('pointerup', () => !this.arrastou && this.entrar(n));
-    this.marcadores.push({ c, nome });
-  }
-
-  entrar(n) {
-    if (this.ocupado) return;
+  jogar() {
+    const n = this.atual;
+    if (this.ocupado || this.andando) return;
     if (!FASES[n] || n > estado.liberada) {
       tocarEfeito('dano', { volume: 0.4 });
-      const [x, y] = PONTOS[n];
-      const t = this.add
-        .text(x, y - 26, FASES[n] ? 'Termine a fase anterior!' : TEXTOS.mapa.embreve, { fontFamily: FONTES.dialogo, fontSize: '14px', color: CORES_CSS.amarelo })
-        .setOrigin(0.5)
-        .setDepth(30)
-        .setShadow(1, 1, CORES_CSS.roxo, 0, false, true);
-      this.tweens.add({ targets: t, y: y - 40, alpha: 0, delay: 700, duration: 500, onComplete: () => t.destroy() });
+      this.tweens.add({ targets: this.heroi, x: this.heroi.x + 3, duration: 50, yoyo: true, repeat: 2 });
       return;
     }
     tocarEfeito('botao');
-    const [x, y] = PONTOS[n];
-    this.heroi.play(`${heroi()}-normal-${estado.bone ? 'b' : 's'}-correndo`);
-    this.heroi.setFlipX(x < this.heroi.x);
-    this.tweens.add({
-      targets: this.heroi,
-      x,
-      y: y - 8,
-      duration: 400,
-      onComplete: () => {
-        this.cameras.main.fadeOut(250);
-        this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start('Fase', { fase: n }));
-      },
-    });
+    this.ocupado = true;
+    this.animHeroi('vitoria');
+    this.cameras.main.fadeOut(350);
+    this.cameras.main.once('camerafadeoutcomplete', () => this.scene.start('Fase', { fase: n }));
+  }
+
+  // Abertura: a câmera sobe da Rodoviária até a Prefeitura mostrando cada lugar e volta para a fase 1.
+  async passeio() {
+    const cam = this.cameras.main;
+    this.ocupado = true;
+    this.atualizarPainel();
+    cam.stopFollow();
+    const faixa = this.add
+      .text(LARGURA / 2, 52, '', { fontFamily: FONTES.dialogo, fontSize: '17px', color: CORES_CSS.branco, backgroundColor: '#2B2D5CDD', padding: { x: 8, y: 3 }, align: 'center' })
+      .setOrigin(0.5)
+      .setScrollFactor(0)
+      .setDepth(60);
+    const pular = new Botao(this, LARGURA - 74, 20, 'PULAR', () => (this.pularPasseio = true), { largura: 64, altura: 20, tamanhoFonte: '7px' });
+    pular.setDepth(61);
+    const ir = (y, ms) =>
+      new Promise((ok) => this.tweens.add({ targets: cam, scrollY: Phaser.Math.Clamp(y - ALTURA / 2, 0, this.alturaMapa - ALTURA), duration: ms, ease: 'Sine.inOut', onComplete: ok }));
+    const pausa = (ms) => new Promise((ok) => this.time.delayedCall(ms, ok));
+    faixa.setText(g('Bem-vind{o|a} a Itajubá!'));
+    cam.scrollY = this.alturaMapa - ALTURA;
+    await pausa(1300);
+    for (let n = 1; n <= 14 && !this.pularPasseio; n++) {
+      faixa.setText(`${n}. ${NOMES_FASES[n]}`);
+      await ir(PONTOS[n][1], 380);
+      const anel = this.add.circle(PONTOS[n][0], PONTOS[n][1], 8).setStrokeStyle(3, CORES.amarelo).setDepth(7);
+      this.tweens.add({ targets: anel, scale: 2.2, alpha: 0, duration: 600, onComplete: () => anel.destroy() });
+      tocarEfeito('moeda', { variar: 0.1, volume: 0.45 });
+      await pausa(n === 14 ? 1400 : 320);
+    }
+    if (!this.pularPasseio) {
+      faixa.setText('A aventura começa na Rodoviária!');
+      await ir(PONTOS[1][1], 1400);
+      await pausa(500);
+    }
+    faixa.destroy();
+    pular.container.destroy();
+    this.ocupado = false;
+    cam.startFollow(this.heroi, true, 0.12, 0.12, 0, -20);
+    this.atualizarPainel();
+    this.jogar();
   }
 }
