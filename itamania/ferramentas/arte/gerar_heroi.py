@@ -96,7 +96,7 @@ def desenhar(p, h, s, bone):
         j = ponto(quadril, COXA, coxa)
         t = ponto(j, CANELA, coxa - joelho)
         ang_pe = coxa - joelho + 90 - pe_ang
-        b.capsula(j, t, 2.0 * s, 1.7 * s, PELE, esc)                                  # canela
+        b.capsula(j, t, 2.0 * s, 1.7 * s, JEANS if h.get('calca') == 'longa' else PELE, esc)   # canela
         b.capsula(quadril, j, 3.3 * s, 3.0 * s, JEANS, esc, achatar=0.9)              # bermuda
         b.capsula(mistura(quadril, j, 0.6), mistura(j, t, 0.12), 3.2 * s, 3.0 * s, JEANS, esc, achatar=0.9)
         b.capsula(ponto(t, 1.6 * s, coxa - joelho + 180), t, 1.8 * s, 1.8 * s, BRANCO, esc, pontas=False)  # meia
@@ -112,8 +112,9 @@ def desenhar(p, h, s, bone):
     braco(ombro_t, p['ombro_t'], p['cotovelo_t'], 1, p['mao_t'])
     # mochila (nas costas, lado -x)
     costas = ponto(mistura((hx, hy), pescoco, 0.55), 3.4 * s, 180 - incl - 90)
-    b.elipse((costas[0] - 1.2 * s, costas[1]), 3.8 * s, 5.4 * s, MOC, 1, giro=-incl)
-    b.elipse((costas[0] - 2.4 * s, costas[1] + 2.4 * s), 2.2 * s, 2.2 * s, MOC, 0, giro=-incl)  # bolso
+    if h.get('usa_mochila', True):
+        b.elipse((costas[0] - 1.2 * s, costas[1]), 3.8 * s, 5.4 * s, MOC, 1, giro=-incl)
+        b.elipse((costas[0] - 2.4 * s, costas[1] + 2.4 * s), 2.2 * s, 2.2 * s, MOC, 0, giro=-incl)  # bolso
     perna(quadril_t, p['coxa_t'], p['joelho_t'], p['pe_t'], 1)
     perna(quadril_f, p['coxa_f'], p['joelho_f'], p['pe_f'], 0)
     # tronco (camiseta)
@@ -125,15 +126,27 @@ def desenhar(p, h, s, bone):
     # alça da mochila passando no ombro da frente
     alca_a = (pescoco[0] - 0.6 * s, pescoco[1] + 1.6 * s)
     alca_b = ponto(alca_a, 7.0 * s, 180 - incl + 180 - 8)
-    b.capsula(alca_a, alca_b, 0.8 * s, 0.8 * s, MOC, 1, separar=False)
+    if h.get('usa_mochila', True):
+        b.capsula(alca_a, alca_b, 0.8 * s, 0.8 * s, MOC, 1, separar=False)
+    elif h.get('avental'):
+        # avental na frente do tronco (cor da mochila)
+        b.poligono([(peito[0] + 0.5 * s, peito[1] - 1.5 * s), (peito[0] + 4.2 * s, peito[1] - 1.0 * s),
+                    (hx + 4.8 * s, hy + 6.0 * s), (hx + 0.2 * s, hy + 6.0 * s)], MOC, separar=False)
     b.capsula(pescoco, (cab[0] - 0.4, cab[1] + 2.0 * s), 1.9 * s, 1.9 * s, PELE, separar=False)
 
     # ---- cabeça (criança: cabeça grande) ----
     cx, cy = cab
-    sh = s * 1.14  # cabeça de criança, maior
+    sh = s * h.get('cabeca', 1.14)  # cabeça de criança, maior
     cx, cy = cx + 0.4 * sh, cy - 0.8 * sh
     # cabelo de trás
-    if h['estilo'] == 'curto':
+    if h['estilo'] == 'careca':
+        for dx, dy, r in ((-3.8, 0.6, 2.4), (-2.6, 2.8, 2.0)):
+            b.elipse((cx + dx * sh, cy + dy * sh), r * sh, r * sh, CAB, separar=False)
+    elif h['estilo'] == 'coque':
+        b.elipse((cx - 3.6 * sh, cy - 4.4 * sh), 2.8 * sh, 2.6 * sh, CAB, 1, separar=False)
+        for dx, dy, r in ((-3.4, -0.4, 3.2), (-1.0, -3.4, 3.4), (2.0, -3.8, 2.8), (-4.0, 2.4, 2.4)):
+            b.elipse((cx + dx * sh, cy + dy * sh), r * sh, r * sh, CAB, separar=False)
+    elif h['estilo'] == 'curto':
         for dx, dy, r in ((-3.4, -0.6, 3.2), (-1.0, -3.4, 3.4), (2.0, -3.8, 2.8), (-4.0, 2.0, 2.4)):
             b.elipse((cx + dx * sh, cy + dy * sh), r * sh, r * sh, CAB, separar=False)
     else:
@@ -152,7 +165,9 @@ def desenhar(p, h, s, bone):
     b.elipse((cx + 1.0 * sh, cy + 0.6 * sh), 5.0 * sh, 5.4 * sh, PELE, separar=False, achatar=0.7)   # rosto
     b.elipse((cx - 2.0 * sh, cy + 1.2 * sh), 1.3 * sh, 1.8 * sh, PELE, 1, separar=False, achatar=0.8)  # orelha
     # franja / topo
-    if h['estilo'] == 'curto':
+    if h['estilo'] == 'careca':
+        b.tom_em(cx + 1.0 * sh, cy - 3.6 * sh, PELE, 0)
+    elif h['estilo'] in ('curto', 'coque'):
         for dx, dy, r in ((0.0, -4.0, 2.6), (2.6, -4.2, 2.3), (4.6, -3.0, 1.5), (-2.4, -3.0, 2.0)):
             b.elipse((cx + dx * sh, cy + dy * sh), r * sh, r * 0.85 * sh, CAB, separar=False)
     else:
@@ -167,6 +182,15 @@ def desenhar(p, h, s, bone):
         b.tom_em(cx - 2.0 * sh, cy - 2.2 * sh, OURO, 2)   # costura
     braco(ombro_f, p['ombro_f'], p['cotovelo_f'], 0, p['mao_f'])
     rosto(b, cx, cy, sh, p['rosto'])
+    if h.get('bigode'):
+        for dx in (2.0, 3.0, 4.0, 5.0):
+            b.px(cx + dx * sh, cy + 3.6 * sh, 'G')
+    if h.get('oculos'):
+        ox1, ox2, oy = cx + 1.0 * sh, cx + 4.0 * sh, cy + 0.6 * sh
+        for x in range(int(round(ox1)) - 1, int(round(ox2)) + 2):
+            b.px(x, oy - 1, 'e')
+        b.px(ox1 - 1, oy, 'e'); b.px(ox1 - 1, oy + 1, 'e'); b.px(ox1 + 2, oy + 1, 'e')
+        b.px(ox1, oy + 2, 'e'); b.px(ox1 + 1, oy + 2, 'e'); b.px(ox2 + 1, oy, 'e'); b.px(ox2 + 1, oy + 1, 'e')
     return b
 
 
@@ -317,10 +341,72 @@ def png(quadros, pal, caminho):
     return img
 
 
+# NPCs adultos (genéricos, sem pessoa real): mesmo renderizador, cabeça proporcional de adulto, sem mochila.
+NPCS = {
+    'motorista': dict(cabelo=['#5A5A6A', '#36364A', '#24243A', '#18182A', '#0C0C18'],
+                      camiseta=['#C6DCFF', '#7AA6F0', '#4C78C8', '#30509A', '#182C5C'],
+                      mochila=['#C6DCFF', '#7AA6F0', '#4C78C8', '#30509A', '#182C5C'],
+                      tenis=['#7C7888', '#545060', '#3A3644', '#28242F', '#1A1720'],
+                      estilo='curto', mochila_=False, calca='longa', cabeca=0.98, bigode=True),
+    'guia': dict(cabelo=['#FFFFFF', '#D8D8E4', '#A8A8BC', '#7C7C94', '#4A4A60'],
+                 camiseta=['#F6E4B8', '#D8B878', '#B08C4E', '#7E6034', '#46341A'],
+                 mochila=['#C8A070', '#A07440', '#784E24', '#503014', '#2C1808'],
+                 tenis=['#C98E55', '#955F37', '#6A3D22', '#472513', '#2A1208'],
+                 estilo='careca', mochila_=False, calca='longa', cabeca=0.98, oculos=True),
+    'vovo': dict(cabelo=['#FFFFFF', '#E4E0EC', '#B8B2C8', '#8A84A0', '#565070'],
+                 camiseta=['#E8D0FF', '#B48AF0', '#8460C8', '#5A3C98', '#2E1C58'],
+                 mochila=['#E8D0FF', '#B48AF0', '#8460C8', '#5A3C98', '#2E1C58'],
+                 tenis=['#F6F0F0', '#DCD2D8', '#B4A8B8', '#86788E', '#4A3E58'],
+                 estilo='coque', mochila_=False, calca='longa', cabeca=0.98, oculos=True),
+    'vendedora': dict(cabelo=['#3A2A2A', '#24161A', '#160C10', '#0C0608', '#060204'],
+                      camiseta=['#FFFFFF', '#E9ECF6', '#BCC2DA', '#8A90B0', '#4A4E6C'],
+                      mochila=['#FF9C8C', '#F05A4A', '#CC3530', '#9A2228', '#66161E'],
+                      tenis=['#7C7888', '#545060', '#3A3644', '#28242F', '#1A1720'],
+                      estilo='rabo', mochila_=False, avental=True, calca='longa', cabeca=0.98),
+    'tecnico': dict(cabelo=['#6A4E3A', '#46301E', '#2C1C10', '#1A1008', '#0C0604'],
+                    camiseta=['#A8C8FF', '#5A8AE8', '#3460C0', '#244490', '#182C62'],
+                    mochila=['#A8C8FF', '#5A8AE8', '#3460C0', '#244490', '#182C62'],
+                    tenis=['#C98E55', '#955F37', '#6A3D22', '#472513', '#2A1208'],
+                    estilo='curto', mochila_=False, calca='longa', cabeca=0.98),
+    'atendente': dict(cabelo=['#8A5A3A', '#5E3A22', '#3E2414', '#28160A', '#140A04'],
+                      camiseta=['#FFF0A0', '#FFC845', '#F8941E', '#D0601A', '#963A14'],
+                      mochila=['#E0A86C', '#C08A55', '#955F37', '#6A3D22', '#472513'],
+                      tenis=['#7C7888', '#545060', '#3A3644', '#28242F', '#1A1720'],
+                      estilo='curto', mochila_=False, avental=True, calca='longa', cabeca=0.98),
+    'barista': dict(cabelo=['#2E2A3A', '#1C1826', '#100E18', '#08060E', '#040208'],
+                    camiseta=['#F4F0EA', '#DCD4D2', '#B4A8B4', '#857792', '#4A3E5A'],
+                    mochila=['#B08A6E', '#8A6650', '#664838', '#4A3028', '#30201C'],
+                    tenis=['#7C7888', '#545060', '#3A3644', '#28242F', '#1A1720'],
+                    estilo='coque', mochila_=False, avental=True, calca='longa', cabeca=0.98),
+    'estudante': dict(cabelo=['#3A2418', '#24140C', '#160A06', '#0C0402', '#060200'],
+                      camiseta=['#C2EE8E', '#86CC58', '#55A23E', '#3A7634', '#26502C'],
+                      mochila=['#7C7888', '#545060', '#3A3644', '#28242F', '#1A1720'],
+                      tenis=['#FFFFFF', '#E9ECF6', '#BCC2DA', '#8A90B0', '#4A4E6C'],
+                      estilo='curto', calca='longa', cabeca=1.02, oculos=True),
+}
+
+
+def gerar_npcs(pasta):
+    """Cada NPC: 2 quadros (parado, falando com a mão levantada), escala de adulto."""
+    for nome, h in NPCS.items():
+        h = dict(h)
+        h['usa_mochila'] = h.pop('mochila_', True)
+        CAB, CAM, MOC, TEN = materiais(h)
+        pal = paleta_de([PELE, BRANCO, OURO, JEANS, CAB, CAM, MOC, TEN], EXTRAS)
+        p1 = dict(parado(0), rosto='normal')
+        p2 = dict(parado(2), rosto='feliz', ombro_f=40, cotovelo_f=80)
+        qs = [desenhar(p1, h, 1.14, False).texto(CONTORNO_FIXO), desenhar(p2, h, 1.14, False).texto(CONTORNO_FIXO)]
+        ultima = max(y for y, l in enumerate(qs[0]) if any(c != '.' for c in l))
+        desce = A - 1 - ultima
+        qs = [(['.' * L] * desce + q[:A - desce]) if desce > 0 else q for q in qs]
+        png(qs, pal, os.path.join(pasta, f'npc-{nome}.png'))
+
+
 def main():
     raiz = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     pasta = os.path.join(raiz, 'public/assets/sprites')
     os.makedirs(pasta, exist_ok=True)
+    gerar_npcs(pasta)
     folhas = []
     for nome, h in HEROIS.items():
         for tam, s in TAMANHOS.items():
