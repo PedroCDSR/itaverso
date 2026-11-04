@@ -1433,6 +1433,43 @@ def palmeira(base, x, y):
     colar(base, s, x, y, C['gl'])
 
 
+def ponte(d, cx, cy, vao, larg, vertical, deck=(112, 116, 128), faixa=True):
+    """Ponte bonitinha: deck do mesmo asfalto da rua, mureta de pedra clara com pilaretes, e sombra na água.
+    vertical=True: a ponte atravessa um rio que corre na horizontal (deck de pé)."""
+    pedra, pedra2, contorno_ = (226, 224, 218), (170, 168, 162), C['ci0']
+    h = larg // 2
+    if not vertical:
+        x0, x1 = cx - vao // 2, cx + vao // 2
+        ret(d, x0 + 3, cy + h + 2, x1 - 3, cy + h + 3, (20, 36, 72))      # sombra na água
+        ret(d, x0, cy - h - 2, x1, cy + h + 2, contorno_)
+        ret(d, x0, cy - h, x1, cy + h, deck)
+        for yy in (cy - h - 1, cy + h + 1):
+            ret(d, x0, yy, x1, yy, pedra)
+            for xx in range(x0, x1 + 1, 3):
+                px(d, xx, yy, pedra2)
+        for xx in (x0, x1):
+            ret(d, xx - 1, cy - h - 2, xx, cy - h - 1, pedra)
+            ret(d, xx - 1, cy + h + 1, xx, cy + h + 2, pedra)
+        if faixa:
+            for xx in range(x0 + 2, x1 - 1, 4):
+                ret(d, xx, cy, xx + 1, cy, (240, 232, 200))
+    else:
+        y0, y1 = cy - vao // 2, cy + vao // 2
+        ret(d, cx + h + 2, y0 + 3, cx + h + 3, y1 - 3, (20, 36, 72))
+        ret(d, cx - h - 2, y0, cx + h + 2, y1, contorno_)
+        ret(d, cx - h, y0, cx + h, y1, deck)
+        for xx in (cx - h - 1, cx + h + 1):
+            ret(d, xx, y0, xx, y1, pedra)
+            for yy in range(y0, y1 + 1, 3):
+                px(d, xx, yy, pedra2)
+        for yy in (y0, y1):
+            ret(d, cx - h - 2, yy - 1, cx - h - 1, yy, pedra)
+            ret(d, cx + h + 1, yy - 1, cx + h + 2, yy, pedra)
+        if faixa:
+            for yy in range(y0 + 2, y1 - 1, 4):
+                ret(d, cx, yy, cx, yy + 1, (240, 232, 200))
+
+
 # ---------------------------------------------------------------- mapa (em pé)
 def main():
     base = terreno()
@@ -1486,13 +1523,13 @@ def main():
 
     # ----- Av. BPS: eixo central da cidade, com o rio correndo no meio, até o lago
     # Av. Dr. Jerson Dias: corre de norte a sul a leste do lago e do kart e encontra a BPS
-    jerson = [(298, 30), (298, 220), (288, 232), (262, 232)]
+    jerson = [(298, 30), (298, 222)]
     linha_grossa(d, jerson, 13, C['ci0'])
     linha_grossa(d, jerson, 11, (112, 116, 128))
     for y in range(34, 220, 8):
         ret(d, 298, y, 298, y + 2, (236, 228, 200))
     dl.line(jerson, fill=255, width=15)
-    eixo = [(124, 514), (124, 236), (128, 230), (266, 230)]
+    eixo = [(124, 514), (124, 236), (128, 230), (282, 230)]
     # o Rio Sapucaí corre no meio da BPS só daqui (y 470) até o lago; abaixo disso ele passa por baixo de uma
     # ponte e segue coberto pelo asfalto (informação do Pedro, 04/11/2026)
     FIM_RIO = 470
@@ -1579,6 +1616,20 @@ def main():
     dl.line(rua_alameda, fill=255, width=9)
     dl.rectangle([78, 528, 110, 556], fill=255)   # prédios entre a Alameda e a Rua Nova
     dl.rectangle([108, 470, 140, 516], fill=255)  # pracinha da Unimed
+
+    # rotatória onde a BPS encontra a avenida da Prefeitura
+    RX, RY = 294, 232
+    d.ellipse([RX - 13, RY - 13, RX + 13, RY + 13], fill=rgba(C['ci0']))
+    d.ellipse([RX - 12, RY - 12, RX + 12, RY + 12], fill=rgba((112, 116, 128)))
+    for k in range(12):
+        a = k * math.pi / 6
+        px(d, round(RX + 9 * math.cos(a)), round(RY + 9 * math.sin(a)), (240, 232, 200))
+    d.ellipse([RX - 6, RY - 6, RX + 6, RY + 6], fill=rgba(C['pa']))
+    d.ellipse([RX - 5, RY - 5, RX + 5, RY + 5], fill=rgba(C['g2']))
+    d.ellipse([RX - 4, RY - 5, RX + 2, RY + 1], fill=rgba(C['g3']))
+    for fx, fy in [(RX - 2, RY + 2), (RX + 2, RY - 1), (RX - 1, RY - 3)]:
+        flor(base, fx, fy, random.choice([(255, 120, 160), C['br'], (255, 236, 96)]))
+    dl.ellipse([RX - 15, RY - 15, RX + 15, RY + 15], fill=255)
 
     # ----- marcos fixos
     lago_parque(base, dl)
@@ -1765,23 +1816,24 @@ def main():
     for tx, ty in [(168, 336), (176, 352), (163, 357), (178, 338)]:
         arvore(base, tx, ty, 0)
 
+    TRILHA = [(128, 128, 136), (192, 192, 194), (218, 216, 210), (240, 238, 232)]
     for r in ROTAS:
-        linha_grossa(d, r, 9, C['c0'])
+        linha_grossa(d, r, 7, TRILHA[0])
     for r in ROTAS:
-        linha_grossa(d, r, 7, C['c1'])
-        linha_grossa(d, r, 5, C['c2'])
+        linha_grossa(d, r, 5, TRILHA[1])
+        linha_grossa(d, r, 3, TRILHA[2])
     for r in ROTAS:
         tot = 0
         for (x0, y0), (x1, y1) in zip(r, r[1:]):
             seg = math.hypot(x1 - x0, y1 - y0)
             k = 0
             while k < seg:
-                if int(tot + k) % 6 < 2:
+                if int(tot + k) % 4 == 0:
                     t = k / seg
-                    d.point((round(x0 + (x1 - x0) * t), round(y0 + (y1 - y0) * t)), fill=rgba(C['c3']))
+                    d.point((round(x0 + (x1 - x0) * t), round(y0 + (y1 - y0) * t)), fill=rgba(TRILHA[3]))
                 k += 1
             tot += seg
-    # pontes de madeira onde a rota cruza o rio
+    # pontes de pedra clara onde a trilha cruza o rio
     feitas = []
     for r in ROTAS:
         for (x0, y0), (x1, y1) in zip(r, r[1:]):
@@ -1792,16 +1844,7 @@ def main():
                 if 0 <= y < H and 0 <= x < W and rio_a[y, x] and all(math.hypot(x - a, y - b) > 10 for a, b in feitas):
                     feitas.append((x, y))
                     horiz = abs(x1 - x0) > abs(y1 - y0)
-                    if horiz:
-                        ret(d, x - 7, y - 5, x + 7, y + 5, C['mad0'])
-                        for xx in range(x - 6, x + 7):
-                            ret(d, xx, y - 3, xx, y + 3, C['mad2'] if xx % 3 else C['mad1'])
-                        ret(d, x - 7, y - 5, x + 7, y - 4, C['mad3'])
-                        ret(d, x - 7, y + 4, x + 7, y + 5, C['mad1'])
-                    else:
-                        ret(d, x - 5, y - 7, x + 5, y + 7, C['mad0'])
-                        for yy in range(y - 6, y + 7):
-                            ret(d, x - 3, yy, x + 3, yy, C['mad2'] if yy % 3 else C['mad1'])
+                    ponte(d, x, y, 14, 4, not horiz, deck=TRILHA[2], faixa=False)
 
     # ----- Praça Theodomiro Santiago (praça central): piso claro, gramado, caminhos em cruz, fonte redonda com
     # jatos e o busto, e palmeiras (pedido do Pedro, 04/11/2026)
@@ -1911,17 +1954,11 @@ def main():
                    any(abs(tx - b) < 7 for b in PONTES_H) and nx == 0:
                     continue
                 colar(base, ar, tx, ty, C['gl'])
+    d2 = ImageDraw.Draw(base)
     for b in PONTES_V:  # pontes atravessando a parte norte-sul do rio
-        ret(d2 := ImageDraw.Draw(base), 112, b - 3, 136, b + 3, C['ci0'])
-        ret(d2, 113, b - 2, 135, b + 2, (200, 200, 204))
-        ret(d2, 113, b - 2, 135, b - 2, (236, 236, 240))
-        ret(d2, 113, b + 2, 135, b + 2, (150, 150, 156))
+        ponte(d2, 124, b, 24, 4, False)
     for b in PONTES_H:  # pontes atravessando a parte leste-oeste
-        d2 = ImageDraw.Draw(base)
-        ret(d2, b - 3, 218, b + 3, 242, C['ci0'])
-        ret(d2, b - 2, 219, b + 2, 241, (200, 200, 204))
-        ret(d2, b - 2, 219, b - 2, 241, (236, 236, 240))
-        ret(d2, b + 2, 219, b + 2, 241, (150, 150, 156))
+        ponte(d2, b, 230, 24, 4, True)
 
     # flores espalhadas na grama (fora da cidade, das ruas e dos planaltos escuros)
     cores_flor = [C['br'], (255, 120, 160), C['vm'], (255, 236, 96), (176, 140, 255)]
@@ -1981,8 +2018,8 @@ def main():
     d = ImageDraw.Draw(base)
     for nome, (x, y) in N.items():
         if nome.startswith('j'):
-            d.ellipse([x - 2, y - 2, x + 2, y + 2], fill=rgba(C['c0']))
-            d.ellipse([x - 1, y - 1, x + 1, y + 1], fill=rgba(C['c3']))
+            d.ellipse([x - 2, y - 2, x + 2, y + 2], fill=rgba((128, 128, 136)))
+            d.ellipse([x - 1, y - 1, x + 1, y + 1], fill=rgba((240, 238, 232)))
             continue
         cor, cor2, cor3 = (C['vm'], C['vm2'], C['vm3']) if nome in ('prefeitura', 'cemiterio') else \
             (C['am'], C['am2'], C['am3'])

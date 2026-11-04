@@ -160,6 +160,15 @@ Os nomes dos bairros aparecem escritos no chão.
 - **Placas:** "PRAÇA" foi para dentro da praça e "PRAÇA DO SOLDADO" foi para o lado da placa do trem, nas posições do
   print.
 
+## Pontes, trilhas e rotatória (Pedro, 04/11/2026)
+
+- **Pontes:** todas no mesmo estilo, com deck do mesmo asfalto das ruas (ou de pedra clara, nas da trilha), mureta de
+  pedra clara com pilaretes, sombra na água e faixa no meio nas da avenida.
+- **Trilhas entre as fases:** estavam de terra marrom. Ficaram mais finas e de pedra cinza-clara, quase um asfalto claro.
+  Os pontinhos de cruzamento também ficaram cinza.
+- **Rotatória:** a curva entre o fim da BPS e a avenida da Prefeitura virou uma rotatória com canteiro verde e flores no
+  meio.
+
 ## O que o mapa mostra
 
 - **Formato em pé.** O eixo central de Itajubá é a **Av. BPS**, com o **Rio Sapucaí** correndo no meio dela. A avenida sobe pela
