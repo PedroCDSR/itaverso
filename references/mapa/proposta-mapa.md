@@ -146,6 +146,20 @@ Os nomes dos bairros aparecem escritos no chão.
   rua curva, uma horizontal e uma vertical, com casinhas em volta.
 - **Morro Chic:** tem casinhas no alto.
 
+## Praçonha, cemitério, Unimed, praça central e pontes (Pedro, 04/11/2026)
+
+- **Praçonha:** foi para a beira da Av. BPS, no formato do print. Tem piso claro, gramados redondos nos 4 cantos, árvores
+  no meio e o tanque de areia. A rota passa entre a avenida e a praça, como uma calçada. No lugar antigo agora há casas.
+- **Cemitério:**
+  - saiu o caminho que ligava a Praçonha antiga ao cemitério. A beira oeste do Cruzeiro virou encosta, sem passagem;
+  - o caminho novo sobe pela rua em S do centro e segue por uma rua estreita pelo meio do Cruzeiro até o cemitério.
+- **Pracinha da Unimed:** tem 4 árvores e 4 aparelhos de ginástica.
+- **Praça central:** voltou à versão boa, com gramado, caminhos em cruz e fonte redonda com o busto. O piso ficou mais claro,
+  o clube saiu e as árvores viraram palmeiras.
+- **Pontes:** 7 pontes de concreto ao longo do rio na BPS, 4 na parte norte-sul e 3 na parte leste-oeste.
+- **Placas:** "PRAÇA" foi para dentro da praça e "PRAÇA DO SOLDADO" foi para o lado da placa do trem, nas posições do
+  print.
+
 ## O que o mapa mostra
 
 - **Formato em pé.** O eixo central de Itajubá é a **Av. BPS**, com o **Rio Sapucaí** correndo no meio dela. A avenida sobe pela
