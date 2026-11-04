@@ -81,6 +81,15 @@
 - **Dúvida:** no satélite, o canteiro da BPS parece um córrego, e o Rio Sapucaí passa mais ao sul, perto de São Vicente.
   Confirmar se o rio do canteiro deve continuar com o nome "Rio Sapucaí".
 
+## Bairros (Pedro, 04/11/2026)
+
+1. **Centro:** embaixo, em volta da Rua Nova, do trem e da Alameda.
+2. **BPS:** a faixa enorme da avenida, dos dois lados.
+3. **Cruzeiro:** bairro alto e montanhoso. No mapa virou um planalto com casas, e o cemitério ficou menor, no alto dele.
+4. **Varginha:** bairro baixo, embaixo à direita, com mais árvores entre as casas.
+
+Os nomes dos bairros aparecem escritos no chão.
+
 ## O que o mapa mostra
 
 - **Formato em pé.** O eixo central de Itajubá é a **Av. BPS**, com o **Rio Sapucaí** correndo no meio dela. A avenida sobe pela

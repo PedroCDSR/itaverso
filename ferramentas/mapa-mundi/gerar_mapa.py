@@ -1304,9 +1304,10 @@ def main():
     planalto(morros, 14, 232, 92, 494, 12, raio=16)   # Coroados: crista comprida norte-sul
     planalto(morros, 20, 500, 98, 540, 10, raio=12)   # Alameda: morro com a rua
     planalto(morros, 178, 74, 242, 110, 12, raio=14)   # Agonia
+    planalto(morros, 222, 250, 346, 424, 14, raio=18)  # Cruzeiro: bairro alto, no morro
     base.alpha_composite(morros)
     esc = camada()
-    planalto(esc, 222, 254, 346, 330, 14, escuro=True, raio=18)   # cemitério: a parte "assombrada"
+    planalto(esc, 236, 252, 340, 320, 8, escuro=True, raio=14)   # cemitério, no alto do Cruzeiro
     base.alpha_composite(esc)
 
     relevo = np.maximum(np.array(serra)[:, :, 3], np.maximum(np.array(morros)[:, :, 3], np.array(esc)[:, :, 3]))
@@ -1361,6 +1362,14 @@ def main():
     dz.ellipse([70, 80, 190, 168], fill=255)      # Pinheirinho (bairro das mansões)
     dz.rectangle([304, 196, 346, 230], fill=255)  # bairro da Prefeitura
     zona_a = (np.array(zona) > 0) & (relevo == 0)
+    # casas também no alto do Cruzeiro (abaixo do cemitério)
+    cruz_m = Image.new('L', (W, H), 0)
+    ImageDraw.Draw(cruz_m).rounded_rectangle([228, 334, 340, 420], radius=12, fill=255)
+    zona_a |= np.array(cruz_m) > 0
+    # Varginha: bairro baixo, com mais árvores entre as casas
+    varginha = np.zeros((H, W), bool)
+    varginha[442:600, 288:348] = True
+    varginha[442:512, 232:348] = True
     # morros pequenos podem ter casas no Pinheirinho
     zona_a |= (np.array(zona) > 0) & (np.arange(H)[:, None] < 150) & (np.arange(H)[:, None] > 84)
 
@@ -1384,7 +1393,7 @@ def main():
         dl.rectangle([x - s.width // 2 - 2, y - s.height - 2, x + s.width // 2 + 2, y + 3], fill=255)
     dl.rectangle([praca[0] - 3, praca[1] - 3, praca[2] + 3, praca[3] + 3], fill=255)
     dl.rectangle([ruanova[0] - 8, ruanova[1] - 9, ruanova[2] + 4, ruanova[3] + 3], fill=255)
-    dl.rectangle([226, 254, 344, 352], fill=255)  # topo do cemitério
+    dl.rectangle([234, 248, 342, 330], fill=255)  # cemitério
     dl.rectangle([164, 364, 228, 404], fill=255)  # Praçonha
     dl.rectangle([70, 596, 160, 632], fill=255)   # Praça do Soldado
     dl.rectangle([0, 598, 70, 612], fill=255)     # trilho
@@ -1446,7 +1455,7 @@ def main():
                 x, y = cx_ + random.randint(-1, 0), cy_ - 1
                 if not (8 < x < W - 8 and y < H - 6) or not zona_a[y - 6:y + 1, x - 4:x + 5].all():
                     continue
-                if ocup[y - 6:y + 1, x - 4:x + 5].any() or random.random() < 0.06:
+                if ocup[y - 6:y + 1, x - 4:x + 5].any() or random.random() < (0.55 if varginha[y, x] else 0.06):
                     continue
                 ocup[y - 6:y + 1, x - 4:x + 5] = True
                 casas.append((x, y))
@@ -1474,7 +1483,7 @@ def main():
     morros_a = np.array(morros)[:, :, 3]
     for _ in range(5000):
         x, y = random.randrange(8, W - 8), random.randrange(60, H - 4)
-        if zona_a[y, x] and random.random() < 0.97:
+        if zona_a[y, x] and random.random() < (0.35 if varginha[y, x] else 0.97):
             continue
         if livre_np[max(0, y - 9):y + 1, x - 4:x + 5].any() or ocup[y - 9:y + 1, x - 4:x + 5].any():
             continue
@@ -1648,7 +1657,7 @@ def main():
     for i, (x, y) in enumerate([(244, 250), (330, 262), (262, 236), (312, 230), (222, 276)]):
         morcego(base, x, y, i % 2)
     # árvores secas
-    for tx, ty in [(236, 300), (338, 304)]:
+    for tx, ty in [(244, 300), (332, 304)]:
         dd.line([(tx, ty), (tx, ty - 12)], fill=rgba((40, 28, 52)), width=2)
         dd.line([(tx, ty - 8), (tx - 4, ty - 13)], fill=rgba((40, 28, 52)))
         dd.line([(tx, ty - 10), (tx + 4, ty - 15)], fill=rgba((40, 28, 52)))
@@ -1694,7 +1703,7 @@ def main():
 
     PLACAS = [
         ('TREM', 26, 618), ('PRAÇA DO SOLDADO', 208, 618), ('RUA NOVA', 176, 529), ('PRAÇA', 255, 578),
-        ('ALAMEDA', 40, 536), ('COROADOS', 54, 428), ('PRAÇONHA', 196, 410), ('CEMITÉRIO', 286, 320),
+        ('ALAMEDA', 40, 536), ('COROADOS', 54, 428), ('PRAÇONHA', 196, 410), ('CEMITÉRIO', 288, 322),
         ('UNIFEI', 194, 252), ('PINHEIRINHO', 132, 124), ('AGONIA', 206, 124), ('KART', 242, 56),
         ('LAGO', 230, 160), ('PREFEITURA', 314, 190), ('AV. BPS', 160, 470),
     ]
@@ -1711,7 +1720,7 @@ def main():
         ret(d, bx0 + 1, by0 + 1, bx0 + t.width + 1, by0 + t.height, C['vm2'])
         base.alpha_composite(t, (bx0 + 2, by0 + 1))
 
-    for txt, bx, by_ in [('BAIRRO BPS', 196, 352), ('CENTRO', 274, 440)]:
+    for txt, bx, by_ in [('BAIRRO BPS', 190, 300), ('CENTRO', 196, 500), ('CRUZEIRO', 288, 392), ('VARGINHA', 314, 470)]:
         t = contorno(texto_img(txt, C['br'], C['preto']), C['preto'])
         base.alpha_composite(t, (bx - t.width // 2, by_))
 
