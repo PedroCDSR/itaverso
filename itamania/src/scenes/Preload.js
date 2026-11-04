@@ -27,7 +27,8 @@ export class Preload extends Phaser.Scene {
         this.load.spritesheet(`heroi-${chave}-${forma}`, `assets/sprites/heroi-${chave}-${forma}.png`, { frameWidth: w, frameHeight: h });
       }
     }
-    if (TEM_MAPA) this.load.image('mapa-mundi', 'assets/mapa.png'); // o mapa pronto do Pedro
+    // o mapa do Pedro em alta resolução é mostrado em HTML (ui/mapaHtml.js); aqui só aquece o cache do navegador
+    if (TEM_MAPA) new Image().src = 'assets/mapa-hd.png';
   }
 
   create() {

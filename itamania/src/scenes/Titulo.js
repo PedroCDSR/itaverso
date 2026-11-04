@@ -19,11 +19,7 @@ export class Titulo extends Phaser.Scene {
   create() {
     this.mover = fundoCidade(this);
     tocarMusica('titulo');
-    const titulo = this.add
-      .text(LARGURA / 2, 36, TEXTOS.jogo, { fontFamily: FONTES.titulo, fontSize: '30px', color: CORES_CSS.amarelo })
-      .setOrigin(0.5)
-      .setStroke(CORES_CSS.roxo, 6)
-      .setShadow(3, 3, '#1A1A40', 0, true, true);
+    const titulo = this.tituloColorido(LARGURA / 2, 36);
     this.tweens.add({ targets: titulo, y: 40, duration: 1400, yoyo: true, repeat: -1, ease: 'Sine.inOut' });
     this.add
       .text(LARGURA / 2, 64, TEXTOS.subtitulo, { fontFamily: FONTES.dialogo, fontSize: '17px', color: CORES_CSS.branco })
@@ -61,6 +57,42 @@ export class Titulo extends Phaser.Scene {
     this.input.keyboard?.on('keydown-RIGHT', () => this.escolher('helena'));
     this.input.keyboard?.on('keydown-ENTER', () => this.jogar());
     this.cameras.main.fadeIn(300);
+  }
+
+  // "ITAMANIA" com uma cor por letra, como no topo do mapa do Pedro (referencias/mapa-mundi-original.png):
+  // vermelho, amarelo, verde e azul, repetidos. Cada letra tem o tom claro em cima, contorno escuro e sombra em
+  // degrau (cópias deslocadas 1 px por vez, sem desfoque).
+  tituloColorido(x, y) {
+    const CORES_LETRAS = [
+      ['#FF7464', '#D83828'], // vermelho
+      ['#FFFF74', '#F8D038'], // amarelo
+      ['#84F484', '#48B848'], // verde
+      ['#74B4FF', '#3878E8'], // azul
+    ];
+    const CONTORNO = '#181420';
+    const SOMBRA = '#425772';
+    const letras = [...TEXTOS.jogo];
+    const tam = 30;
+    const passo = tam + 2;
+    const estilo = { fontFamily: FONTES.titulo, fontSize: `${tam}px`, color: '#FFFFFF' };
+    const grupo = this.add.container(x, y);
+    letras.forEach((ch, i) => {
+      const lx = (i - (letras.length - 1) / 2) * passo;
+      for (let d = 4; d >= 1; d--) {
+        grupo.add(this.add.text(lx + d, d, ch, { ...estilo, color: SOMBRA }).setOrigin(0.5).setStroke(SOMBRA, 6));
+      }
+      const t = this.add.text(lx, 0, ch, estilo).setOrigin(0.5).setStroke(CONTORNO, 6);
+      const [claro, base] = CORES_LETRAS[i % CORES_LETRAS.length];
+      // corte seco entre o tom claro (terço de cima) e o tom base, como no pixel art
+      const grad = t.context.createLinearGradient(0, 0, 0, t.height);
+      grad.addColorStop(0, claro);
+      grad.addColorStop(0.42, claro);
+      grad.addColorStop(0.42, base);
+      grad.addColorStop(1, base);
+      t.setFill(grad);
+      grupo.add(t);
+    });
+    return grupo;
   }
 
   escolher(chave, silencioso = false) {
