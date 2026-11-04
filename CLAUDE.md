@@ -83,7 +83,7 @@ A arte que dá vida ao jogo vem de mão humana; o Claude integra, anima, ajusta 
 1. **Desenhos do Pedro são a base** (heróis 16x24 e 16x32, mapa-múndi, referências em `itamania/referencias/`). Copiar
    pixel a pixel o que ele desenhou; derivar animações sem mudar o design.
 2. **Assets licenciados** (itch.io, OpenGameArt, Kenney etc.) podem entrar quando a licença permitir, registrados em
-   `CREDITS.md`. Preferir um pacote coerente a misturar estilos.
+   `itamania/CREDITS.md`. Preferir um pacote coerente a misturar estilos.
 3. **Geradores Python** (`ferramentas/arte/`) completam o que falta, no mesmo estilo e escala, e escrevem PNG em
    `public/assets/` ou matrizes em `src/art/`. Nunca entregar arte genérica ou abaixo do nível dos desenhos do Pedro.
 - **Escala:** sprites desenhados em 16x24 (criança) e 16x32 (grande e adultos), ampliados 2x no jogo (48 e 64 px, a
@@ -107,6 +107,7 @@ A arte que dá vida ao jogo vem de mão humana; o Claude integra, anima, ajusta 
 itamania/              o jogo (tudo que vai para o Netlify sai daqui)
   DESIGN.md            história e fases (Pedro)
   STATUS.md            andamento e decisões
+  CREDITS.md           créditos e licenças
   PLANO.md             plano da etapa atual
   referencias/         desenhos e mapa originais do Pedro (não vão para o build)
   ferramentas/         geradores de arte (Python) e robô de teste (Playwright)
@@ -114,5 +115,4 @@ itamania/              o jogo (tudo que vai para o Netlify sai daqui)
   src/                 scenes, levels, objects, ui, audio, data, art
 ```
 
-O código que está na raiz do repositório, fora de `itamania/`, é **legado de outro projeto** (que já tem repositório
-próprio). Não usar como referência de regras nem editar; a remoção está pendente.
+Na raiz ficam só este `CLAUDE.md`, o `README.md` e o `.gitignore`. Créditos e licenças em `itamania/CREDITS.md`.

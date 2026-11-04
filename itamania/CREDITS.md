@@ -7,17 +7,15 @@ Tudo que vem de fora do projeto fica registrado aqui (autoria, licença e onde e
 | Phaser 4 | Phaser Studio | MIT | dependência npm |
 | Vite | Evan You e colaboradores | MIT | dependência de desenvolvimento |
 | Fonte "Press Start 2P" | CodeMan38 | SIL Open Font License 1.1 | `public/assets/fonts/PressStart2P.woff2` (licença em `OFL-PressStart2P.txt`) |
-| ZzFX (gerador de efeitos sonoros, função `zzfxG`) | Frank Force ([KilledByAPixel/ZzFX](https://github.com/KilledByAPixel/ZzFX)) | MIT | adaptado em `src/audio/zzfx.js` |
-| Logo do Colégio G9 (redesenhado em pixel na fachada do teatro) | Colégio G9 | Uso autorizado pelo G9 (parceiro do espetáculo), informado pelo Pedro em 02/11/2026 | `public/assets/cenario/teatro-g9.png` (gerado por `ferramentas/arte/gerar_lugares.py`); originais de referência em `references/logo/g9-logo.png` e `references/lugares/7-colegio-g9-fachada.png` |
-| Música tema (`tema.m4a`, Título, Intro, Fases 1, 2 e 4 e Final) | Fornecida pelo Pedro em 02/11/2026 | Própria ou autorizada, conforme o Pedro (não é música do filme nem do jogo original) | `public/assets/audio/tema.m4a` (cortada e convertida para AAC mono 20 kb/s) |
 | Fonte "Patrick Hand" | Patrick Wagesreiter | SIL Open Font License 1.1 | `public/assets/fonts/PatrickHand.woff2` (licença em `OFL-PatrickHand.txt`) |
+| ZzFX (gerador de efeitos sonoros, função `zzfxG`) | Frank Force ([KilledByAPixel/ZzFX](https://github.com/KilledByAPixel/ZzFX)) | MIT | adaptado em `src/audio/zzfx.js` |
+| Nomes e logos de comércios de Itajubá (Casa Joka, Cesar Burg, Café do Vadinho), redesenhados em pixel | os próprios comércios | Uso autorizado pelos donos, informado pelo Pedro em 04/11/2026 | `public/assets/cenario/` |
 
 As fontes vêm do repositório oficial `google/fonts` e foram convertidas para woff2, só com o alfabeto latino
 (Latin-1), para ficarem leves. A OFL permite essa conversão.
 
-Efeitos sonoros (parâmetros em `src/audio/efeitos.js`), a música do chefe e as vinhetas (`src/audio/musicas.js`):
-criação original deste projeto, gerados em código. As outras músicas em código continuam no arquivo, mas hoje o
-tema em arquivo toca no lugar delas.
+Heróis (Geraldo e Helena) e mapa-múndi: desenhos do Pedro. Demais personagens, cenários, efeitos sonoros e músicas
+(gerados em código): criação original deste projeto. Nenhum arquivo de arte, som ou música de outro jogo é usado.
 
 Licença do ZzFX:
 
@@ -32,6 +30,3 @@ Licença do ZzFX:
 > WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
 > COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 > OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-Personagens, cenários, sprites, `og-image.png` e ícones: criação original deste projeto. A jogabilidade se inspira no gênero de plataforma
-dos anos 90; nenhum arquivo de arte, som ou música de outro jogo é usado.
