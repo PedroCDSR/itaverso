@@ -138,6 +138,14 @@ Os nomes dos bairros aparecem escritos no chão.
   asfalto largo.
 - **Rio Sapucaí:** tem árvores nas duas margens ao longo de todo o trecho com água.
 
+## Sul da cidade (Pedro, 04/11/2026)
+
+- **Rio Sapucaí:** também corta a cidade no sul, de ponta a ponta, na parte de baixo do mapa, com o nome escrito na água. A
+  Praça do Soldado e as placas de baixo subiram um pouco para dar espaço.
+- **Ruas estreitas:** nas linhas vermelhas do Pedro, entre a pracinha da Unimed, a Alameda e a Praça do Soldado, há uma
+  rua curva, uma horizontal e uma vertical, com casinhas em volta.
+- **Morro Chic:** tem casinhas no alto.
+
 ## O que o mapa mostra
 
 - **Formato em pé.** O eixo central de Itajubá é a **Av. BPS**, com o **Rio Sapucaí** correndo no meio dela. A avenida sobe pela

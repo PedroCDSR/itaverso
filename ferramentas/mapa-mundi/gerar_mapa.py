@@ -1526,6 +1526,27 @@ def main():
             if random.random() < 0.02:
                 d.point((round(x), round(y)), fill=rgba(C['a4']))
 
+    # Rio Sapucaí também cortando a cidade no sul, de ponta a ponta (pedido do Pedro, 04/11/2026)
+    rio_sul = catmull([(-6, 627), (40, 625), (90, 629), (140, 626), (200, 628), (260, 625), (320, 628), (366, 626)], 8)
+    linha_grossa(d, rio_sul, 11, C['areia'])
+    linha_grossa(d, rio_sul, 9, C['a0'])
+    linha_grossa(d, rio_sul, 7, C['a1'])
+    linha_grossa(d, rio_sul, 3, C['a2'])
+    for i in range(0, len(rio_sul), 2):
+        x, y = rio_sul[i]
+        if random.random() < 0.4:
+            d.line([(x, y + random.choice((-2, 1))), (x + 2, y + random.choice((-2, 1)))], fill=rgba(C['a3']))
+    dl.line(rio_sul, fill=255, width=13)
+
+    # ruas estreitas no centro, entre a pracinha da Unimed, a Alameda e a Praça do Soldado (linhas do Pedro)
+    ruas_estreitas = [catmull([(120, 516), (106, 524), (99, 536), (97, 552), (98, 561)], 6),
+                      [(72, 561), (138, 561)], [(124, 561), (124, 597)]]
+    for r in ruas_estreitas:
+        linha_grossa(d, r, 5, C['ci0'])
+    for r in ruas_estreitas:
+        linha_grossa(d, r, 3, (124, 128, 140))
+        dl.line(r, fill=255, width=7)
+
     # rua em S que sobe do centro para o Cruzeiro, entre a Câmara e a Santa Casa
     rua_s = catmull([(176, 516), (226, 512), (240, 492), (236, 466), (232, 440), (242, 418), (262, 402)], 8)
     dl.line(rua_s, fill=255, width=9)
@@ -1551,6 +1572,10 @@ def main():
     cruz_m = Image.new('L', (W, H), 0)
     ImageDraw.Draw(cruz_m).rounded_rectangle([228, 334, 340, 404], radius=12, fill=255)
     zona_a |= np.array(cruz_m) > 0
+    # casinhas no alto do Morro Chic
+    chic_m = Image.new('L', (W, H), 0)
+    ImageDraw.Draw(chic_m).rounded_rectangle([7, 503, 43, 549], radius=8, fill=255)
+    zona_a |= np.array(chic_m) > 0
     # Varginha: bairro baixo, com mais árvores entre as casas
     varginha = np.zeros((H, W), bool)
     varginha[442:600, 288:348] = True
@@ -1573,8 +1598,8 @@ def main():
         ('camara', m_camara(), (214, 500)),
         ('estacao', m_estacao(), (36, 584)),
         ('trem', m_locomotiva(), (40, 606)),
-        ('soldado', m_estatua_soldado(), (90, 630)),
-        ('heli', m_helicoptero(), (112, 633)),
+        ('soldado', m_estatua_soldado(), (90, 618)),
+        ('heli', m_helicoptero(), (112, 620)),
         ('posto', m_posto(), (146, 556)),
     ]
     for _, s, (x, y) in MARCOS:
@@ -1583,20 +1608,20 @@ def main():
     dl.rectangle([ruanova[0] - 8, ruanova[1] - 9, ruanova[2] + 4, ruanova[3] + 3], fill=255)
     dl.rectangle([234, 248, 342, 330], fill=255)  # cemitério
     dl.rectangle([164, 364, 228, 404], fill=255)  # Praçonha
-    dl.rectangle([76, 562, 126, 638], fill=255)   # pracinha e Praça do Soldado
+    dl.rectangle([76, 563, 126, 624], fill=255)   # pracinha e Praça do Soldado
     dl.rectangle([0, 598, 70, 612], fill=255)     # trilho
 
     # ----- rota das fases
     N = {
-        'trem': (54, 578), 'soldado': (102, 599), 'ruanova': (176, 568), 'praca': (243, 547),
+        'trem': (54, 578), 'soldado': (102, 596), 'ruanova': (176, 568), 'praca': (243, 547),
         'alameda': (66, 522), 'coroados': (64, 430), 'pracona': (196, 404), 'cemiterio': (276, 300),
         'unifei': (194, 246), 'pinheirinho': (132, 118), 'agonia': (226, 102), 'kart': (284, 104),
         'lago': (298, 150), 'prefeitura': (328, 182),
         'j1': (144, 522), 'j2': (144, 360), 'j3': (144, 246), 'j4': (226, 404),
     }
     ROTAS = [
-        [N['trem'], (54, 599), N['soldado']],
-        [N['soldado'], (144, 599), (144, 568), N['ruanova']],
+        [N['trem'], (54, 596), N['soldado']],
+        [N['soldado'], (144, 596), (144, 568), N['ruanova']],
         [N['ruanova'], (226, 568), (226, 547), N['praca']],
         [N['praca'], (243, 522), N['j1']],
         [N['j1'], (104, 524), (88, 524), N['alameda']],
@@ -1825,10 +1850,10 @@ def main():
     ret(d, 0, 604, 72, 604, C['ci2'])
     ret(d, 0, 607, 72, 607, C['ci2'])
     # piso da Praça do Soldado
-    d.rounded_rectangle([81, 603, 124, 636], radius=8, fill=rgba(C['ci0']))
-    d.rounded_rectangle([82, 604, 123, 635], radius=7, fill=rgba((216, 208, 192)))
-    d.rounded_rectangle([85, 607, 120, 632], radius=5, fill=rgba(C['g2']))
-    d.rounded_rectangle([88, 612, 117, 634], radius=4, fill=rgba((216, 208, 192)))
+    d.rounded_rectangle([81, 599, 124, 621], radius=8, fill=rgba(C['ci0']))
+    d.rounded_rectangle([82, 600, 123, 620], radius=7, fill=rgba((216, 208, 192)))
+    d.rounded_rectangle([85, 602, 120, 618], radius=5, fill=rgba(C['g2']))
+    d.rounded_rectangle([88, 606, 117, 619], radius=4, fill=rgba((216, 208, 192)))
     # pracinha arredondada ao norte da Praça do Soldado
     d.rounded_rectangle([79, 566, 111, 595], radius=9, fill=rgba(C['ci0']))
     d.rounded_rectangle([80, 567, 110, 594], radius=8, fill=rgba((216, 208, 192)))
@@ -1942,7 +1967,7 @@ def main():
         d.rectangle([x - 2, y - 3, x, y - 2], fill=rgba(cor3))
 
     PLACAS = [
-        ('TREM', 26, 618), ('PRAÇA DO SOLDADO', 208, 618), ('RUA NOVA', 176, 529), ('PRAÇA', 255, 578),
+        ('TREM', 24, 609), ('PRAÇA DO SOLDADO', 206, 604), ('RUA NOVA', 176, 529), ('PRAÇA', 255, 578),
         ('ALAMEDA', 64, 532), ('COROADOS', 64, 438), ('PRAÇONHA', 196, 410), ('CEMITÉRIO', 288, 322),
         ('UNIFEI', 194, 252), ('PINHEIRINHO', 132, 124), ('AGONIA', 206, 124), ('KART', 242, 56),
         ('LAGO', 230, 160), ('PREFEITURA', 314, 190), ('AV. BPS', 160, 436), ('CÂMARA', 214, 456), ('SANTA CASA', 286, 494),
@@ -1965,6 +1990,7 @@ def main():
         base.alpha_composite(t, (bx - t.width // 2, by_))
 
     t = texto_img('RIO SAPUCAÍ', C['a4'], C['a0'])
+    base.alpha_composite(t, (262, 619))
     tv = t.rotate(90, expand=True)
     base.alpha_composite(tv, (119, 370))
 
