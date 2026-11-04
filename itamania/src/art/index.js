@@ -23,14 +23,14 @@ export const SPRITES_PNG = {
   heliceu: [72, 30],
   placaretorno: [18, 44],
   placasaida: [26, 40],
-  'npc-motorista': [48, 64],
-  'npc-guia': [48, 64],
-  'npc-vovo': [48, 64],
-  'npc-vendedora': [48, 64],
-  'npc-tecnico': [48, 64],
-  'npc-atendente': [48, 64],
-  'npc-barista': [48, 64],
-  'npc-estudante': [48, 64],
+  'npc-motorista': [32, 64],
+  'npc-guia': [32, 64],
+  'npc-vovo': [32, 64],
+  'npc-vendedora': [32, 64],
+  'npc-tecnico': [32, 64],
+  'npc-atendente': [32, 64],
+  'npc-barista': [32, 64],
+  'npc-estudante': [32, 64],
 };
 
 // Mapa-múndi pronto (pixel art em pé, 480 px de largura) em public/assets/mapa.png. Mude para true quando o arquivo

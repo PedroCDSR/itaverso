@@ -14,7 +14,7 @@ const heroi = process.env.HEROI || 'geraldo';
 const [w, h] = (process.env.TELA || '960x540').split('x').map(Number);
 const limite = Number(process.env.LIMITE_S || 240) * 1000;
 
-const navegador = await chromium.launch();
+const navegador = await chromium.launch({ args: ['--use-angle=swiftshader'] });
 const pagina = await navegador.newPage({ viewport: { width: w, height: h } });
 const erros = [];
 pagina.on('console', (m) => m.type() === 'error' && erros.push(m.text()));

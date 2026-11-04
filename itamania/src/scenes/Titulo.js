@@ -26,7 +26,7 @@ export class Titulo extends Phaser.Scene {
       .setOrigin(0.5)
       .setShadow(1, 1, CORES_CSS.roxo, 0, false, true);
     this.add
-      .text(LARGURA / 2, 86, TEXTOS.escolha, { fontFamily: FONTES.titulo, fontSize: '8px', color: CORES_CSS.branco })
+      .text(LARGURA / 2, 82, TEXTOS.escolha, { fontFamily: FONTES.titulo, fontSize: '8px', color: CORES_CSS.branco })
       .setOrigin(0.5)
       .setShadow(1, 1, CORES_CSS.roxo, 0, false, true);
 
@@ -35,11 +35,11 @@ export class Titulo extends Phaser.Scene {
     this.cartoes = {};
     Object.keys(HEROIS).forEach((chave, i) => {
       const x = LARGURA / 2 + (i === 0 ? -62 : 62);
-      const fundo = this.add.rectangle(x, 152, 104, 104, CORES.roxo, 0.55).setStrokeStyle(3, CORES.branco);
-      const s = this.add.sprite(x, 198, `heroi-${chave}-normal`, 0).setOrigin(0.5, 1).setScale(2);
+      const fundo = this.add.rectangle(x, 151, 104, 116, CORES.roxo, 0.55).setStrokeStyle(3, CORES.branco);
+      const s = this.add.sprite(x, 189, `heroi-${chave}-normal`, 0).setOrigin(0.5, 1).setScale(2);
       s.play(`${chave}-normal-s-parado`);
       const nome = this.add
-        .text(x, 109, HEROIS[chave].nome.toUpperCase(), { fontFamily: FONTES.titulo, fontSize: '9px', color: CORES_CSS.branco })
+        .text(x, 200, HEROIS[chave].nome.toUpperCase(), { fontFamily: FONTES.titulo, fontSize: '9px', color: CORES_CSS.branco })
         .setOrigin(0.5);
       fundo.setInteractive({ useHandCursor: true }).on('pointerup', () => this.escolher(chave));
       this.cartoes[chave] = { fundo, s, nome };
@@ -47,10 +47,10 @@ export class Titulo extends Phaser.Scene {
     this.escolher(this.escolhido, true);
 
     if (temProgresso()) {
-      new Botao(this, LARGURA / 2 - 72, 226, TEXTOS.botoes.continuar, () => this.continuar(), { largura: 130, altura: 26, cor: 'amarelo' });
-      new Botao(this, LARGURA / 2 + 72, 226, TEXTOS.botoes.novo, () => this.jogar(), { largura: 130, altura: 26 });
+      new Botao(this, LARGURA / 2 - 72, 234, TEXTOS.botoes.continuar, () => this.continuar(), { largura: 130, altura: 26, cor: 'amarelo' });
+      new Botao(this, LARGURA / 2 + 72, 234, TEXTOS.botoes.novo, () => this.jogar(), { largura: 130, altura: 26 });
     } else {
-      new Botao(this, LARGURA / 2, 226, TEXTOS.botoes.jogar, () => this.jogar(), { largura: 150, altura: 28, cor: 'amarelo', tamanhoFonte: '10px' });
+      new Botao(this, LARGURA / 2, 234, TEXTOS.botoes.jogar, () => this.jogar(), { largura: 150, altura: 28, cor: 'amarelo', tamanhoFonte: '10px' });
     }
     new BotaoSom(this, LARGURA - 20, 20);
     this.input.keyboard?.on('keydown-LEFT', () => this.escolher('geraldo'));

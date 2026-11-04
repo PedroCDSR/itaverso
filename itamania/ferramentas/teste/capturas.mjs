@@ -4,7 +4,7 @@ import { createRequire } from 'module';
 const { chromium } = createRequire(import.meta.url)('playwright');
 const base = process.argv[2] || 'http://localhost:5180/';
 const pasta = process.argv[3] || '.';
-const navegador = await chromium.launch();
+const navegador = await chromium.launch({ args: ['--use-angle=swiftshader'] });
 const erros = [];
 async function tela(caminho, nome, esperaMs = 2500, acao) {
   const p = await navegador.newPage({ viewport: { width: 960, height: 540 } });
