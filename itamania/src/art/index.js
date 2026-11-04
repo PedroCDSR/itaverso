@@ -5,7 +5,7 @@ import * as ArteHeroi from './heroi.js';
 
 export { ArteTiles, ArteObjetos, ArteHeroi };
 
-// Cenários (public/assets/cenario/<nome>.png). Os de Itajubá vieram do jogo do Aladdin (arte própria do Pedro);
+// Cenários (public/assets/cenario/<nome>.png). Os de Itajubá são arte própria do projeto;
 // os novos saem de ferramentas/arte/gerar_cenarios.py.
 export const CENARIO_PNG = [
   'ceu', 'morros', 'casas', 'fonte', 'cafe', 'igreja', 'estatua', 'helicoptero', 'arvore', 'arvore2', 'clube',

@@ -11,7 +11,7 @@ export const TEXTOS = {
     continuar: 'CONTINUAR',
     novo: 'NOVO JOGO',
     pular: 'PULAR',
-    maca: 'PÃO', // botão de arremesso (o nome da chave vem do motor do Aladdin)
+    maca: 'PÃO', // botão de arremesso (o nome da chave vem do motor original)
     mapa: 'MAPA',
     recomecar: 'RECOMEÇAR FASE',
     som: 'SOM',

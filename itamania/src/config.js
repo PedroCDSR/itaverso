@@ -15,7 +15,7 @@ export const CORES = {
   rosa: 0xf07ab4,
   roxo: 0x2b2d5c,
   branco: 0xffffff,
-  // nomes usados pelos módulos copiados do Aladdin (Botao, ControlesToque, BotaoSom)
+  // nomes usados pelos módulos herdados do motor original (Botao, ControlesToque, BotaoSom)
   lilas: 0x9ec8ff,
 };
 export const CORES_CSS = {

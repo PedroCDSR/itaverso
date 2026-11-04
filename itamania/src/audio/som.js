@@ -13,7 +13,7 @@
 
 import { SOM } from '../config.js';
 
-const CHAVE_MUDO = 'aladdin-som-mudo';
+const CHAVE_MUDO = 'itamania-som-mudo';
 
 let ctx = null;
 let saida = null; // volume geral

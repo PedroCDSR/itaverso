@@ -2,7 +2,7 @@ import * as Phaser from 'phaser';
 import { JOGADOR as J } from '../config.js';
 import { heroi } from '../genero.js';
 
-// Herói (Geraldo ou Helena). Física herdada do motor do Aladdin:
+// Herói (Geraldo ou Helena). Física herdada do motor original:
 // aceleração e freio, pulo variável, coyote time e buffer de pulo de 100 ms, queda mais pesada que a subida.
 //
 // Duas formas (DESIGN.md): 'normal' (criança, 48 px) e 'grande' (café com leite: 64 px, aguenta um toque a mais).
