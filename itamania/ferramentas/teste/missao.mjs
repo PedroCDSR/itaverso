@@ -42,8 +42,7 @@ try {
         this.esquerda = false; this.direita = true; this.maca = false; this.macaApertou = false;
         const j = s.jogador;
         const chao = j.body.blocked.down || j.body.touching.down;
-        const tile = s.chao.getTileAtWorldXY(j.body.right + 24, 230);
-        const buraco = !tile || tile.index === -1;
+        const buraco = false; // A calçada urbana é contínua.
         const inimigo = s.inimigos.getChildren().some((i) => i.active && i.x > j.x && i.x - j.x < 64);
         if (chao && (buraco || inimigo)) robo.segurarAte = s.time.now + 390;
         this.pular = s.time.now < robo.segurarAte;
@@ -52,9 +51,9 @@ try {
       };
     });
     await pagina.waitForFunction(() => window.missao?.terminou, null, { timeout: 80000 });
-    const resultado = await pagina.evaluate(() => ({ venceu: JSON.parse(localStorage.getItem('itamania-progresso-v1')).retornoExploracao.venceu, x: missao.jogador.x, vidas: missao.vidas, moedas: missao.moedas }));
+    const resultado = await pagina.evaluate(() => ({ venceu: JSON.parse(localStorage.getItem('itamania-progresso-v1')).retornoExploracao.venceu, x: missao.jogador.x, vidas: missao.vidas, pontos: missao.placar.pontos }));
     assert.equal(resultado.venceu, true, JSON.stringify(resultado));
-    assert(resultado.x >= 3232);
+    assert(resultado.x >= 5512);
     console.log('Travessia física concluída:', JSON.stringify(resultado));
   }
   await encontro();
@@ -80,7 +79,7 @@ try {
   await pagina.waitForFunction(() => !jogo.scene.isActive('Pausa'));
   // Queda e derrota são exercitadas pela física, sem chamar finalizar diretamente.
   for (let i = 0; i < 3; i++) {
-    await pagina.evaluate(() => missao.jogador.body.reset(704, 330));
+    await pagina.evaluate(() => missao.jogador.body.reset(704, 800));
     await pagina.waitForTimeout(1550);
   }
   assert.equal(await pagina.evaluate(() => JSON.parse(localStorage.getItem('itamania-progresso-v1')).retornoExploracao.venceu), false);

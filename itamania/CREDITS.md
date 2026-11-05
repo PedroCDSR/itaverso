@@ -44,3 +44,16 @@ Luis Zuno (ansimuz), https://ansimuz.itch.io/sunny-land-pixel-game-art. Licença
 no pacote, preservado em `referencias/licenciados/sunny-land-licenca.pdf`. Só os PNGs usados estão em
 `public/assets/sunnyland/`. Não usamos o código do exemplo Phaser nem a música do pacote. A capivara continua
 sendo a arte original da proposta aprovada; não é a raposa do Sunny Land.
+
+## Missão urbana lateral (05/11/2026)
+
+Fachadas laterais do clube, café, sobrados e lojas: recortes, montagens e repinturas das peças do Modern Exteriors
+já usadas no projeto, geradas por `ferramentas/arte/gerar_missao_urbana.py`. Mesmo crédito obrigatório ao LimeZu,
+preservado na tela de título. Só os recortes usados ficam em `public/assets/missao-urbana/`.
+Casarões verde, azul e branco/azul usam janelas do pacote em montagem própria inspirada nas referências do Pedro.
+Igreja: reaproveitamento do desenho original do projeto em `public/assets/cenario/igreja.png`.
+Concha frontal, fonte, toldo, ficha de pontos e estrela: desenhos próprios gerados pelo mesmo script.
+As fichas da missão têm identidade própria e não são itacoins persistentes.
+Licenças conferidas nesta sessão: PDF Modern Exteriors (edição e uso em projetos abertos permitidos,
+crédito obrigatório, sem redistribuição do pacote); PDF Sunny Land (CC0). O gambá do encontro e da fuga continua
+creditado ao Sunny Land. Fotos enviadas são referências arquitetônicas; não são distribuídas no build.

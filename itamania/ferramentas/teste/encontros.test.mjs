@@ -17,22 +17,45 @@ test('vitória guarda posição exata e premia uma única vez', () => {
   assert.equal(iniciarMissao(REGIAO_PRACA, especial, { x: 1, y: 1 }, 'baixo'), null);
   assert.equal(concluirMissao('token-errado', true, 3), null);
   assert(estado.encontros.pendente);
-  const r = concluirMissao(s.token, true, 3);
-  assert.equal(r.x, 848); assert.equal(r.y, 596); assert.equal(r.premio, 8);
-  assert.equal(estado.itacoins, 15);
-  assert.equal(concluirMissao(s.token, true, 3), null);
-  assert.equal(estado.itacoins, 15);
+  const r = concluirMissao(s.token, true, 200);
+  assert.equal(r.x, 848); assert.equal(r.y, 596); assert.equal(r.premio, 6);
+  assert.equal(estado.itacoins, 13);
+  assert.equal(concluirMissao(s.token, true, 850), null);
+  assert.equal(estado.itacoins, 13);
 });
-test('repetição rende menos, derrota preserva saldo e retorna ao ponto seguro', () => {
+test('repetição não repaga conquistas, derrota preserva saldo e retorna ao ponto seguro', () => {
   let s = iniciarMissao(REGIAO_PRACA, especial, { x: 848, y: 596 }, 'cima');
   concluirMissao(s.token, true, 20);
   s = iniciarMissao(REGIAO_PRACA, especial, { x: 848, y: 596 }, 'cima');
-  assert.equal(concluirMissao(s.token, true, 20).premio, 4);
+  assert.equal(concluirMissao(s.token, true, 20).premio, 0);
   const saldo = estado.itacoins;
   s = iniciarMissao(REGIAO_PRACA, especial, { x: 848, y: 596 }, 'cima');
   const r = concluirMissao(s.token, false, 20);
   assert.equal(estado.itacoins, saldo); assert.equal(r.premio, 0);
   assert.equal(r.x, REGIAO_PRACA.pontoSeguro.x);
+});
+test('primeira conclusão e medalhas pagam até 10 itacoins no total, inclusive entre variantes', () => {
+  for (const [pontos, premio] of [[199, 5], [200, 1], [500, 2], [750, 2], [850, 0]]) {
+    const s = iniciarMissao(REGIAO_PRACA, especial, { x: 848, y: 596 }, 'cima');
+    assert.equal(concluirMissao(s.token, true, pontos).premio, premio);
+  }
+  const fuga = REGIAO_PRACA.encontros[1];
+  const s = iniciarMissao(REGIAO_PRACA, fuga, { x: 900, y: 620 }, 'direita');
+  assert.equal(concluirMissao(s.token, true, 850).premio, 0);
+  assert.equal(estado.itacoins, 17);
+  assert.equal(estado.encontros.premiosUrbanos['jardins-praca'].recorde, 850);
+});
+test('progresso anterior não recebe o prêmio de primeira conclusão novamente', () => {
+  estado.encontros.concluidas['fuga-praca'] = 2;
+  const s = iniciarMissao(REGIAO_PRACA, especial, { x: 848, y: 596 }, 'cima');
+  assert.equal(concluirMissao(s.token, true, 850).premio, 5);
+  assert.equal(estado.itacoins, 12);
+});
+test('derrota com pontuação alta não grava recorde, medalha ou prêmio', () => {
+  const s = iniciarMissao(REGIAO_PRACA, especial, { x: 848, y: 596 }, 'cima');
+  assert.equal(concluirMissao(s.token, false, 850).premio, 0);
+  assert.deepEqual(estado.encontros.premiosUrbanos, {});
+  assert.equal(estado.itacoins, 7);
 });
 test('recarga interrompe a missão sem apagar descobertas nem conceder recompensa', () => {
   estado.moedasPraca = [1, 4];

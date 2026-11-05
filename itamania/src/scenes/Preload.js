@@ -5,7 +5,8 @@ import { texturaDeQuadros } from '../art/matriz.js';
 import { HEROIS, escolherHeroi } from '../genero.js';
 import { carregar, estado } from '../estado.js';
 import { FASES } from '../levels/index.js';
-import { recuperarMissaoInterrompida } from '../systems/encontros.js';
+import { recuperarMissaoInterrompida, iniciarMissao } from '../systems/encontros.js';
+import { REGIAO_PRACA } from '../data/micromundos.js';
 
 import { OBJETOS_PRACA, PERSONAGENS_PRACA } from '../data/pracaArte.js';
 
@@ -38,6 +39,9 @@ export class Preload extends Phaser.Scene {
       this.load.image(`sunny-${nome}`, `assets/sunnyland/${nome}.png`);
     }
     this.load.spritesheet('sunny-gamba', 'assets/sunnyland/gamba.png', { frameWidth: 36, frameHeight: 28 });
+    for (const nome of ['clube', 'cafe', 'sobrado', 'loja', 'tijolos', 'verde', 'azul', 'brancoazul', 'concha', 'fonte', 'igreja', 'toldo', 'ficha', 'estrela']) {
+      this.load.image(`urbano-${nome}`, `assets/missao-urbana/${nome}.png`);
+    }
     for (const o of OBJETOS_PRACA) this.load.image(`limezu-${o}`, `assets/limezu/objetos/${o}.png`);
     for (const c of PERSONAGENS_PRACA) {
       this.load.spritesheet(`limezu-${c}`, `assets/limezu/personagens/${c}.png`, { frameWidth: 16, frameHeight: 32 });
@@ -104,6 +108,12 @@ export class Preload extends Phaser.Scene {
     carregar();
     const interrompida = recuperarMissaoInterrompida();
     const q = new URLSearchParams(window.location.search);
+    // Atalho exclusivo do Vite para avaliar a missão sem depender de alterações na praça.
+    if (import.meta.env.DEV && q.get('missao') === 'urbana') {
+      const encontro = REGIAO_PRACA.encontros[q.get('fuga') === '1' ? 1 : 0];
+      const sessao = iniciarMissao(REGIAO_PRACA, encontro, { x: 848, y: 596 }, 'cima');
+      if (sessao) { this.scene.start('Missao', { sessao }); return; }
+    }
     if (q.get('heroi')) {
       escolherHeroi(q.get('heroi'));
       estado.heroi = q.get('heroi');

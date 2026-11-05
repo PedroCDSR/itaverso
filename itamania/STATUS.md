@@ -1,5 +1,31 @@
 # STATUS · ITAMANIA
 
+## Missão urbana da praça até a igreja (05/11/2026)
+
+Implementação da proposta visual aprovada pelo Pedro. Publicação autorizada somente em `dev-itamania`.
+
+- Percurso lateral de 5.760 px: praça plana (clube, fonte, concha e Vadinho), subida suave, casarões e largo da igreja.
+- Calçada contínua sem abismos, dois checkpoints (C1/C2), rota baixa e desvio opcional por degraus, mureta,
+  toldo elástico e marquise. A queda do desvio termina na calçada. Pombos voam embora ao receber um salto.
+- Capivara exploradora preservada, com mochila verde e lenço amarelo. Cidade em primeiro plano e no fundo;
+  montanhas distantes discretas. Assets laterais exclusivos, sem alterar os recortes da praça top-down.
+- Fichas de 10 pontos, estrela de 50 e bônus de 50 ao completar cada grupo de cinco. Sem cronômetro,
+  multiplicador ou perda de pontos por dano. Coletas e bônus não reaparecem ao voltar a um checkpoint.
+- Pontuação máxima: 850. Recorde e três medalhas (200/500/750 pontos) são gravados ao vencer.
+- Itacoins: primeira vitória +5; medalhas +1/+2/+2 uma única vez. Teto compartilhado de 10 entre travessia e fuga.
+  Saves anteriores com missão concluída não recebem a primeira recompensa novamente. Saldo antigo é preservado.
+- Sessões continuam consumidas uma única vez; derrota, abandono e recarga não concedem moeda.
+- Praça top-down: `Praca.js`, `PracaUI.js`, mapa, diálogos e controles compartilhados intactos.
+- Build local passou, aproximadamente 2,71 MB. Avisos preexistentes de resolução das fontes permanecem.
+- Validação executada: 9 testes de encontros/economia e 6 de coleta/geometria passaram.
+- **Limitação:** Chromium e servidor local foram bloqueados pelo sandbox (EPERM). Não foi concluída validação
+  visual ou multitoque nesta sessão. Robô urbano preparado em `ferramentas/teste/missao-urbana.mjs`.
+- Testar em dev: entrar pelo gambá da praça; percorrer a rota baixa; completar o desvio e pegar a estrela;
+  conferir C1/C2 e retorno exato; repetir para conferir que prêmios não são pagos novamente; testar no celular.
+- Base remota inspecionada: `94bee5ac0ce8e26c4fa9ee142c9bcf7878081327`.
+  A confirmação do deploy deve ser acompanhada após o envio, sem confundir push com deploy pronto.
+
+
 ## Desenvolvimento separado da produção (04/11/2026)
 
 - Pedro habilitou `dev-itamania` em Branch deploys, preservando a Production branch anterior.

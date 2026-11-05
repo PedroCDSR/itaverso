@@ -1,9 +1,11 @@
 import { estado, salvar } from '../estado.js';
 import { MISSOES, MICROMUNDOS } from '../data/micromundos.js';
+import { PONTOS_MAXIMOS_URBANOS } from '../data/missaoUrbana.js';
 
 function progresso() {
   estado.encontros ||= { concluidas: {}, visitas: {}, historias: {}, pendente: null };
   estado.encontros.historias ||= {};
+  estado.encontros.premiosUrbanos ||= {};
   return estado.encontros;
 }
 
@@ -23,19 +25,34 @@ export function iniciarMissao(regiao, encontro, retorno, direcao) {
 }
 
 // A sessão é consumida uma única vez. Reabrir uma tela de vitória não duplica o prêmio.
-export function concluirMissao(token, venceu, moedas = 0) {
+export function concluirMissao(token, venceu, pontos = 0) {
   const p = progresso();
   const sessao = p.pendente;
   if (!sessao || sessao.token !== token) return null;
   const m = MISSOES[sessao.missao];
-  const repetida = !!p.concluidas[m.id];
-  const premio = venceu ? (repetida ? m.recompensaRepetida : m.recompensa) + (repetida ? Math.min(3, moedas) : moedas) : 0;
+  // Travessia e fuga compartilham o mesmo orçamento finito, sem trocar os IDs dos encontros.
+  const chave = m.economia || m.id;
+  const def = MISSOES[chave];
+  const antigas = Object.values(MISSOES).some((d) => (d.economia || d.id) === chave && p.concluidas[d.id]);
+  const salvo = p.premiosUrbanos[chave] || { primeira: !!antigas, medalhas: [], recorde: 0 };
+  const placar = Math.min(PONTOS_MAXIMOS_URBANOS, Math.max(0, Number.isFinite(pontos) ? Math.floor(pontos) : 0));
+  let premio = 0;
+  if (venceu) {
+    if (!salvo.primeira) { premio += def.recompensa; salvo.primeira = true; }
+    for (const medalha of def.medalhas) {
+      if (placar >= medalha.pontos && !salvo.medalhas.includes(medalha.pontos)) {
+        premio += medalha.premio; salvo.medalhas.push(medalha.pontos);
+      }
+    }
+    salvo.recorde = Math.max(salvo.recorde, placar);
+    p.premiosUrbanos[chave] = salvo;
+  }
   if (venceu) p.concluidas[m.id] = (p.concluidas[m.id] || 0) + 1;
   if (venceu && sessao.tipo === 'historia') p.historias[sessao.encontro] = true;
   estado.itacoins += premio;
   const regiao = MICROMUNDOS.find((r) => r.id === sessao.regiao);
   const pos = venceu ? sessao.retorno : regiao.pontoSeguro || sessao.retorno;
-  estado.retornoExploracao = { ...pos, direcao: sessao.direcao, venceu, premio, interrompida: false };
+  estado.retornoExploracao = { ...pos, direcao: sessao.direcao, venceu, premio, pontos: placar, recorde: salvo.recorde, medalhas: salvo.medalhas.length, interrompida: false };
   p.pendente = null;
   salvar();
   return estado.retornoExploracao;

@@ -118,6 +118,14 @@ export const PRACA = {
   botao: { x: 432, y: 218, raio: 28 },
 };
 
+// Exclusivo da missão lateral urbana. Não muda controles ou colisões da praça.
+export const MISSAO_URBANA = {
+  velocidade: 160, aceleracaoChao: 1500, aceleracaoAr: 950,
+  pulo: 370, cortePulo: 0.5, puloToldo: 470, coyoteMs: 110, bufferMs: 110,
+  vidas: 3, invencivelMs: 1400, velocidadePombo: 26, velocidadePerseguidor: 112,
+  distanciaCheckpoint: 56,
+};
+
 export const DIALOGO = {
   largura: 400,
   topo: 34,

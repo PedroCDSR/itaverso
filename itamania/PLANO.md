@@ -1,3 +1,12 @@
+# Entrega atual: missão urbana da praça até a igreja
+
+Proposta A e percurso visual aprovados pelo Pedro. Implementação e publicação somente em `dev-itamania`.
+Escopo: cena lateral, assets exclusivos, coleta/pontos, desvio opcional, checkpoints e recompensas finitas.
+Não alterar controles, colisões ou conversas da praça top-down. Sem agentes ou janelas adicionais.
+Detalhes e limitações da validação em `MISSOES.md` e `STATUS.md`.
+
+---
+
 # Entrega atual: encontros e missões Sunny Land
 
 Pedido do Pedro (04/11/2026): converter o desafio da praça para o estilo Sunny Land e validar o ciclo de encontros

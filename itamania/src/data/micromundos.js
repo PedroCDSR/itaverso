@@ -1,4 +1,5 @@
 import { NOMES_FASES } from './textos.js';
+import { PERCURSO_URBANO } from './missaoUrbana.js';
 
 // Os nomes e a ordem vêm do mapa do Pedro. Só a praça tem micromundo implementado neste recorte.
 export const MICROMUNDOS = NOMES_FASES.slice(1).map((nome, i) => ({
@@ -13,14 +14,12 @@ export const MICROMUNDOS = NOMES_FASES.slice(1).map((nome, i) => ({
 export const REGIAO_PRACA = MICROMUNDOS[3];
 export const MISSOES = {
   'jardins-praca': {
-    id: 'jardins-praca', regiao: 4, nome: 'Trilhas da praça', tipo: 'travessia',
-    largura: 3360, fim: 3232, recompensa: 5, recompensaRepetida: 1,
-    retornos: [80, 1000, 1900],
-    buracos: [[672, 736], [1376, 1440], [2208, 2272]],
-    plataformas: [[384, 176, 96], [800, 176, 80], [1136, 160, 80], [1568, 176, 96], [1856, 160, 80], [2432, 176, 96], [2768, 160, 96]],
-    inimigos: [912, 1696, 2576, 2928],
+    ...PERCURSO_URBANO,
+    id: 'jardins-praca', regiao: 4, nome: 'Da praça à igreja', tipo: 'travessia',
+    recompensa: 5,
+    medalhas: [{ pontos: 200, premio: 1 }, { pontos: 500, premio: 2 }, { pontos: 750, premio: 2 }],
   },
 };
 
 // A fuga reutiliza o percurso, com perseguidor e regras de retorno do mesmo sistema.
-MISSOES['fuga-praca'] = { ...MISSOES['jardins-praca'], id: 'fuga-praca', nome: 'Corrida pelos jardins', tipo: 'fuga' };
+MISSOES['fuga-praca'] = { ...MISSOES['jardins-praca'], id: 'fuga-praca', nome: 'Corrida até a igreja', tipo: 'fuga', economia: 'jardins-praca' };
